@@ -5,8 +5,37 @@
  * into ready-to-use component styles.
  */
 
+// TypeScript type definitions for variants
+export type VariantFunction = () => string;
+export type VariantWithArgs<T = string> = (variant?: T) => string;
 
-const variants = {
+export interface VariantsType {
+  button: {
+    [key: string]: {
+      [key: string]: VariantFunction | VariantWithArgs;
+    } | VariantFunction | VariantWithArgs;
+  };
+  card: {
+    [key: string]: {
+      [key: string]: VariantFunction;
+    };
+  };
+  badge: {
+    [key: string]: VariantFunction | VariantWithArgs;
+  };
+  input: {
+    [key: string]: VariantFunction | VariantWithArgs;
+  };
+  alert: {
+    [key: string]: VariantFunction | {
+      [key: string]: VariantFunction;
+    };
+  };
+  [key: string]: any; // Allow additional properties for extensibility
+}
+
+
+const variants: VariantsType = {
   // Button variants with complete styling
   button: {
     primary: {

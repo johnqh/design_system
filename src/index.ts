@@ -10,6 +10,9 @@ export { designTokens } from './tokens';
 export { textVariants } from './typography';
 export { variants } from './variants';
 
+// === TYPE EXPORTS ===
+export type { VariantFunction, VariantWithArgs, VariantsType } from './variants';
+
 // === ORGANIZED STRUCTURE ALIASES ===
 export { colors as Colors } from './colors';
 export { designTokens as Tokens } from './tokens';
@@ -171,9 +174,12 @@ import { designTokens } from './tokens';
 import { textVariants } from './typography';
 import { variants } from './variants';
 
-export default {
+const designSystem = {
   colors,
   tokens: designTokens,
   typography: textVariants,
   variants,
-};
+  ui,
+} as const;
+
+export default designSystem;
