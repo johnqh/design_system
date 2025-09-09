@@ -1,43 +1,49 @@
-name: CI/CD - Test and Release
+---
+name: "CI/CD - Test and Release"
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
-    types: [closed]
+    branches:
+      - main
+    types:
+      - closed
 
 env:
   NPM_MODULE_NAME: "@johnqh/design-system"
 
 jobs:
   test:
-    name: Run Tests
+    name: "Run Tests"
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20.x, 22.x]
+        node:
+          - "20.x"
+          - "22.x"
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node }}
+      - name: "Use Node.js ${{ matrix.node }}"
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Install dependencies
+      - name: "Install dependencies"
         run: npm ci
 
-      - name: Run type checking
+      - name: "Run type checking"
         run: npm run type-check
 
-      - name: Run linting
+      - name: "Run linting"
         run: npm run lint
 
-      - name: Run tests
+      - name: "Run tests"
         run: npm test
 
-      - name: Build project
+      - name: "Build project"
         run: npm run build
 
   check_for_release:
@@ -47,12 +53,12 @@ jobs:
       version: ${{ steps.check.outputs.version }}
       version_tag: ${{ steps.check.outputs.version_tag }}
     steps:
-      - name: Checkout
+      - name: "Checkout"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Check if should trigger release
+      - name: "Check if should trigger release"
         id: check
         run: |
           # Skip only if explicitly marked with [skip ci] or [skip-ci]
@@ -82,55 +88,57 @@ jobs:
           fi
 
   release_npm:
-    needs: [test, check_for_release]
+    needs:
+      - test
+      - check_for_release
     if: ${{ needs.check_for_release.outputs.should_release == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
     steps:
-      - name: Checkout
+      - name: "Checkout"
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Verify package version
+      - name: "Verify package version"
         run: |
           echo "Using version: ${{ needs.check_for_release.outputs.version }}"
           echo "Package.json version: $(node -p "require('./package.json').version")"
 
-      - name: Install dependencies
+      - name: "Install dependencies"
         run: npm ci
 
-      - name: Build project
+      - name: "Build project"
         run: npm run build
 
-      - name: Create GitHub Release
+      - name: "Create GitHub Release"
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.check_for_release.outputs.version_tag }}
-          name: Release ${{ needs.check_for_release.outputs.version }}
+          name: "Release ${{ needs.check_for_release.outputs.version }}"
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to NPM
+      - name: "Publish to NPM"
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Notify deployment success
+      - name: "Notify deployment success"
         if: success()
         run: |
           echo "🚀 Release ${{ needs.check_for_release.outputs.version }} deployed successfully!"
           echo "• NPM: https://www.npmjs.com/package/@johnqh/design-system/v/${{ needs.check_for_release.outputs.version }}"
           echo "• GitHub: https://github.com/${{ github.repository }}/releases/tag/${{ needs.check_for_release.outputs.version_tag }}"
 
-      - name: Notify deployment failure  
+      - name: "Notify deployment failure"
         if: failure()
         run: |
           echo "❌ Release deployment FAILED for commit ${{ github.sha }}"
