@@ -10,7 +10,22 @@
       "Bash(mkdir:*)",
       "Read(//Users/qianghuang/mail_box_lib/**)",
       "Bash(git add:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(npm update)",
+      "Bash(npm install:*)",
+      "Bash(npm view:*)",
+      "Bash(node:*)",
+      "Bash(command:*)",
+      "Bash(command -v:*)",
+      "Bash(source:*)",
+      "Bash(nvm install:*)",
+      "Bash(nvm use:*)",
+      "Bash(nvm alias:*)",
+      "Bash(npm outdated)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm version:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run test:coverage:*)"
     ],
     "deny": [],
     "ask": []
