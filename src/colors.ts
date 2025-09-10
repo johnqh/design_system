@@ -796,4 +796,3 @@ const colors = {
 } as const;
 
 export { colors, semanticColors, componentColors, getColorClasses, buildColorClass };
-export default colors;
