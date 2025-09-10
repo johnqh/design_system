@@ -9,9 +9,11 @@ export { colors } from './colors';
 export { designTokens } from './tokens';
 export { textVariants } from './typography';
 export { variants } from './variants';
+export { SimpleVariants, createVariants, createQuickVariants } from './simple-variants';
 
 // === TYPE EXPORTS ===
 export type { VariantFunction, VariantWithArgs, VariantsType } from './variants';
+export type { VariantConfig } from './simple-variants';
 
 // === ORGANIZED STRUCTURE ALIASES ===
 export { colors as Colors } from './colors';
@@ -167,19 +169,7 @@ export * from './tokens';
 export * from './typography';
 export * from './variants';
 
-// === DEFAULT EXPORT ===
-// Grouped exports for convenience
-import { colors } from './colors';
-import { designTokens } from './tokens';
-import { textVariants } from './typography';
-import { variants } from './variants';
-
-const designSystem = {
-  colors,
-  tokens: designTokens,
-  typography: textVariants,
-  variants,
-  ui,
-} as const;
-
-export { designSystem };
+// === UTILITY FUNCTIONS ===
+// Re-export utility functions from colors
+export { getColorClasses, buildColorClass } from './colors';
+export { createTextStyle, combineTextStyles, createResponsiveText } from './typography';

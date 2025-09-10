@@ -375,11 +375,16 @@ describe('Main Index Exports', () => {
     expect(indexModule.Variants).toBeDefined()
   })
 
-  it('should have default export with grouped structure', async () => {
-    const indexModule = await import('../index')
-    expect(indexModule.default.colors).toBeDefined()
-    expect(indexModule.default.tokens).toBeDefined()
-    expect(indexModule.default.typography).toBeDefined()
-    expect(indexModule.default.variants).toBeDefined()
+  it('should export utility functions', () => {
+    expect(getColorClasses).toBeDefined()
+    expect(buildColorClass).toBeDefined()
+    expect(createTextStyle).toBeDefined()
+    expect(combineTextStyles).toBeDefined()
+    expect(createResponsiveText).toBeDefined()
+    expect(typeof getColorClasses).toBe('function')
+    expect(typeof buildColorClass).toBe('function')
+    expect(typeof createTextStyle).toBe('function')
+    expect(typeof combineTextStyles).toBe('function')
+    expect(typeof createResponsiveText).toBe('function')
   })
 })
