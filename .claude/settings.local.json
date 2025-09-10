@@ -25,7 +25,8 @@
       "Bash(npm run type-check:*)",
       "Bash(npm version:*)",
       "Bash(git commit:*)",
-      "Bash(npm run test:coverage:*)"
+      "Bash(npm run test:coverage:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

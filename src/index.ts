@@ -182,4 +182,4 @@ const designSystem = {
   ui,
 } as const;
 
-export default designSystem;
+export { designSystem };

@@ -110,20 +110,117 @@ Ready-to-use Tailwind class combinations for:
 
 ## AI-Assisted Development Optimization
 
+### Quick Reference for AI Assistants
+
+#### File Organization Map
+```
+src/
+├── index.ts       # Main entry point, exports all modules
+├── colors.ts      # Color system (raw, semantic, component colors)
+├── tokens.ts      # Design tokens (spacing, animation, layout)
+├── typography.ts  # Text variants and typography system
+├── variants.ts    # Component style variants (buttons, cards, etc.)
+└── __tests__/     # Comprehensive test suite
+```
+
+#### Import Examples
+```typescript
+// Named imports (recommended)
+import { colors, designTokens, textVariants, variants } from '@johnqh/design-system';
+
+// Specific utilities
+import { getColorClasses, buildColorClass } from '@johnqh/design-system';
+
+// UI utilities object
+import { ui } from '@johnqh/design-system';
+
+// Default import (all modules)
+import designSystem from '@johnqh/design-system';
+```
+
+#### Common Usage Patterns
+```typescript
+// Using semantic colors
+const primaryButton = colors.semantic.primary.DEFAULT;
+
+// Using design tokens
+const spacing = designTokens.spacing.margin.md;
+
+// Using text variants
+const heading = textVariants.h1;
+
+// Using component variants
+const buttonClass = variants.button.primary;
+
+// Using UI utilities
+const container = ui.layout.container;
+```
+
 ### Structured Architecture
-- Clear separation of concerns across files
-- Consistent naming conventions throughout
-- Comprehensive TypeScript types for IntelliSense
-- Semantic organization that mirrors design thinking
+- **Clear separation of concerns** - Each file has a single, well-defined purpose
+- **Consistent naming conventions** - camelCase for functions, PascalCase for types
+- **Comprehensive TypeScript types** - All exports are fully typed with IntelliSense support
+- **Semantic organization** - Structure mirrors design thinking and usage patterns
 
 ### Development-Friendly Features
-- Extensive JSDoc comments for all major functions
-- Utility functions with clear parameter types
-- Consistent export patterns across all files
-- Built-in color utilities for custom combinations
+- **Extensive JSDoc comments** - All major functions documented with examples
+- **Utility functions with clear types** - `getColorClasses()`, `buildColorClass()` 
+- **Consistent export patterns** - Named exports, aliases, and default export
+- **Built-in color utilities** - Helper functions for dynamic color combinations
+- **Type-safe constants** - All tokens use `as const` for literal types
 
 ### Design System Best Practices
-- Semantic color tokens prevent arbitrary color usage
-- Comprehensive spacing scale ensures visual consistency  
-- Typography system with semantic size/weight combinations
-- Component variants reduce need for custom styling
+- **Semantic color tokens** - Prevent arbitrary color usage with purpose-based naming
+- **Comprehensive spacing scale** - 4px grid system ensures visual consistency  
+- **Typography system** - Semantic size/weight combinations for consistent text
+- **Component variants** - Pre-built styles reduce need for custom CSS
+- **Dark mode support** - All colors have light/dark variants built-in
+
+### AI Development Guidelines
+
+#### When Adding Features
+1. **Check existing patterns first** - Look at similar implementations in the codebase
+2. **Maintain consistency** - Follow established naming and structure conventions
+3. **Add comprehensive tests** - Every new feature needs test coverage
+4. **Update all export points** - Ensure new features are properly exported
+5. **Document with JSDoc** - Add clear documentation with usage examples
+
+#### Code Generation Tips
+- **Use semantic tokens** - Always prefer `colors.semantic.*` over `colors.raw.*`
+- **Leverage existing variants** - Check `variants.ts` before creating new styles
+- **Follow the 4px grid** - All spacing should use `designTokens.spacing.*`
+- **Export consistently** - Add both named export and to default export object
+- **Test immediately** - Run `npm test` after making changes
+
+#### Common Tasks Reference
+```bash
+# Before making changes
+npm run type-check  # Ensure no existing type errors
+
+# After making changes
+npm run build       # Build the library
+npm test           # Run all tests
+npm run lint       # Check for issues
+
+# For development
+npm run dev        # Watch mode for continuous building
+```
+
+#### Error Prevention
+- **Never use magic numbers** - Always use tokens from `designTokens`
+- **Avoid inline styles** - Use variant classes or create new variants
+- **Type everything** - No `any` types, use proper TypeScript types
+- **Test edge cases** - Include tests for undefined, null, empty values
+- **Validate imports** - Ensure all imports resolve correctly
+
+### Performance Optimization
+- **Tree-shakeable exports** - Named exports allow optimal bundling
+- **Minimal dependencies** - Only peer dependencies on clsx and tailwind-merge
+- **Efficient utilities** - Helper functions are optimized for performance
+- **Cached computations** - Complex color combinations are memoizable
+
+### Integration Best Practices
+- **Version management** - Use semantic versioning for all changes
+- **Breaking changes** - Document thoroughly in commit messages
+- **Backward compatibility** - Maintain legacy exports when possible
+- **Clear migration paths** - Provide upgrade guides for breaking changes
