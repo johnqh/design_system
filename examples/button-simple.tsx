@@ -5,9 +5,10 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../lib/utils"
+// Note: cn utility would need to be implemented or imported from a utility library
+// import { cn } from "../lib/utils"
 import { variants as designSystemVariants } from "@johnqh/design-system"
-import { createQuickVariants } from "../lib/simple-variants"
+import { createQuickVariants } from "@johnqh/design-system"
 
 // Create variant resolver once
 const v = createQuickVariants(designSystemVariants);
@@ -55,10 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     
     return (
       <Comp
-        className={cn(
-          buttonVariants({ size, className }),
-          variantClass  // Design system classes
-        )}
+        className={`${buttonVariants({ size, className })} ${variantClass}`.trim()}
         ref={ref}
         {...props}
       />

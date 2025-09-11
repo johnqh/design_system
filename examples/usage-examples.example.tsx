@@ -3,8 +3,9 @@
  * Works with React, React Native, Vue, Vanilla JS, etc.
  */
 
+import React from 'react';
 import { variants as designSystemVariants } from '@johnqh/design-system';
-import { createVariants, createQuickVariants } from './simple-variants';
+import { createVariants, createQuickVariants } from '@johnqh/design-system';
 
 // =============================================================================
 // SETUP (Do this once in your app)
@@ -37,8 +38,8 @@ const dotNotation = v.get('button.primary');       // Easy!
 const gradientButton = v.nested('button.gradient.primary');   // Easy!
 const webThreeButton = v.nested('button.web3.connect');       // Easy!
 
-// ✨ CONDITIONAL VARIANTS
-const errorButton = v.when(hasError, 'button', 'destructive', 'button', 'primary');   // Easy!
+// ✨ CONDITIONAL VARIANTS (hasError would be a variable in your component)
+// const errorButton = v.when(hasError, 'button', 'destructive', 'button', 'primary');   // Easy!
 
 // ✨ COMBINE MULTIPLE
 const complexButton = v.combine('button.primary', 'animations.hover', 'shadow-lg');   // Easy!
@@ -48,7 +49,7 @@ const complexButton = v.combine('button.primary', 'animations.hover', 'shadow-lg
 // =============================================================================
 
 // React Web Button
-function Button({ variant = 'primary', size, children, className, ...props }) {
+function Button({ variant = 'primary', size, children, className, ...props }: any) {
   return (
     <button 
       className={`${v.button(variant, size)} ${className || ''}`}
@@ -60,20 +61,15 @@ function Button({ variant = 'primary', size, children, className, ...props }) {
 }
 
 // React Native Button (just swap className for style)
-function ButtonRN({ variant = 'primary', size, children, style, ...props }) {
+// Note: TouchableOpacity and Text would be imported from 'react-native' in a real RN app
+function ButtonRN({ variant = 'primary', size, children, style, ...props }: any) {
   const variantStyle = v.button(variant, size); // Same API!
-  return (
-    <TouchableOpacity 
-      style={[{ /* convert classes to styles */ }, style]}
-      {...props}
-    >
-      <Text>{children}</Text>
-    </TouchableOpacity>
-  );
+  // In real implementation, you'd convert variantStyle classes to React Native styles
+  return null; // Placeholder for React Native component
 }
 
 // Alert Component
-function Alert({ variant = 'default', children, className }) {
+function Alert({ variant = 'default', children, className }: any) {
   return (
     <div className={`${v.alert(variant)} ${className || ''}`}>
       {children}
@@ -82,7 +78,7 @@ function Alert({ variant = 'default', children, className }) {
 }
 
 // Complex Component with Multiple Variants
-function ComplexCard({ isError, isLoading, priority }) {
+function ComplexCard({ isError, isLoading, priority }: any) {
   const cardClass = v.when(isError, 'card', 'error', 'card', 'default');
   const buttonClass = v.when(isLoading, 'button', 'disabled', 'button', 'primary');
   const badgeClass = v.get('badge', priority); // low, medium, high
@@ -107,7 +103,7 @@ function ComplexCard({ isError, isLoading, priority }) {
 
 // NEW (robust, never breaks)
 const buttonClass2 = v.button('primary');          // ✨ Same result, much safer
-const alertClass2 = v.alert(variant);              // ✨ Same result, much safer
+// const alertClass2 = v.alert(variant);              // ✨ Same result, much safer (variant would be a prop)
 
 // =============================================================================
 // PLATFORM-SPECIFIC ADAPTATIONS
@@ -129,15 +125,12 @@ function classesToStyles(classes: string) {
 }
 
 // React Native with style conversion
-function ButtonRNWithStyles({ variant = 'primary', children, style, ...props }) {
+function ButtonRNWithStyles({ variant = 'primary', children, style, ...props }: any) {
   const variantClasses = v.button(variant);
   const styles = classesToStyles(variantClasses);
   
-  return (
-    <TouchableOpacity style={[...styles, style]} {...props}>
-      <Text>{children}</Text>
-    </TouchableOpacity>
-  );
+  // In real implementation, you'd use TouchableOpacity and Text from react-native
+  return null; // Placeholder for React Native component
 }
 
 // =============================================================================

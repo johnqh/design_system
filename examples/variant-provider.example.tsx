@@ -2,7 +2,7 @@
  * Variant Provider - React Context-based DI for variants
  */
 import React, { createContext, useContext, ReactNode } from 'react';
-import { VariantRegistry, createVariantRegistry, ComponentVariants } from './variant-registry';
+import { VariantRegistry, createVariantRegistry, ComponentVariants } from './variant-registry.example';
 
 // Context for variant registry
 const VariantContext = createContext<VariantRegistry | null>(null);

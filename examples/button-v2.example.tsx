@@ -4,8 +4,9 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../lib/utils"
-import { useVariant, useNestedVariant } from "../lib/variant-provider"
+// Note: cn utility would need to be implemented or imported from a utility library
+// import { cn } from "../lib/utils"
+import { useVariant, useNestedVariant } from "./variant-provider.example"
 
 // Clean, simple variant definitions using the registry
 const buttonVariants = cva(
@@ -58,10 +59,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     
     return (
       <Comp
-        className={cn(
-          buttonVariants({ size, className }),
-          finalVariantClass
-        )}
+        className={`${buttonVariants({ size, className })} ${finalVariantClass}`.trim()}
         ref={ref}
         {...props}
       />

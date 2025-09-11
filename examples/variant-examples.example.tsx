@@ -3,9 +3,9 @@
  */
 import React from 'react';
 import { variants } from '@johnqh/design-system';
-import { VariantProvider, useVariant, useNestedVariant } from './variant-provider';
-import { createVariantBuilder } from './variant-builder';
-import { cn } from './utils';
+import { VariantProvider, useVariant, useNestedVariant } from './variant-provider.example';
+import { createVariantBuilder } from './variant-builder.example';
+// Note: cn utility would need to be implemented or imported from a utility library
 
 // =============================================================================
 // 1. REGISTRY APPROACH - Clean and type-safe
@@ -17,7 +17,7 @@ function ButtonWithRegistry({ variant = 'primary', size = 'default', children, c
   
   return (
     <button 
-      className={cn(variantClass, sizeClass, className)}
+      className={`${variantClass} ${sizeClass} ${className || ''}`.trim()}
       {...props}
     >
       {children}
@@ -38,7 +38,7 @@ function ButtonWithBuilder({ variant = 'primary', size = 'default', children, cl
   
   return (
     <button 
-      className={cn(variantClass, className)}
+      className={`${variantClass} ${className || ''}`.trim()}
       {...props}
     >
       {children}
@@ -63,7 +63,7 @@ function BaseButton({ variant = 'primary', variantRegistry, children, className,
   
   return (
     <button 
-      className={cn(variantClass, className)}
+      className={`${variantClass} ${className || ''}`.trim()}
       {...props}
     >
       {children}

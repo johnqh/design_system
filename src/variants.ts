@@ -9,12 +9,55 @@
 export type VariantFunction = () => string;
 export type VariantWithArgs<T = string> = (variant?: T) => string;
 
-export interface VariantsType {
-  button: {
-    [key: string]: {
-      [key: string]: VariantFunction | VariantWithArgs;
-    } | VariantFunction | VariantWithArgs;
+export interface ButtonVariants {
+  primary: {
+    default: VariantFunction;
+    small: VariantFunction;
+    large: VariantFunction;
+    withIcon: VariantFunction;
+    fullWidth: VariantFunction;
   };
+  secondary: {
+    default: VariantFunction;
+    small: VariantFunction;
+    large: VariantFunction;
+    withIcon: VariantFunction;
+  };
+  outline: {
+    default: VariantFunction;
+    [key: string]: VariantFunction;
+  };
+  destructive: {
+    default: VariantFunction;
+    outline: VariantFunction;
+    [key: string]: VariantFunction;
+  };
+  ghost: {
+    default: VariantFunction;
+    icon: VariantFunction;
+    [key: string]: VariantFunction;
+  };
+  link: {
+    default: VariantFunction;
+    muted: VariantFunction;
+    [key: string]: VariantFunction;
+  };
+  gradient: {
+    primary: VariantFunction;
+    success: VariantFunction;
+    [key: string]: VariantFunction;
+  };
+  web3: {
+    wallet: VariantFunction;
+    connect: VariantFunction;
+    disconnect: VariantFunction;
+    [key: string]: VariantFunction;
+  };
+  [key: string]: any;
+}
+
+export interface VariantsType {
+  button: ButtonVariants;
   card: {
     [key: string]: {
       [key: string]: VariantFunction;
@@ -29,6 +72,11 @@ export interface VariantsType {
   alert: {
     [key: string]: VariantFunction | {
       [key: string]: VariantFunction;
+    };
+  };
+  loading: {
+    [key: string]: {
+      [key: string]: VariantFunction | VariantWithArgs;
     };
   };
   [key: string]: any; // Allow additional properties for extensibility
