@@ -11,15 +11,16 @@ export { textVariants } from './typography';
 export { variants } from './variants';
 export { SimpleVariants, createVariants, createQuickVariants } from './simple-variants';
 export { cn } from './utils';
-export * from './theme-utils';
-export * from './component-helpers';
+export { withOpacity, responsive, themeColor, getSemanticColor, gradient, spacing, animation } from './theme-utils';
+export { sizeClasses, getSizeClasses, focusRing, focusVisible, transitions, hoverState, disabledState, loadingState, buttonVariant, inputVariant, cardVariant, textVariant } from './component-helpers';
 
 // === PURE TYPESCRIPT UTILITIES ===
-export * from './types-ui-navigation';
-export * from './gradients';
-export * from './ui-constants';
-export * from './seo-keywords';
-export * from './structured-data';
+export type { UINavigationService, UINavigationState, UINavigationHook, UILocationHook, UINavigationConfig, UINavigationOptions } from './types-ui-navigation';
+export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './gradients';
+export { UI_CONSTANTS, UI_PATTERNS } from './ui-constants';
+export { BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, DEVELOPER_KEYWORDS, DOCUMENTATION_KEYWORDS, COMPANY_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS, ACCESSIBILITY_KEYWORDS, combineKeywords, getHomePageKeywords, getAboutPageKeywords, getDocumentationKeywords, getUserPageKeywords, getDeveloperPageKeywords, getWeb3ProjectsKeywords, getSubscriptionKeywords, getContactKeywords } from './seo-keywords';
+export type { StructuredData } from './structured-data';
+export { BASE_ORGANIZATION, createSoftwareApplicationData, createWebPageData, createAboutPageData, createTechArticleData } from './structured-data';
 
 // === TYPE EXPORTS ===
 export type { VariantFunction, VariantWithArgs, VariantsType } from './variants';
@@ -174,12 +175,12 @@ const ui = {
 
 export { ui };
 
-// === LEGACY WILDCARD EXPORTS ===
-// For backward compatibility
-export * from './colors';
-export * from './tokens';
-export * from './typography';
-export * from './variants';
+// === LEGACY NAMED EXPORTS ===
+// For backward compatibility - duplicate named exports
+export { colors as colorsLegacy, getColorClasses as getColorClassesLegacy, buildColorClass as buildColorClassLegacy } from './colors';
+export { designTokens as designTokensLegacy } from './tokens';
+export { textVariants as textVariantsLegacy, createTextStyle as createTextStyleLegacy, combineTextStyles as combineTextStylesLegacy, createResponsiveText as createResponsiveTextLegacy } from './typography';
+export { variants as variantsLegacy } from './variants';
 
 // === UTILITY FUNCTIONS ===
 // Re-export utility functions from colors
