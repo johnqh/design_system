@@ -10,10 +10,22 @@ export { designTokens } from './tokens';
 export { textVariants } from './typography';
 export { variants } from './variants';
 export { SimpleVariants, createVariants, createQuickVariants } from './simple-variants';
+export { cn } from './utils';
+export * from './theme-utils';
+export * from './component-helpers';
+
+// === PURE TYPESCRIPT UTILITIES ===
+export * from './types-ui-navigation';
+export * from './gradients';
+export * from './ui-constants';
+export * from './seo-keywords';
+export * from './structured-data';
 
 // === TYPE EXPORTS ===
 export type { VariantFunction, VariantWithArgs, VariantsType } from './variants';
 export type { VariantConfig } from './simple-variants';
+export type { ThemeMode, ResponsiveBreakpoint } from './theme-utils';
+export type { ComponentSize, ComponentVariant } from './component-helpers';
 
 // === ORGANIZED STRUCTURE ALIASES ===
 export { colors as Colors } from './colors';
