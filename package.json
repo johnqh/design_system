@@ -1,5 +1,5 @@
 {
-  "name": "@johnqh/design-system",
+  "name": "@johnqh/design_system",
   "version": "1.0.14",
   "description": "Design system library with tokens, colors, typography and variants",
   "main": "dist/index.umd.js",
