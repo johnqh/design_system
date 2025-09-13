@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { variants } from '../variants'
+import { variants } from '../core/variants'
 
 describe('Component Variants', () => {
   describe('Button Variants', () => {

@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { SimpleVariants, createVariants, createQuickVariants } from '../simple-variants';
+import { SimpleVariants, createVariants, createQuickVariants } from '../core/simple-variants';
 
 // Mock design system variants for testing
 const mockDesignSystemVariants = {

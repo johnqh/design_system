@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { colors, getColorClasses, buildColorClass } from '../colors'
+import { colors, getColorClasses, buildColorClass } from '../tokens/colors'
 
 describe('Colors System', () => {
   describe('Raw Colors', () => {

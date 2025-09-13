@@ -5,7 +5,7 @@
  * and other typography properties into ready-to-use text styles.
  */
 
-import { designTokens } from './tokens';
+import { designTokens } from '../tokens/tokens';
 
 const textVariants = {
   // =============================================================================

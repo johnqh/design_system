@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { textVariants, createTextStyle, combineTextStyles, createResponsiveText } from '../typography'
-import { designTokens } from '../tokens'
+import { textVariants, createTextStyle, combineTextStyles, createResponsiveText } from '../core/typography'
+import { designTokens } from '../tokens/tokens'
 
 describe('Typography System', () => {
   describe('Heading Variants', () => {

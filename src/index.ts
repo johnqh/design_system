@@ -5,34 +5,34 @@
  */
 
 // === PRIMARY EXPORTS ===
-export { colors } from './colors';
-export { designTokens } from './tokens';
-export { textVariants } from './typography';
-export { variants } from './variants';
-export { SimpleVariants, createVariants, createQuickVariants } from './simple-variants';
-export { cn } from './utils';
-export { withOpacity, responsive, themeColor, getSemanticColor, gradient, spacing, animation } from './theme-utils';
-export { sizeClasses, getSizeClasses, focusRing, focusVisible, transitions, hoverState, disabledState, loadingState, buttonVariant, inputVariant, cardVariant, textVariant } from './component-helpers';
+export { colors } from './tokens/colors';
+export { designTokens } from './tokens/tokens';
+export { textVariants } from './core/typography';
+export { variants } from './core/variants';
+export { SimpleVariants, createVariants, createQuickVariants } from './core/simple-variants';
+export { cn } from './utilities/utils';
+export { withOpacity, responsive, themeColor, getSemanticColor, gradient, spacing, animation } from './utilities/theme-utils';
+export { sizeClasses, getSizeClasses, focusRing, focusVisible, transitions, hoverState, disabledState, loadingState, buttonVariant, inputVariant, cardVariant, textVariant } from './utilities/component-helpers';
 
 // === PURE TYPESCRIPT UTILITIES ===
-export type { UINavigationService, UINavigationState, UINavigationHook, UILocationHook, UINavigationConfig, UINavigationOptions } from './types-ui-navigation';
-export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './gradients';
-export { UI_CONSTANTS, UI_PATTERNS } from './ui-constants';
-export { BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, DEVELOPER_KEYWORDS, DOCUMENTATION_KEYWORDS, COMPANY_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS, ACCESSIBILITY_KEYWORDS, combineKeywords, getHomePageKeywords, getAboutPageKeywords, getDocumentationKeywords, getUserPageKeywords, getDeveloperPageKeywords, getWeb3ProjectsKeywords, getSubscriptionKeywords, getContactKeywords } from './seo-keywords';
-export type { StructuredData } from './structured-data';
-export { BASE_ORGANIZATION, createSoftwareApplicationData, createWebPageData, createAboutPageData, createTechArticleData } from './structured-data';
+export type { UINavigationService, UINavigationState, UINavigationHook, UILocationHook, UINavigationConfig, UINavigationOptions } from './types/types-ui-navigation';
+export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './tokens/gradients';
+export { UI_CONSTANTS, UI_PATTERNS } from './utilities/ui-constants';
+export { BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, DEVELOPER_KEYWORDS, DOCUMENTATION_KEYWORDS, COMPANY_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS, ACCESSIBILITY_KEYWORDS, combineKeywords, getHomePageKeywords, getAboutPageKeywords, getDocumentationKeywords, getUserPageKeywords, getDeveloperPageKeywords, getWeb3ProjectsKeywords, getSubscriptionKeywords, getContactKeywords } from './content/seo-keywords';
+export type { StructuredData } from './content/structured-data';
+export { BASE_ORGANIZATION, createSoftwareApplicationData, createWebPageData, createAboutPageData, createTechArticleData } from './content/structured-data';
 
 // === TYPE EXPORTS ===
-export type { VariantFunction, VariantWithArgs, VariantsType } from './variants';
-export type { VariantConfig } from './simple-variants';
-export type { ThemeMode, ResponsiveBreakpoint } from './theme-utils';
-export type { ComponentSize, ComponentVariant } from './component-helpers';
+export type { VariantFunction, VariantWithArgs, VariantsType } from './core/variants';
+export type { VariantConfig } from './core/simple-variants';
+export type { ThemeMode, ResponsiveBreakpoint } from './utilities/theme-utils';
+export type { ComponentSize, ComponentVariant } from './utilities/component-helpers';
 
 // === ORGANIZED STRUCTURE ALIASES ===
-export { colors as Colors } from './colors';
-export { designTokens as Tokens } from './tokens';
-export { textVariants as Typography } from './typography';
-export { variants as Variants } from './variants';
+export { colors as Colors } from './tokens/colors';
+export { designTokens as Tokens } from './tokens/tokens';
+export { textVariants as Typography } from './core/typography';
+export { variants as Variants } from './core/variants';
 
 // === UI UTILITIES ===
 /**
@@ -177,12 +177,12 @@ export { ui };
 
 // === LEGACY NAMED EXPORTS ===
 // For backward compatibility - duplicate named exports
-export { colors as colorsLegacy, getColorClasses as getColorClassesLegacy, buildColorClass as buildColorClassLegacy } from './colors';
-export { designTokens as designTokensLegacy } from './tokens';
-export { textVariants as textVariantsLegacy, createTextStyle as createTextStyleLegacy, combineTextStyles as combineTextStylesLegacy, createResponsiveText as createResponsiveTextLegacy } from './typography';
-export { variants as variantsLegacy } from './variants';
+export { colors as colorsLegacy, getColorClasses as getColorClassesLegacy, buildColorClass as buildColorClassLegacy } from './tokens/colors';
+export { designTokens as designTokensLegacy } from './tokens/tokens';
+export { textVariants as textVariantsLegacy, createTextStyle as createTextStyleLegacy, combineTextStyles as combineTextStylesLegacy, createResponsiveText as createResponsiveTextLegacy } from './core/typography';
+export { variants as variantsLegacy } from './core/variants';
 
 // === UTILITY FUNCTIONS ===
 // Re-export utility functions from colors
-export { getColorClasses, buildColorClass } from './colors';
-export { createTextStyle, combineTextStyles, createResponsiveText } from './typography';
+export { getColorClasses, buildColorClass } from './tokens/colors';
+export { createTextStyle, combineTextStyles, createResponsiveText } from './core/typography';
