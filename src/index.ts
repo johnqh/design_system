@@ -15,8 +15,6 @@ export { withOpacity, responsive, themeColor, getSemanticColor, gradient, spacin
 export { sizeClasses, getSizeClasses, focusRing, focusVisible, transitions, hoverState, disabledState, loadingState, buttonVariant, inputVariant, cardVariant, textVariant } from './utilities/component-helpers';
 
 // === PURE TYPESCRIPT UTILITIES ===
-// UI Navigation types are now exported from @johnqh/types
-export type { UINavigationService, UINavigationState, UINavigationHook, UILocationHook, UINavigationConfig, UINavigationOptions } from '@johnqh/types';
 export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './tokens/gradients';
 export { UI_CONSTANTS, UI_PATTERNS } from './utilities/ui-constants';
 export { BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, DEVELOPER_KEYWORDS, DOCUMENTATION_KEYWORDS, COMPANY_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS, ACCESSIBILITY_KEYWORDS, combineKeywords, getHomePageKeywords, getAboutPageKeywords, getDocumentationKeywords, getUserPageKeywords, getDeveloperPageKeywords, getWeb3ProjectsKeywords, getSubscriptionKeywords, getContactKeywords } from './content/seo-keywords';
