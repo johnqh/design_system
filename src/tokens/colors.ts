@@ -12,6 +12,17 @@
  * className={colors.button.primary}
  */
 
+// Type definitions for color variants
+interface ColorVariant {
+  base?: string;
+  dark?: string;
+  focus?: string;
+  hover?: string;
+  disabled?: string;
+  active?: string;
+  [key: string]: string | undefined;
+}
+
 // =============================================================================
 // RAW COLOR PALETTE
 // =============================================================================
@@ -719,7 +730,7 @@ const getColorClasses = (
   states: ('focus' | 'hover' | 'disabled' | 'active')[] = ['focus']
 ): string => {
   const componentColorSet = componentColors[component] as Record<string, unknown>;
-  const variantColors = componentColorSet[variant];
+  const variantColors = componentColorSet[variant] as ColorVariant;
   
   if (!variantColors) {
     console.warn(`Color variant '${variant}' not found for component '${component}'`);
@@ -727,9 +738,9 @@ const getColorClasses = (
   }
 
   const classes = [
-    (variantColors as any).base,
-    (variantColors as any).dark,
-    ...states.map(state => (variantColors as any)[state]).filter(Boolean)
+    variantColors.base,
+    variantColors.dark,
+    ...states.map(state => variantColors[state]).filter(Boolean)
   ];
 
   return classes.join(' ');

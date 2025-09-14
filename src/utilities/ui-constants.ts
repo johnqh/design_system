@@ -126,17 +126,18 @@ export const UI_PATTERNS = {
  */
 export const getUIConstant = (path: string): string => {
   const keys = path.split('.');
-  let current: any = UI_CONSTANTS;
+  let current: unknown = UI_CONSTANTS;
   
   for (const key of keys) {
-    current = current[key];
-    if (current === undefined) {
+    if (typeof current === 'object' && current !== null && key in current) {
+      current = (current as Record<string, unknown>)[key];
+    } else {
       console.warn(`UI constant not found: ${path}`);
       return '';
     }
   }
   
-  return current;
+  return typeof current === 'string' ? current : String(current);
 };
 
 /**

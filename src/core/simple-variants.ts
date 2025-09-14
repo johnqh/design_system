@@ -9,19 +9,15 @@ export interface VariantFunction {
 }
 
 export interface VariantConfig {
-  [componentName: string]: {
-    [variantName: string]: VariantFunction | string | {
-      [sizeName: string]: VariantFunction | string;
-    };
-  };
+  [componentName: string]: any;
 }
 
 // Platform-agnostic variant resolver
 export class SimpleVariants {
-  private variants: any;
+  private variants: VariantConfig;
   private fallbacks: Map<string, string> = new Map();
 
-  constructor(designSystemVariants: any) {
+  constructor(designSystemVariants: VariantConfig) {
     this.variants = designSystemVariants;
     this.setupDefaultFallbacks();
   }
@@ -206,14 +202,14 @@ export class SimpleVariants {
 /**
  * Create variant resolver instance
  */
-export function createVariants(designSystemVariants: any): SimpleVariants {
+export function createVariants(designSystemVariants: VariantConfig): SimpleVariants {
   return new SimpleVariants(designSystemVariants);
 }
 
 /**
  * Utility function for quick variant access
  */
-export function createQuickVariants(designSystemVariants: any) {
+export function createQuickVariants(designSystemVariants: VariantConfig) {
   const resolver = new SimpleVariants(designSystemVariants);
   
   return {

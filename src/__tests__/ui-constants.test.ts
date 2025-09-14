@@ -73,7 +73,7 @@ describe('ui-constants', () => {
 
     it('should retrieve animation constants', () => {
       const result = getUIConstant('animation.fast')
-      expect(result).toBe(UI_CONSTANTS.animation.fast)
+      expect(result).toBe(String(UI_CONSTANTS.animation.fast))
     })
 
     it('should return empty string for invalid path', () => {
