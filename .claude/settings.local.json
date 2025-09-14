@@ -27,7 +27,9 @@
       "Bash(git commit:*)",
       "Bash(npm run test:coverage:*)",
       "Bash(git push:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm update:*)"
     ],
     "deny": [],
     "ask": []
