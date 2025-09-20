@@ -53,6 +53,7 @@ export interface ButtonVariants {
     disconnect: VariantFunction;
     [key: string]: VariantFunction;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -79,6 +80,7 @@ export interface VariantsType {
       [key: string]: VariantFunction | VariantWithArgs;
     };
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any; // Allow additional properties for extensibility
 }
 

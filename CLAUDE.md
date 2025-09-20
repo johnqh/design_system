@@ -176,7 +176,14 @@ const container = ui.layout.container;
 - **Component variants** - Pre-built styles reduce need for custom CSS
 - **Dark mode support** - All colors have light/dark variants built-in
 
-### AI Development Guidelines
+### AI-Assisted Development Guidelines
+
+#### Core Principles for AI Development
+1. **Semantic Understanding** - The design system uses semantic naming to help AI understand intent
+2. **Type Safety First** - Comprehensive TypeScript types enable better AI code generation
+3. **Pattern Recognition** - Consistent patterns help AI learn and replicate design decisions
+4. **Error Context** - Structured error messages provide AI with debugging context
+5. **Documentation-Driven** - Rich JSDoc comments enable AI to understand usage patterns
 
 #### When Adding Features
 1. **Check existing patterns first** - Look at similar implementations in the codebase
@@ -185,33 +192,159 @@ const container = ui.layout.container;
 4. **Update all export points** - Ensure new features are properly exported
 5. **Document with JSDoc** - Add clear documentation with usage examples
 
-#### Code Generation Tips
+#### AI-Friendly Code Generation Patterns
+
+##### Using Semantic Helpers
+```typescript
+// AI can easily understand semantic intent
+import { getSemanticColor, applyUIPattern, createComponentWithIntent } from '@johnqh/design-system';
+
+// Clear semantic mapping
+const errorMessage = getSemanticColor('error');
+const successButton = getSemanticColor('success');
+
+// Descriptive UI patterns
+const centeredLayout = applyUIPattern('centeredContainer');
+const clickableCard = applyUIPattern('clickable', 'bg-white rounded-lg');
+
+// Intent-based component creation
+const primaryButton = createComponentWithIntent({
+  intent: 'primary',
+  size: 'md',
+  pattern: 'clickable',
+  additional: 'rounded-md font-medium'
+});
+```
+
+##### Type-Safe Variant Usage
+```typescript
+// AI can leverage TypeScript intellisense
+import { createVariants, type TypedVariantConfig } from '@johnqh/design-system';
+
+// Structured variant configuration
+const config: TypedVariantConfig = {
+  button: {
+    primary: () => 'bg-blue-600 text-white px-4 py-2 rounded',
+    secondary: () => 'bg-gray-200 text-gray-900 px-4 py-2 rounded'
+  }
+};
+
+const variants = createVariants(config);
+```
+
+##### Safe Variant Resolution
+```typescript
+// AI can handle errors gracefully
+import { safeResolveVariant, validateVariantConfig } from '@johnqh/design-system';
+
+// Validate configuration
+const validation = validateVariantConfig(config, {
+  requireDefault: true,
+  checkTypes: true
+});
+
+if (!validation.isValid) {
+  console.log('Configuration issues:', validation.errors);
+  console.log('Suggestions:', validation.suggestions);
+}
+
+// Safe resolution with detailed feedback
+const result = safeResolveVariant(config, 'button', 'primary', {
+  strict: false,
+  logWarnings: true
+});
+
+console.log('Classes:', result.classes);
+console.log('Used fallback:', result.usedFallback);
+console.log('Warnings:', result.warnings);
+```
+
+#### AI Code Generation Tips
 - **Use semantic tokens** - Always prefer `colors.semantic.*` over `colors.raw.*`
 - **Leverage existing variants** - Check `variants.ts` before creating new styles
 - **Follow the 4px grid** - All spacing should use `designTokens.spacing.*`
 - **Export consistently** - Add both named export and to default export object
 - **Test immediately** - Run `npm test` after making changes
+- **Use AI helpers** - Leverage `ai-helpers.ts` utilities for better code generation
+- **Validate early** - Use validation functions to catch issues during development
 
-#### Common Tasks Reference
-```bash
-# Before making changes
-npm run type-check  # Ensure no existing type errors
-
-# After making changes
-npm run build       # Build the library
-npm test           # Run all tests
-npm run lint       # Check for issues
-
-# For development
-npm run dev        # Watch mode for continuous building
+#### Structured Error Handling for AI
+```typescript
+// The design system provides structured errors for better AI understanding
+try {
+  const classes = variants.get('nonexistent', 'variant');
+} catch (error) {
+  // Structured errors include:
+  // - Error codes for categorization
+  // - Context for debugging
+  // - Suggestions for fixes
+  // - Available alternatives
+}
 ```
 
-#### Error Prevention
+#### AI-Optimized Development Workflow
+```bash
+# 1. Validate types before starting
+npm run type-check
+
+# 2. Use development mode for real-time feedback
+npm run dev
+
+# 3. Run tests continuously during development
+npm test -- --watch
+
+# 4. Validate your changes
+npm run build && npm test && npm run lint
+
+# 5. Analyze variant usage for optimization
+node -e "
+  const { analyzeVariantUsage } = require('./dist/index.esm.js');
+  const analysis = analyzeVariantUsage(yourConfig);
+  console.log('Analysis:', analysis);
+"
+```
+
+#### AI Debugging and Optimization
+
+##### Configuration Analysis
+```typescript
+// AI can analyze and optimize variant configurations
+import { analyzeVariantUsage, getVariantSuggestions } from '@johnqh/design-system';
+
+const analysis = analyzeVariantUsage(config);
+console.log('Component count:', analysis.componentCount);
+console.log('Missing defaults:', analysis.missingDefaults);
+console.log('Optimization suggestions:', analysis.optimizationSuggestions);
+
+// Get intelligent suggestions
+const suggestions = getVariantSuggestions(config, 'button', 'pri');
+console.log('Autocomplete suggestions:', suggestions); // ['primary']
+```
+
+##### Pattern Recognition
+```typescript
+// AI can identify and suggest common patterns
+const patterns = UI_PATTERNS;
+console.log('Available patterns:', Object.keys(patterns));
+
+// AI can understand size scales
+const sizes = SIZE_SCALES;
+console.log('Size options:', Object.keys(sizes));
+
+// AI can map semantic colors
+const semantics = SEMANTIC_COLOR_MAP;
+console.log('Semantic intents:', Object.keys(semantics));
+```
+
+#### Error Prevention with AI Assistance
 - **Never use magic numbers** - Always use tokens from `designTokens`
 - **Avoid inline styles** - Use variant classes or create new variants
-- **Type everything** - No `any` types, use proper TypeScript types
+- **Type everything** - Leverage the enhanced TypeScript types
 - **Test edge cases** - Include tests for undefined, null, empty values
 - **Validate imports** - Ensure all imports resolve correctly
+- **Use validation helpers** - Leverage `validateVariantConfig` for early error detection
+- **Follow semantic naming** - Use intent-based naming for better AI understanding
+- **Structure errors** - Use the structured error system for better debugging
 
 ### Performance Optimization
 - **Tree-shakeable exports** - Named exports allow optimal bundling

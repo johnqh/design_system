@@ -11,12 +11,12 @@ export { textVariants } from './core/typography';
 export { variants } from './core/variants';
 export { SimpleVariants, createVariants, createQuickVariants } from './core/simple-variants';
 export { cn } from './utilities/utils';
-export { withOpacity, responsive, themeColor, getSemanticColor, gradient, spacing, animation } from './utilities/theme-utils';
+export { withOpacity, responsive, themeColor, getSemanticColor as getThemeSemanticColor, gradient, spacing, animation } from './utilities/theme-utils';
 export { sizeClasses, getSizeClasses, focusRing, focusVisible, transitions, hoverState, disabledState, loadingState, buttonVariant, inputVariant, cardVariant, textVariant } from './utilities/component-helpers';
 
 // === PURE TYPESCRIPT UTILITIES ===
 export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './tokens/gradients';
-export { UI_CONSTANTS, UI_PATTERNS } from './utilities/ui-constants';
+export { UI_CONSTANTS, UI_PATTERNS as UI_CONSTANTS_PATTERNS } from './utilities/ui-constants';
 export { BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, DEVELOPER_KEYWORDS, DOCUMENTATION_KEYWORDS, COMPANY_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS, ACCESSIBILITY_KEYWORDS, combineKeywords, getHomePageKeywords, getAboutPageKeywords, getDocumentationKeywords, getUserPageKeywords, getDeveloperPageKeywords, getWeb3ProjectsKeywords, getSubscriptionKeywords, getContactKeywords } from './content/seo-keywords';
 export type { StructuredData } from './content/structured-data';
 export { BASE_ORGANIZATION, createSoftwareApplicationData, createWebPageData, createAboutPageData, createTechArticleData } from './content/structured-data';
@@ -26,6 +26,24 @@ export type { VariantFunction, VariantWithArgs, VariantsType } from './core/vari
 export type { VariantConfig } from './core/simple-variants';
 export type { ThemeMode, ResponsiveBreakpoint } from './utilities/theme-utils';
 export type { ComponentSize, ComponentVariant } from './utilities/component-helpers';
+
+// === ENHANCED TYPE EXPORTS ===
+export type {
+  TypedVariantConfig,
+  TypedVariantsType,
+  TypedButtonVariants,
+  TypedCardVariants,
+  TypedBadgeVariants,
+  TypedInputVariants,
+  TypedAlertVariants,
+  VariantValue,
+  NestedVariant,
+  ComponentNames,
+  VariantNames,
+  TypedVariantGetter,
+  VariantResolutionOptions,
+  VariantResolutionResult,
+} from './types/variant-types';
 
 // === ORGANIZED STRUCTURE ALIASES ===
 export { colors as Colors } from './tokens/colors';
@@ -185,3 +203,18 @@ export { variants as variantsLegacy } from './core/variants';
 // Re-export utility functions from colors
 export { getColorClasses, buildColorClass } from './tokens/colors';
 export { createTextStyle, combineTextStyles, createResponsiveText } from './core/typography';
+
+// === AI-FRIENDLY HELPERS ===
+export {
+  SEMANTIC_COLOR_MAP,
+  UI_PATTERNS,
+  SIZE_SCALES,
+  getSemanticColor,
+  applyUIPattern,
+  createSizedComponent,
+  createComponentWithIntent,
+  validateVariantConfig,
+  safeResolveVariant,
+  getVariantSuggestions,
+  analyzeVariantUsage,
+} from './utilities/ai-helpers';
