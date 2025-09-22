@@ -212,7 +212,7 @@ export type ComponentNames<T extends TypedVariantConfig> = keyof T;
 export type VariantNames<
   T extends TypedVariantConfig,
   C extends ComponentNames<T>
-> = T[C] extends Record<string, any> ? keyof T[C] : never;
+> = T[C] extends Record<string, unknown> ? keyof T[C] : never;
 
 /**
  * Type-safe variant getter function signature.
