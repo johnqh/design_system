@@ -1,6 +1,6 @@
 /**
  * Design System Exports
- * 
+ *
  * Main export file for all design system components, tokens, and utilities.
  */
 
@@ -11,15 +11,60 @@ export { textVariants } from './core/typography';
 export { variants } from './core/variants';
 export { SimpleVariants, createVariants, createQuickVariants } from './core/simple-variants';
 export { cn } from './utilities/utils';
-export { withOpacity, responsive, themeColor, getSemanticColor as getThemeSemanticColor, gradient, spacing, animation } from './utilities/theme-utils';
-export { sizeClasses, getSizeClasses, focusRing, focusVisible, transitions, hoverState, disabledState, loadingState, buttonVariant, inputVariant, cardVariant, textVariant } from './utilities/component-helpers';
+export {
+  withOpacity,
+  responsive,
+  themeColor,
+  getSemanticColor as getThemeSemanticColor,
+  gradient,
+  spacing,
+  animation,
+} from './utilities/theme-utils';
+export {
+  sizeClasses,
+  getSizeClasses,
+  focusRing,
+  focusVisible,
+  transitions,
+  hoverState,
+  disabledState,
+  loadingState,
+  buttonVariant,
+  inputVariant,
+  cardVariant,
+  textVariant,
+} from './utilities/component-helpers';
 
 // === PURE TYPESCRIPT UTILITIES ===
 export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './tokens/gradients';
 export { UI_CONSTANTS, UI_PATTERNS as UI_CONSTANTS_PATTERNS } from './utilities/ui-constants';
-export { BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, DEVELOPER_KEYWORDS, DOCUMENTATION_KEYWORDS, COMPANY_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS, ACCESSIBILITY_KEYWORDS, combineKeywords, getHomePageKeywords, getAboutPageKeywords, getDocumentationKeywords, getUserPageKeywords, getDeveloperPageKeywords, getWeb3ProjectsKeywords, getSubscriptionKeywords, getContactKeywords } from './content/seo-keywords';
+export {
+  BASE_KEYWORDS,
+  USER_FOCUSED_KEYWORDS,
+  DEVELOPER_KEYWORDS,
+  DOCUMENTATION_KEYWORDS,
+  COMPANY_KEYWORDS,
+  WEB3_TRENDING_KEYWORDS,
+  TECHNICAL_SEO_KEYWORDS,
+  ACCESSIBILITY_KEYWORDS,
+  combineKeywords,
+  getHomePageKeywords,
+  getAboutPageKeywords,
+  getDocumentationKeywords,
+  getUserPageKeywords,
+  getDeveloperPageKeywords,
+  getWeb3ProjectsKeywords,
+  getSubscriptionKeywords,
+  getContactKeywords,
+} from './content/seo-keywords';
 export type { StructuredData } from './content/structured-data';
-export { BASE_ORGANIZATION, createSoftwareApplicationData, createWebPageData, createAboutPageData, createTechArticleData } from './content/structured-data';
+export {
+  BASE_ORGANIZATION,
+  createSoftwareApplicationData,
+  createWebPageData,
+  createAboutPageData,
+  createTechArticleData,
+} from './content/structured-data';
 
 // === TYPE EXPORTS ===
 export type { VariantFunction, VariantWithArgs, VariantsType } from './core/variants';
@@ -120,45 +165,49 @@ const ui = {
     h4: 'text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight tracking-tight',
     h5: 'text-base sm:text-lg font-semibold text-gray-900 dark:text-white leading-tight tracking-tight',
     h6: 'text-base font-semibold text-gray-900 dark:text-white leading-tight tracking-tight',
-    
+
     // Display headings
-    display: 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-gray-900 dark:text-white leading-none tracking-tight',
+    display:
+      'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-gray-900 dark:text-white leading-none tracking-tight',
     hero: 'text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-gray-900 dark:text-white leading-none tracking-tight',
-    
+
     // Body text
     body: 'text-base font-normal text-gray-700 dark:text-gray-300 leading-relaxed',
     bodyLarge: 'text-lg font-normal text-gray-700 dark:text-gray-300 leading-relaxed',
     bodySmall: 'text-sm font-normal text-gray-600 dark:text-gray-400 leading-relaxed',
-    
+
     // Lead text (introductory paragraphs)
     lead: 'text-xl font-normal text-gray-700 dark:text-gray-300 leading-relaxed',
     leadLarge: 'text-2xl font-normal text-gray-700 dark:text-gray-300 leading-relaxed',
-    
+
     // Specialized text
     caption: 'text-sm font-normal text-gray-500 dark:text-gray-500 leading-normal',
     label: 'text-sm font-medium text-gray-700 dark:text-gray-300',
     helper: 'text-sm font-normal text-gray-500 dark:text-gray-500',
-    
+
     // Links
     link: 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 decoration-blue-600 dark:decoration-blue-400 transition-colors duration-150',
-    linkSubtle: 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 no-underline hover:underline hover:underline-offset-2 transition-all duration-150',
-    linkMuted: 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline underline-offset-2 decoration-gray-400 hover:decoration-gray-600 transition-colors duration-150',
-    
+    linkSubtle:
+      'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 no-underline hover:underline hover:underline-offset-2 transition-all duration-150',
+    linkMuted:
+      'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline underline-offset-2 decoration-gray-400 hover:decoration-gray-600 transition-colors duration-150',
+
     // Code text
     code: 'font-mono text-sm font-medium text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded',
-    codeBlock: 'font-mono text-sm font-normal text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto leading-relaxed',
-    
+    codeBlock:
+      'font-mono text-sm font-normal text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto leading-relaxed',
+
     // Status text
     success: 'text-green-700 dark:text-green-300 font-medium',
     warning: 'text-amber-700 dark:text-amber-300 font-medium',
     error: 'text-red-700 dark:text-red-300 font-medium',
     info: 'text-blue-700 dark:text-blue-300 font-medium',
-    
+
     // Emphasis variants
     emphasis: 'font-medium text-gray-900 dark:text-gray-100',
     strong: 'font-semibold text-gray-900 dark:text-gray-100',
     muted: 'text-gray-500 dark:text-gray-500',
-    
+
     // Uppercase labels
     uppercase: 'text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider',
   },
@@ -182,10 +231,12 @@ const ui = {
 
   // Web3 specific utilities
   web3: {
-    walletButton: 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium',
-    chainBadge: (chain: 'ethereum' | 'solana') => chain === 'ethereum' 
-      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
-      : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+    walletButton:
+      'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium',
+    chainBadge: (chain: 'ethereum' | 'solana') =>
+      chain === 'ethereum'
+        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
+        : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
     addressText: 'font-mono text-sm text-gray-600 dark:text-gray-400',
   },
 } as const;
@@ -194,9 +245,18 @@ export { ui };
 
 // === LEGACY NAMED EXPORTS ===
 // For backward compatibility - duplicate named exports
-export { colors as colorsLegacy, getColorClasses as getColorClassesLegacy, buildColorClass as buildColorClassLegacy } from './tokens/colors';
+export {
+  colors as colorsLegacy,
+  getColorClasses as getColorClassesLegacy,
+  buildColorClass as buildColorClassLegacy,
+} from './tokens/colors';
 export { designTokens as designTokensLegacy } from './tokens/tokens';
-export { textVariants as textVariantsLegacy, createTextStyle as createTextStyleLegacy, combineTextStyles as combineTextStylesLegacy, createResponsiveText as createResponsiveTextLegacy } from './core/typography';
+export {
+  textVariants as textVariantsLegacy,
+  createTextStyle as createTextStyleLegacy,
+  combineTextStyles as combineTextStylesLegacy,
+  createResponsiveText as createResponsiveTextLegacy,
+} from './core/typography';
 export { variants as variantsLegacy } from './core/variants';
 
 // === UTILITY FUNCTIONS ===

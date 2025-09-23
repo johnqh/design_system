@@ -15,19 +15,19 @@ const mockDesignSystemVariants = {
     destructive: () => 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700',
     gradient: {
       primary: () => 'bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded',
-      secondary: () => 'bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2 rounded'
-    }
+      secondary: () => 'bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2 rounded',
+    },
   },
   alert: {
     info: () => 'bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded',
     success: () => 'bg-green-50 border border-green-200 text-green-800 p-4 rounded',
     warning: () => 'bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded',
     error: () => 'bg-red-50 border border-red-200 text-red-800 p-4 rounded',
-    destructive: () => 'bg-red-50 border border-red-200 text-red-800 p-4 rounded'
+    destructive: () => 'bg-red-50 border border-red-200 text-red-800 p-4 rounded',
   },
   input: {
-    default: () => 'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500'
-  }
+    default: () => 'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500',
+  },
 };
 
 // Separate mock for sized variants to test sizing functionality
@@ -36,9 +36,9 @@ const mockSizedVariants = {
     primary: {
       sm: () => 'bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700',
       lg: () => 'bg-blue-600 text-white px-6 py-3 text-lg rounded hover:bg-blue-700',
-      default: () => 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
-    }
-  }
+      default: () => 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+    },
+  },
 };
 
 describe('SimpleVariants Class', () => {
@@ -50,18 +50,30 @@ describe('SimpleVariants Class', () => {
 
   describe('Basic Variant Access', () => {
     it('should get basic variant classes', () => {
-      expect(variants.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
-      expect(variants.get('alert', 'success')).toBe('bg-green-50 border border-green-200 text-green-800 p-4 rounded');
-      expect(variants.get('input', 'default')).toBe('border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500');
+      expect(variants.get('button', 'primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
+      expect(variants.get('alert', 'success')).toBe(
+        'bg-green-50 border border-green-200 text-green-800 p-4 rounded'
+      );
+      expect(variants.get('input', 'default')).toBe(
+        'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500'
+      );
     });
 
     it('should handle dot notation', () => {
-      expect(variants.get('button.primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
-      expect(variants.get('alert.success')).toBe('bg-green-50 border border-green-200 text-green-800 p-4 rounded');
+      expect(variants.get('button.primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
+      expect(variants.get('alert.success')).toBe(
+        'bg-green-50 border border-green-200 text-green-800 p-4 rounded'
+      );
     });
 
     it('should default to "default" variant when no variant specified', () => {
-      expect(variants.get('input')).toBe('border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500');
+      expect(variants.get('input')).toBe(
+        'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500'
+      );
     });
 
     it('should return fallback for missing components', () => {
@@ -82,12 +94,18 @@ describe('SimpleVariants Class', () => {
     });
 
     it('should get sized variants', () => {
-      expect(sizedVariants.sized('button', 'primary', 'sm')).toBe('bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700');
-      expect(sizedVariants.sized('button', 'primary', 'lg')).toBe('bg-blue-600 text-white px-6 py-3 text-lg rounded hover:bg-blue-700');
+      expect(sizedVariants.sized('button', 'primary', 'sm')).toBe(
+        'bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700'
+      );
+      expect(sizedVariants.sized('button', 'primary', 'lg')).toBe(
+        'bg-blue-600 text-white px-6 py-3 text-lg rounded hover:bg-blue-700'
+      );
     });
 
     it('should fallback to base variant for missing sizes', () => {
-      expect(sizedVariants.sized('button', 'primary', 'missing-size')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
+      expect(sizedVariants.sized('button', 'primary', 'missing-size')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
     });
 
     it('should handle missing component in sized', () => {
@@ -97,8 +115,12 @@ describe('SimpleVariants Class', () => {
 
   describe('Nested Variants', () => {
     it('should get nested variant paths', () => {
-      expect(variants.nested('button.gradient.primary')).toBe('bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded');
-      expect(variants.nested('button.gradient.secondary')).toBe('bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2 rounded');
+      expect(variants.nested('button.gradient.primary')).toBe(
+        'bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded'
+      );
+      expect(variants.nested('button.gradient.secondary')).toBe(
+        'bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2 rounded'
+      );
     });
 
     it('should return fallback for missing nested paths', () => {
@@ -111,10 +133,10 @@ describe('SimpleVariants Class', () => {
         button: {
           web3: {
             connect: {
-              default: () => 'web3-connect-styles'
-            }
-          }
-        }
+              default: () => 'web3-connect-styles',
+            },
+          },
+        },
       };
       const deepResolver = new SimpleVariants(deepVariants);
       expect(deepResolver.nested('button.web3.connect.default')).toBe('web3-connect-styles');
@@ -123,13 +145,15 @@ describe('SimpleVariants Class', () => {
 
   describe('Conditional Variants', () => {
     it('should return true variant when condition is true', () => {
-      expect(variants.when(true, 'button', 'primary', 'button', 'secondary'))
-        .toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
+      expect(variants.when(true, 'button', 'primary', 'button', 'secondary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
     });
 
     it('should return false variant when condition is false', () => {
-      expect(variants.when(false, 'button', 'primary', 'button', 'secondary'))
-        .toBe('bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-300');
+      expect(variants.when(false, 'button', 'primary', 'button', 'secondary')).toBe(
+        'bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-300'
+      );
     });
 
     it('should return empty string when condition is false and no false variant provided', () => {
@@ -150,8 +174,9 @@ describe('SimpleVariants Class', () => {
     });
 
     it('should filter out empty variants', () => {
-      expect(variants.combine('button.primary', 'missing.variant', 'custom-class'))
-        .toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 custom-class');
+      expect(variants.combine('button.primary', 'missing.variant', 'custom-class')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 custom-class'
+      );
     });
   });
 
@@ -164,8 +189,10 @@ describe('SimpleVariants Class', () => {
     it('should override default fallbacks', () => {
       variants.addFallback('button.primary', 'overridden-primary-styles');
       // Should still use design system variant, not fallback
-      expect(variants.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
-      
+      expect(variants.get('button', 'primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
+
       // But fallback should be used for missing components
       const emptyVariants = new SimpleVariants({});
       emptyVariants.addFallback('button.primary', 'overridden-primary-styles');
@@ -174,8 +201,12 @@ describe('SimpleVariants Class', () => {
 
     it('should have default fallbacks', () => {
       const emptyVariants = new SimpleVariants({});
-      expect(emptyVariants.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded');
-      expect(emptyVariants.get('alert', 'destructive')).toBe('bg-red-50 border border-red-200 text-red-800 p-4 rounded');
+      expect(emptyVariants.get('button', 'primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded'
+      );
+      expect(emptyVariants.get('alert', 'destructive')).toBe(
+        'bg-red-50 border border-red-200 text-red-800 p-4 rounded'
+      );
     });
   });
 
@@ -191,7 +222,9 @@ describe('SimpleVariants Class', () => {
     it('should handle null/undefined design system gracefully', () => {
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const nullVariants = new SimpleVariants(null);
-      expect(nullVariants.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded');
+      expect(nullVariants.get('button', 'primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded'
+      );
       consoleSpy.mockRestore();
     });
 
@@ -200,13 +233,15 @@ describe('SimpleVariants Class', () => {
         button: {
           primary: null,
           secondary: undefined,
-          tertiary: 'not-a-function'
-        }
+          tertiary: 'not-a-function',
+        },
       };
       const resolver = new SimpleVariants(malformedVariants);
-      
+
       expect(resolver.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded');
-      expect(resolver.get('button', 'secondary')).toBe('bg-gray-200 text-gray-900 px-4 py-2 rounded');
+      expect(resolver.get('button', 'secondary')).toBe(
+        'bg-gray-200 text-gray-900 px-4 py-2 rounded'
+      );
       expect(resolver.get('button', 'tertiary')).toBe('not-a-function');
     });
 
@@ -214,11 +249,13 @@ describe('SimpleVariants Class', () => {
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const errorVariants = {
         button: {
-          error: () => { throw new Error('Variant error'); }
-        }
+          error: () => {
+            throw new Error('Variant error');
+          },
+        },
       };
       const resolver = new SimpleVariants(errorVariants);
-      
+
       // Should fallback gracefully when variant function throws
       expect(resolver.get('button', 'error')).toBe('');
       consoleSpy.mockRestore();
@@ -232,12 +269,12 @@ describe('SimpleVariants Class', () => {
           primary: 'bg-blue-600 text-white',
           secondary: {
             default: 'bg-gray-200 text-gray-900',
-            sm: 'bg-gray-200 text-gray-900 text-sm'
-          }
-        }
+            sm: 'bg-gray-200 text-gray-900 text-sm',
+          },
+        },
       };
       const resolver = new SimpleVariants(stringVariants);
-      
+
       expect(resolver.get('button', 'primary')).toBe('bg-blue-600 text-white');
       expect(resolver.get('button', 'secondary')).toBe('bg-gray-200 text-gray-900');
       expect(resolver.sized('button', 'secondary', 'sm')).toBe('bg-gray-200 text-gray-900 text-sm');
@@ -250,7 +287,9 @@ describe('Factory Functions', () => {
     it('should create SimpleVariants instance', () => {
       const resolver = createVariants(mockDesignSystemVariants);
       expect(resolver).toBeInstanceOf(SimpleVariants);
-      expect(resolver.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
+      expect(resolver.get('button', 'primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
     });
   });
 
@@ -269,35 +308,54 @@ describe('Factory Functions', () => {
     });
 
     it('should have button helper', () => {
-      expect(quickVariants.button('primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
-      expect(quickVariants.button('secondary')).toBe('bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-300');
+      expect(quickVariants.button('primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
+      expect(quickVariants.button('secondary')).toBe(
+        'bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-300'
+      );
     });
 
     it('should have alert helper', () => {
-      expect(quickVariants.alert('success')).toBe('bg-green-50 border border-green-200 text-green-800 p-4 rounded');
-      expect(quickVariants.alert('error')).toBe('bg-red-50 border border-red-200 text-red-800 p-4 rounded');
+      expect(quickVariants.alert('success')).toBe(
+        'bg-green-50 border border-green-200 text-green-800 p-4 rounded'
+      );
+      expect(quickVariants.alert('error')).toBe(
+        'bg-red-50 border border-red-200 text-red-800 p-4 rounded'
+      );
     });
 
     it('should have input helper', () => {
-      expect(quickVariants.input('default')).toBe('border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500');
+      expect(quickVariants.input('default')).toBe(
+        'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500'
+      );
     });
 
     it('should have badge helper with fallback', () => {
-      expect(quickVariants.badge('default')).toBe('bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm');
+      expect(quickVariants.badge('default')).toBe(
+        'bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm'
+      );
     });
 
     it('should have generic get method', () => {
-      expect(quickVariants.get('button', 'primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
-      expect(quickVariants.get('button.primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
+      expect(quickVariants.get('button', 'primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
+      expect(quickVariants.get('button.primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
     });
 
     it('should have nested method', () => {
-      expect(quickVariants.nested('button.gradient.primary')).toBe('bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded');
+      expect(quickVariants.nested('button.gradient.primary')).toBe(
+        'bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded'
+      );
     });
 
     it('should have when method', () => {
-      expect(quickVariants.when(true, 'button', 'primary', 'button', 'secondary'))
-        .toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
+      expect(quickVariants.when(true, 'button', 'primary', 'button', 'secondary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
     });
 
     it('should have combine method', () => {
@@ -315,12 +373,18 @@ describe('Factory Functions', () => {
     });
 
     it('should have button helper with sizes', () => {
-      expect(sizedQuickVariants.button('primary', 'sm')).toBe('bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700');
-      expect(sizedQuickVariants.button('primary', 'lg')).toBe('bg-blue-600 text-white px-6 py-3 text-lg rounded hover:bg-blue-700');
+      expect(sizedQuickVariants.button('primary', 'sm')).toBe(
+        'bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700'
+      );
+      expect(sizedQuickVariants.button('primary', 'lg')).toBe(
+        'bg-blue-600 text-white px-6 py-3 text-lg rounded hover:bg-blue-700'
+      );
     });
 
     it('should fallback to default when no size specified', () => {
-      expect(sizedQuickVariants.button('primary')).toBe('bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700');
+      expect(sizedQuickVariants.button('primary')).toBe(
+        'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+      );
     });
   });
 });
@@ -328,22 +392,22 @@ describe('Factory Functions', () => {
 describe('Integration Tests', () => {
   it('should work with real-world usage patterns', () => {
     const v = createQuickVariants(mockDesignSystemVariants);
-    
+
     // Simulate button component usage
     const buttonClass = v.button('primary');
     expect(buttonClass).toBeTruthy();
     expect(buttonClass).toContain('bg-blue-600');
-    
-    // Simulate alert component usage  
+
+    // Simulate alert component usage
     const alertClass = v.alert('success');
     expect(alertClass).toBeTruthy();
     expect(alertClass).toContain('bg-green-50');
-    
+
     // Simulate gradient button usage
     const gradientClass = v.nested('button.gradient.primary');
     expect(gradientClass).toBeTruthy();
     expect(gradientClass).toContain('bg-gradient-to-r');
-    
+
     // Simulate conditional usage
     const conditionalClass = v.when(true, 'button', 'destructive', 'button', 'secondary');
     expect(conditionalClass).toContain('bg-red-600');
@@ -352,7 +416,7 @@ describe('Integration Tests', () => {
   it('should maintain consistent API across different usage patterns', () => {
     const v = createQuickVariants(mockDesignSystemVariants);
     const direct = new SimpleVariants(mockDesignSystemVariants);
-    
+
     // All should return the same result
     expect(v.button('primary')).toBe(direct.get('button', 'primary'));
     expect(v.get('button', 'primary')).toBe(direct.get('button', 'primary'));

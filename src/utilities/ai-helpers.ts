@@ -11,7 +11,11 @@
  */
 
 import { cn } from './utils';
-import type { TypedVariantConfig, VariantResolutionOptions, VariantResolutionResult } from '../types/variant-types';
+import type {
+  TypedVariantConfig,
+  VariantResolutionOptions,
+  VariantResolutionResult,
+} from '../types/variant-types';
 
 /**
  * Semantic color mapping for better AI understanding.
@@ -53,7 +57,8 @@ export const UI_PATTERNS = {
 
   // Visual hierarchy
   cardShadow: 'shadow-md hover:shadow-lg transition-shadow duration-200',
-  elevatedCard: 'bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700',
+  elevatedCard:
+    'bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700',
   subtleCard: 'bg-gray-50 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800',
 
   // Spacing patterns
@@ -109,10 +114,7 @@ export function getSemanticColor(intent: keyof typeof SEMANTIC_COLOR_MAP): strin
  * const button = applyUIPattern('clickable', 'bg-blue-500 text-white');
  * ```
  */
-export function applyUIPattern(
-  pattern: keyof typeof UI_PATTERNS,
-  additional?: string
-): string {
+export function applyUIPattern(pattern: keyof typeof UI_PATTERNS, additional?: string): string {
   return cn(UI_PATTERNS[pattern], additional);
 }
 
@@ -131,10 +133,7 @@ export function applyUIPattern(
  * const largeInput = createSizedComponent('lg', 'border border-gray-300 rounded');
  * ```
  */
-export function createSizedComponent(
-  size: keyof typeof SIZE_SCALES,
-  baseClasses: string
-): string {
+export function createSizedComponent(size: keyof typeof SIZE_SCALES, baseClasses: string): string {
   const scale = SIZE_SCALES[size];
   return cn(baseClasses, scale.padding, scale.text, scale.height);
 }
@@ -246,8 +245,14 @@ export function validateVariantConfig(
     // Type checking
     if (options.checkTypes && typeof componentConfig === 'object' && componentConfig !== null) {
       for (const [variantName, variantValue] of Object.entries(componentConfig)) {
-        if (typeof variantValue !== 'function' && typeof variantValue !== 'string' && typeof variantValue !== 'object') {
-          errors.push(`Invalid variant type for ${componentName}.${variantName}: expected function, string, or object`);
+        if (
+          typeof variantValue !== 'function' &&
+          typeof variantValue !== 'string' &&
+          typeof variantValue !== 'object'
+        ) {
+          errors.push(
+            `Invalid variant type for ${componentName}.${variantName}: expected function, string, or object`
+          );
         }
       }
     }
@@ -317,7 +322,8 @@ export function safeResolveVariant(
         // Try default variant
         const defaultVariant = componentConfig['default'];
         if (defaultVariant) {
-          result.classes = typeof defaultVariant === 'function' ? defaultVariant() : String(defaultVariant);
+          result.classes =
+            typeof defaultVariant === 'function' ? defaultVariant() : String(defaultVariant);
           result.usedFallback = true;
           result.warnings?.push(`Using 'default' variant instead`);
           return result;
@@ -335,9 +341,10 @@ export function safeResolveVariant(
       result.classes = typeof variantValue === 'function' ? variantValue() : String(variantValue);
       return result;
     }
-
   } catch (error) {
-    result.warnings?.push(`Error resolving variant: ${error instanceof Error ? error.message : String(error)}`);
+    result.warnings?.push(
+      `Error resolving variant: ${error instanceof Error ? error.message : String(error)}`
+    );
     if (options.fallback) {
       result.classes = options.fallback(component, variant);
       result.usedFallback = true;
@@ -368,7 +375,7 @@ export function getVariantSuggestions(
   }
 
   return Object.keys(componentConfig)
-    .filter(variant => variant.toLowerCase().includes(partial.toLowerCase()))
+    .filter((variant) => variant.toLowerCase().includes(partial.toLowerCase()))
     .sort();
 }
 
@@ -435,7 +442,10 @@ export function analyzeVariantUsage(config: TypedVariantConfig): {
 
   if (analysis.duplicatePatterns.length > 0) {
     analysis.optimizationSuggestions.push(
-      `Consider extracting common patterns into shared utilities for: ${analysis.duplicatePatterns.slice(0, 3).map(d => `${d.pattern.slice(0, 30)  }...`).join(', ')}`
+      `Consider extracting common patterns into shared utilities for: ${analysis.duplicatePatterns
+        .slice(0, 3)
+        .map((d) => `${d.pattern.slice(0, 30)}...`)
+        .join(', ')}`
     );
   }
 

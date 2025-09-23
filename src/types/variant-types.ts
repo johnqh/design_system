@@ -149,26 +149,36 @@ export interface TypedInputVariants {
  * Type-safe alert variant structure.
  */
 export interface TypedAlertVariants {
-  default: VariantFunction | {
-    default: VariantFunction;
-    [key: string]: VariantFunction;
-  };
-  info: VariantFunction | {
-    default: VariantFunction;
-    [key: string]: VariantFunction;
-  };
-  success: VariantFunction | {
-    default: VariantFunction;
-    [key: string]: VariantFunction;
-  };
-  warning: VariantFunction | {
-    default: VariantFunction;
-    [key: string]: VariantFunction;
-  };
-  destructive: VariantFunction | {
-    default: VariantFunction;
-    [key: string]: VariantFunction;
-  };
+  default:
+    | VariantFunction
+    | {
+        default: VariantFunction;
+        [key: string]: VariantFunction;
+      };
+  info:
+    | VariantFunction
+    | {
+        default: VariantFunction;
+        [key: string]: VariantFunction;
+      };
+  success:
+    | VariantFunction
+    | {
+        default: VariantFunction;
+        [key: string]: VariantFunction;
+      };
+  warning:
+    | VariantFunction
+    | {
+        default: VariantFunction;
+        [key: string]: VariantFunction;
+      };
+  destructive:
+    | VariantFunction
+    | {
+        default: VariantFunction;
+        [key: string]: VariantFunction;
+      };
   [key: string]: VariantFunction | Record<string, VariantFunction>;
 }
 
@@ -209,10 +219,8 @@ export type ComponentNames<T extends TypedVariantConfig> = keyof T;
 /**
  * Utility type to extract variant names for a specific component.
  */
-export type VariantNames<
-  T extends TypedVariantConfig,
-  C extends ComponentNames<T>
-> = T[C] extends Record<string, unknown> ? keyof T[C] : never;
+export type VariantNames<T extends TypedVariantConfig, C extends ComponentNames<T>> =
+  T[C] extends Record<string, unknown> ? keyof T[C] : never;
 
 /**
  * Type-safe variant getter function signature.
@@ -220,7 +228,7 @@ export type VariantNames<
 export type TypedVariantGetter = <
   T extends TypedVariantConfig,
   C extends ComponentNames<T>,
-  V extends VariantNames<T, C>
+  V extends VariantNames<T, C>,
 >(
   component: C,
   variant?: V

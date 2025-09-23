@@ -29,7 +29,9 @@
       "Bash(git push:*)",
       "Bash(npx tsc:*)",
       "Bash(npm audit:*)",
-      "Bash(npm update:*)"
+      "Bash(npm update:*)",
+      "Bash(npm run format:check:*)",
+      "Bash(npm run format:*)"
     ],
     "deny": [],
     "ask": []

@@ -16,7 +16,8 @@ export const GRADIENTS = {
   buttons: {
     primary: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700',
     primaryBlue: 'bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800',
-    primaryPurple: 'bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800',
+    primaryPurple:
+      'bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800',
   },
 
   // Text gradients (use with bg-clip-text text-transparent)
@@ -30,7 +31,7 @@ export const GRADIENTS = {
   effects: {
     glow: 'bg-gradient-to-r from-blue-600 to-purple-600',
     shimmer: 'bg-gradient-to-r from-transparent via-white/20 to-transparent',
-  }
+  },
 } as const;
 
 /**
@@ -39,19 +40,19 @@ export const GRADIENTS = {
 export const GRADIENT_CLASSES = {
   // Primary action button with full styling
   primaryButton: `${GRADIENTS.buttons.primary} text-white shadow-lg hover:shadow-xl transition-all duration-200`,
-  
+
   // Hero button with enhanced styling
   heroButton: `${GRADIENTS.buttons.primary} text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25`,
-  
+
   // Header button styling
   headerButton: `${GRADIENTS.buttons.primary} text-white px-4 py-2 rounded-md font-medium transition-all duration-200 transform hover:scale-105 shadow-lg`,
-  
+
   // Page background with common layout
   pageLayout: `min-h-screen ${GRADIENTS.backgrounds.page}`,
-  
+
   // Page background with dark mode support
   pageLayoutDark: `min-h-screen ${GRADIENTS.backgrounds.pageDark}`,
-  
+
   // Text gradient styling
   gradientText: `${GRADIENTS.text.primary} bg-clip-text text-transparent`,
   gradientTextSecondary: `${GRADIENTS.text.secondary} bg-clip-text text-transparent`,

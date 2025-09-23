@@ -104,19 +104,19 @@ export const UI_PATTERNS = {
   // Section with container
   section: `${UI_CONSTANTS.layout.section} ${UI_CONSTANTS.layout.container}`,
   sectionCentered: `${UI_CONSTANTS.layout.section} ${UI_CONSTANTS.layout.container} text-center`,
-  
+
   // Interactive card
   interactiveCard: `${UI_CONSTANTS.card.interactive} ${UI_CONSTANTS.transition.base} ${UI_CONSTANTS.hover.lift}`,
-  
+
   // Primary button
   primaryButton: `${UI_CONSTANTS.button.md} ${UI_CONSTANTS.transition.base} ${UI_CONSTANTS.hover.scale} ${UI_CONSTANTS.focus.ring}`,
-  
+
   // Hero text
   heroText: `${UI_CONSTANTS.typography.hero} leading-tight`,
-  
+
   // Feature grid
   featureGrid: `${UI_CONSTANTS.grid.responsive4}`,
-  
+
   // Icon container
   iconContainer: `${UI_CONSTANTS.icon.lg} rounded-full flex items-center justify-center`,
 } as const;
@@ -127,7 +127,7 @@ export const UI_PATTERNS = {
 export const getUIConstant = (path: string): string => {
   const keys = path.split('.');
   let current: unknown = UI_CONSTANTS;
-  
+
   for (const key of keys) {
     if (typeof current === 'object' && current !== null && key in current) {
       current = (current as Record<string, unknown>)[key];
@@ -136,7 +136,7 @@ export const getUIConstant = (path: string): string => {
       return '';
     }
   }
-  
+
   return typeof current === 'string' ? current : String(current);
 };
 

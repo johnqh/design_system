@@ -10,8 +10,8 @@
  * @since 1.0.0
  */
 
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Combines and merges CSS class names intelligently.
@@ -52,7 +52,7 @@ import { twMerge } from "tailwind-merge"
  * ```
  */
 function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export { cn };

@@ -114,9 +114,18 @@ export class SimpleVariants {
     this.fallbacks.set('button.primary', 'bg-blue-600 text-white px-4 py-2 rounded');
     this.fallbacks.set('button.secondary', 'bg-gray-200 text-gray-900 px-4 py-2 rounded');
     this.fallbacks.set('button.outline', 'border border-gray-300 text-gray-700 px-4 py-2 rounded');
-    this.fallbacks.set('alert.default', 'bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded');
-    this.fallbacks.set('alert.destructive', 'bg-red-50 border border-red-200 text-red-800 p-4 rounded');
-    this.fallbacks.set('input.default', 'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500');
+    this.fallbacks.set(
+      'alert.default',
+      'bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded'
+    );
+    this.fallbacks.set(
+      'alert.destructive',
+      'bg-red-50 border border-red-200 text-red-800 p-4 rounded'
+    );
+    this.fallbacks.set(
+      'input.default',
+      'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500'
+    );
     this.fallbacks.set('badge.default', 'bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm');
   }
 
@@ -164,17 +173,17 @@ export class SimpleVariants {
       }
 
       const variantValue = componentVariants[variant];
-      
+
       // Handle function variants
       if (typeof variantValue === 'function') {
         return variantValue();
       }
-      
+
       // Handle string variants
       if (typeof variantValue === 'string') {
         return variantValue;
       }
-      
+
       // Handle object variants with default
       if (variantValue && typeof variantValue === 'object') {
         if (typeof variantValue.default === 'function') {
@@ -192,7 +201,7 @@ export class SimpleVariants {
         component,
         variant,
         error: error instanceof Error ? error.message : String(error),
-        availableVariants: this.getAvailableVariants(component)
+        availableVariants: this.getAvailableVariants(component),
       });
       return this.getFallback(component, variant);
     }
@@ -224,7 +233,7 @@ export class SimpleVariants {
     try {
       const componentVariants = this.variants[component];
       const variantObj = componentVariants?.[variant];
-      
+
       if (variantObj && typeof variantObj === 'object' && variantObj[size]) {
         const sizedVariant = variantObj[size];
         if (typeof sizedVariant === 'function') {
@@ -234,7 +243,7 @@ export class SimpleVariants {
           return sizedVariant;
         }
       }
-      
+
       // Fallback to base variant
       return this.get(component, variant);
     } catch (error) {
@@ -266,7 +275,7 @@ export class SimpleVariants {
     try {
       const parts = path.split('.');
       let current = this.variants;
-      
+
       for (const part of parts) {
         current = current?.[part];
         if (!current) break;
@@ -318,7 +327,13 @@ export class SimpleVariants {
    * const buttonClasses = variants.when(isLoading, 'button', 'disabled');
    * ```
    */
-  when(condition: boolean, trueComponent: string, trueVariant: string, falseComponent?: string, falseVariant?: string): string {
+  when(
+    condition: boolean,
+    trueComponent: string,
+    trueVariant: string,
+    falseComponent?: string,
+    falseVariant?: string
+  ): string {
     if (condition) {
       return this.get(trueComponent, trueVariant);
     }
@@ -359,7 +374,7 @@ export class SimpleVariants {
    */
   combine(...variants: string[]): string {
     return variants
-      .map(v => {
+      .map((v) => {
         if (v.includes('.')) {
           return this.nested(v);
         }
@@ -382,12 +397,16 @@ export class SimpleVariants {
     const fallback = this.fallbacks.get(key) || this.fallbacks.get(`${component}.default`) || '';
 
     if (!fallback) {
-      this.logStructuredError('FALLBACK_NOT_FOUND', `No fallback found for '${component}.${variant}'`, {
-        component,
-        variant,
-        availableFallbacks: Array.from(this.fallbacks.keys()),
-        suggestion: `Consider adding a fallback with addFallback('${component}.${variant}', 'your-classes')`
-      });
+      this.logStructuredError(
+        'FALLBACK_NOT_FOUND',
+        `No fallback found for '${component}.${variant}'`,
+        {
+          component,
+          variant,
+          availableFallbacks: Array.from(this.fallbacks.keys()),
+          suggestion: `Consider adding a fallback with addFallback('${component}.${variant}', 'your-classes')`,
+        }
+      );
     }
 
     return fallback;
@@ -401,7 +420,11 @@ export class SimpleVariants {
    * @param message - Human-readable error message
    * @param context - Additional context for debugging
    */
-  private logStructuredError(errorCode: string, message: string, context: Record<string, unknown>): void {
+  private logStructuredError(
+    errorCode: string,
+    message: string,
+    context: Record<string, unknown>
+  ): void {
     const structuredError = {
       timestamp: new Date().toISOString(),
       code: errorCode,
@@ -441,11 +464,15 @@ export class SimpleVariants {
   private validateConfiguration(): void {
     // Handle null/undefined configurations gracefully
     if (!this.variants || typeof this.variants !== 'object') {
-      this.logStructuredError('INVALID_CONFIGURATION', 'Variant configuration is null, undefined, or not an object', {
-        configType: typeof this.variants,
-        configValue: this.variants,
-        suggestion: 'Provide a valid variant configuration object'
-      });
+      this.logStructuredError(
+        'INVALID_CONFIGURATION',
+        'Variant configuration is null, undefined, or not an object',
+        {
+          configType: typeof this.variants,
+          configValue: this.variants,
+          suggestion: 'Provide a valid variant configuration object',
+        }
+      );
       return;
     }
 
@@ -458,17 +485,21 @@ export class SimpleVariants {
           issues.push({
             type: 'warning',
             message: `Component '${componentName}' has no 'default' variant`,
-            component: componentName
+            component: componentName,
           });
         }
 
         // Check variant types
         for (const [variantName, variantValue] of Object.entries(componentConfig)) {
-          if (typeof variantValue !== 'function' && typeof variantValue !== 'string' && typeof variantValue !== 'object') {
+          if (
+            typeof variantValue !== 'function' &&
+            typeof variantValue !== 'string' &&
+            typeof variantValue !== 'object'
+          ) {
             issues.push({
               type: 'error',
               message: `Invalid variant type for '${componentName}.${variantName}': expected function, string, or object`,
-              component: componentName
+              component: componentName,
             });
           }
         }
@@ -482,8 +513,8 @@ export class SimpleVariants {
         recommendations: [
           'Add default variants to all components',
           'Ensure all variants are functions, strings, or objects',
-          'Consider using TypeScript for better type safety'
-        ]
+          'Consider using TypeScript for better type safety',
+        ],
       });
     }
   }
@@ -592,20 +623,25 @@ export function createVariants(designSystemVariants: VariantConfig): SimpleVaria
  */
 export function createQuickVariants(designSystemVariants: VariantConfig) {
   const resolver = new SimpleVariants(designSystemVariants);
-  
+
   return {
     // Direct access functions
-    button: (variant: string, size?: string) => 
+    button: (variant: string, size?: string) =>
       size ? resolver.sized('button', variant, size) : resolver.get('button', variant),
     alert: (variant: string) => resolver.get('alert', variant),
     input: (variant: string) => resolver.get('input', variant),
     badge: (variant: string) => resolver.get('badge', variant),
-    
+
     // Generic access
     get: (component: string, variant?: string) => resolver.get(component, variant),
     nested: (path: string) => resolver.nested(path),
-    when: (condition: boolean, trueComp: string, trueVar: string, falseComp?: string, falseVar?: string) => 
-      resolver.when(condition, trueComp, trueVar, falseComp, falseVar),
+    when: (
+      condition: boolean,
+      trueComp: string,
+      trueVar: string,
+      falseComp?: string,
+      falseVar?: string
+    ) => resolver.when(condition, trueComp, trueVar, falseComp, falseVar),
     combine: (...variants: string[]) => resolver.combine(...variants),
   };
 }

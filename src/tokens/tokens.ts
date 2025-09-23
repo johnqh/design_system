@@ -1,6 +1,6 @@
 /**
  * Design Tokens
- * 
+ *
  * Core design values that can be used across components.
  * These provide consistent spacing, typography, and other design properties.
  */
@@ -8,21 +8,21 @@
 const designTokens = {
   // Spacing scale (based on 4px grid)
   spacing: {
-    xs: 'p-1',      // 4px
-    sm: 'p-2',      // 8px
-    md: 'p-4',      // 16px
-    lg: 'p-6',      // 24px
-    xl: 'p-8',      // 32px
-    '2xl': 'p-12',  // 48px
-    '3xl': 'p-16',  // 64px
-    '4xl': 'p-20',  // 80px
-    '5xl': 'p-24',  // 96px
+    xs: 'p-1', // 4px
+    sm: 'p-2', // 8px
+    md: 'p-4', // 16px
+    lg: 'p-6', // 24px
+    xl: 'p-8', // 32px
+    '2xl': 'p-12', // 48px
+    '3xl': 'p-16', // 64px
+    '4xl': 'p-20', // 80px
+    '5xl': 'p-24', // 96px
   },
 
   // Margin utilities
   margin: {
     xs: 'm-1',
-    sm: 'm-2', 
+    sm: 'm-2',
     md: 'm-4',
     lg: 'm-6',
     xl: 'm-8',
@@ -32,11 +32,11 @@ const designTokens = {
     '5xl': 'm-24',
   },
 
-  // Padding utilities  
+  // Padding utilities
   padding: {
     xs: 'p-1',
     sm: 'p-2',
-    md: 'p-4', 
+    md: 'p-4',
     lg: 'p-6',
     xl: 'p-8',
     '2xl': 'p-12',
@@ -47,7 +47,7 @@ const designTokens = {
   gap: {
     xs: 'gap-1',
     sm: 'gap-2',
-    md: 'gap-4', 
+    md: 'gap-4',
     lg: 'gap-6',
     xl: 'gap-8',
     '2xl': 'gap-12',
@@ -57,12 +57,12 @@ const designTokens = {
   // Border radius scale
   radius: {
     none: 'rounded-none',
-    sm: 'rounded-sm',      // 2px
-    md: 'rounded-md',      // 6px
-    lg: 'rounded-lg',      // 8px
-    xl: 'rounded-xl',      // 12px
-    '2xl': 'rounded-2xl',  // 16px
-    '3xl': 'rounded-3xl',  // 24px
+    sm: 'rounded-sm', // 2px
+    md: 'rounded-md', // 6px
+    lg: 'rounded-lg', // 8px
+    xl: 'rounded-xl', // 12px
+    '2xl': 'rounded-2xl', // 16px
+    '3xl': 'rounded-3xl', // 24px
     full: 'rounded-full',
   },
 
@@ -81,35 +81,35 @@ const designTokens = {
     // Font families
     family: {
       // Sans-serif fonts (default for UI)
-      sans: 'font-sans',              // Inter, system-ui, sans-serif
+      sans: 'font-sans', // Inter, system-ui, sans-serif
       // Serif fonts (for editorial content)
-      serif: 'font-serif',            // ui-serif, Georgia, serif
+      serif: 'font-serif', // ui-serif, Georgia, serif
       // Monospace fonts (for code)
-      mono: 'font-mono',              // ui-monospace, Menlo, Monaco, Consolas
+      mono: 'font-mono', // ui-monospace, Menlo, Monaco, Consolas
       // Display fonts (for headings)
-      display: 'font-sans',           // Same as sans for consistency
+      display: 'font-sans', // Same as sans for consistency
       // Body text font
-      body: 'font-sans',              // Same as sans for consistency
+      body: 'font-sans', // Same as sans for consistency
     },
 
     // Font sizes with semantic names
     size: {
       // Micro text (10px)
       micro: 'text-[10px]',
-      // Extra small (12px) 
+      // Extra small (12px)
       xs: 'text-xs',
       // Small (14px)
       sm: 'text-sm',
       // Base/Body (16px) - Default browser size
       base: 'text-base',
-      md: 'text-base',                // Alias for base
+      md: 'text-base', // Alias for base
       // Large (18px)
       lg: 'text-lg',
       // Extra large (20px)
       xl: 'text-xl',
       // 2X large (24px)
       '2xl': 'text-2xl',
-      // 3X large (30px) 
+      // 3X large (30px)
       '3xl': 'text-3xl',
       // 4X large (36px)
       '4xl': 'text-4xl',
@@ -128,59 +128,59 @@ const designTokens = {
     // Semantic font sizes for specific use cases
     semantic: {
       // Caption text
-      caption: 'text-xs',             // 12px
+      caption: 'text-xs', // 12px
       // Small body text
-      small: 'text-sm',               // 14px
+      small: 'text-sm', // 14px
       // Regular body text
-      body: 'text-base',              // 16px
+      body: 'text-base', // 16px
       // Large body text
-      bodyLarge: 'text-lg',           // 18px
+      bodyLarge: 'text-lg', // 18px
       // Subheading text
-      subheading: 'text-xl',          // 20px
+      subheading: 'text-xl', // 20px
       // Heading 6
-      h6: 'text-base',                // 16px
+      h6: 'text-base', // 16px
       // Heading 5
-      h5: 'text-lg',                  // 18px
+      h5: 'text-lg', // 18px
       // Heading 4
-      h4: 'text-xl',                  // 20px
+      h4: 'text-xl', // 20px
       // Heading 3
-      h3: 'text-2xl',                 // 24px
+      h3: 'text-2xl', // 24px
       // Heading 2
-      h2: 'text-3xl',                 // 30px
+      h2: 'text-3xl', // 30px
       // Heading 1
-      h1: 'text-4xl',                 // 36px
+      h1: 'text-4xl', // 36px
       // Display text (hero headings)
-      display: 'text-6xl',            // 60px
+      display: 'text-6xl', // 60px
       // Giant display text
-      hero: 'text-8xl',               // 96px
+      hero: 'text-8xl', // 96px
     },
-    
+
     // Font weights with semantic names
     weight: {
       // Numeric weights
-      thin: 'font-thin',              // 100
-      extralight: 'font-extralight',  // 200
-      light: 'font-light',            // 300
-      normal: 'font-normal',          // 400
-      medium: 'font-medium',          // 500
-      semibold: 'font-semibold',      // 600
-      bold: 'font-bold',              // 700
-      extrabold: 'font-extrabold',    // 800
-      black: 'font-black',            // 900
-      
+      thin: 'font-thin', // 100
+      extralight: 'font-extralight', // 200
+      light: 'font-light', // 300
+      normal: 'font-normal', // 400
+      medium: 'font-medium', // 500
+      semibold: 'font-semibold', // 600
+      bold: 'font-bold', // 700
+      extrabold: 'font-extrabold', // 800
+      black: 'font-black', // 900
+
       // Semantic weights
-      body: 'font-normal',            // For body text
-      emphasis: 'font-medium',        // For emphasized text
-      strong: 'font-semibold',        // For strong text
-      heading: 'font-bold',           // For headings
-      display: 'font-extrabold',      // For display text
+      body: 'font-normal', // For body text
+      emphasis: 'font-medium', // For emphasized text
+      strong: 'font-semibold', // For strong text
+      heading: 'font-bold', // For headings
+      display: 'font-extrabold', // For display text
     },
 
     // Font styles
     style: {
       normal: 'not-italic',
       italic: 'italic',
-      oblique: 'italic',              // Maps to italic (closest approximation)
+      oblique: 'italic', // Maps to italic (closest approximation)
     },
 
     // Text decoration
@@ -221,36 +221,36 @@ const designTokens = {
     // Line heights with semantic names
     leading: {
       // Numeric values
-      none: 'leading-none',           // 1
-      tight: 'leading-tight',         // 1.25
-      snug: 'leading-snug',           // 1.375
-      normal: 'leading-normal',       // 1.5
-      relaxed: 'leading-relaxed',     // 1.625
-      loose: 'leading-loose',         // 2
-      
+      none: 'leading-none', // 1
+      tight: 'leading-tight', // 1.25
+      snug: 'leading-snug', // 1.375
+      normal: 'leading-normal', // 1.5
+      relaxed: 'leading-relaxed', // 1.625
+      loose: 'leading-loose', // 2
+
       // Semantic values
-      heading: 'leading-tight',       // For headings
-      body: 'leading-relaxed',        // For body text
-      caption: 'leading-normal',      // For captions
-      display: 'leading-none',        // For display text
+      heading: 'leading-tight', // For headings
+      body: 'leading-relaxed', // For body text
+      caption: 'leading-normal', // For captions
+      display: 'leading-none', // For display text
     },
 
     // Letter spacing with semantic names
     tracking: {
       // Numeric values
-      tighter: 'tracking-tighter',    // -0.05em
-      tight: 'tracking-tight',        // -0.025em
-      normal: 'tracking-normal',      // 0em
-      wide: 'tracking-wide',          // 0.025em
-      wider: 'tracking-wider',        // 0.05em
-      widest: 'tracking-widest',      // 0.1em
-      
+      tighter: 'tracking-tighter', // -0.05em
+      tight: 'tracking-tight', // -0.025em
+      normal: 'tracking-normal', // 0em
+      wide: 'tracking-wide', // 0.025em
+      wider: 'tracking-wider', // 0.05em
+      widest: 'tracking-widest', // 0.1em
+
       // Semantic values
-      heading: 'tracking-tight',      // For headings
-      body: 'tracking-normal',        // For body text
-      caption: 'tracking-normal',     // For captions
-      button: 'tracking-wide',        // For button text
-      uppercase: 'tracking-wider',    // For uppercase text
+      heading: 'tracking-tight', // For headings
+      body: 'tracking-normal', // For body text
+      caption: 'tracking-normal', // For captions
+      button: 'tracking-wide', // For button text
+      uppercase: 'tracking-wider', // For uppercase text
     },
 
     // Text transform

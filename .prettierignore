@@ -1,0 +1,26 @@
+# Build outputs
+dist/
+build/
+coverage/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+
+# Git
+.git/
+
+# Package manager
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

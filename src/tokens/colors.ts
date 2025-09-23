@@ -1,12 +1,12 @@
 /**
  * 0xmail.box Design System - Color Foundations
- * 
+ *
  * This file defines the complete color system for the application with:
  * - Semantic color tokens that map to specific use cases
  * - Light and dark mode support
  * - Component-specific color variants
  * - Consistent color roles and hierarchy
- * 
+ *
  * Usage:
  * import { colors } from '@/design-system/colors'
  * className={colors.button.primary}
@@ -202,7 +202,7 @@ const rawColors = {
       DEFAULT: '#e6007a',
       dark: '#cc006e',
     },
-  }
+  },
 } as const;
 
 // =============================================================================
@@ -468,7 +468,7 @@ const semanticColors = {
       light: `${rawColors.red[50]}`,
       dark: `${rawColors.red[900]}/20`,
     },
-  }
+  },
 } as const;
 
 // =============================================================================
@@ -485,7 +485,8 @@ const componentColors = {
     primary: {
       base: 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white border-transparent',
       dark: 'dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white',
-      focus: 'focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400',
+      focus:
+        'focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400',
       disabled: 'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600',
     },
 
@@ -539,9 +540,12 @@ const componentColors = {
 
     // Gradient variants for special emphasis
     gradient: {
-      primary: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl',
-      secondary: 'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-900 border-transparent',
-      success: 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-transparent',
+      primary:
+        'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl',
+      secondary:
+        'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-900 border-transparent',
+      success:
+        'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-transparent',
     },
   },
 
@@ -626,7 +630,7 @@ const componentColors = {
       base: 'bg-blue-100 text-blue-800',
       dark: 'dark:bg-blue-900/30 dark:text-blue-300',
     },
-    
+
     solana: {
       base: 'bg-purple-100 text-purple-800',
       dark: 'dark:bg-purple-900/30 dark:text-purple-300',
@@ -673,7 +677,8 @@ const componentColors = {
     default: {
       base: 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500',
       dark: 'dark:bg-gray-900 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-400',
-      focus: 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400',
+      focus:
+        'focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400',
       error: 'border-red-300 focus:border-red-500 focus:ring-red-500 dark:border-red-700',
     },
 
@@ -681,7 +686,8 @@ const componentColors = {
     search: {
       base: 'bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-500',
       dark: 'dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-400',
-      focus: 'focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:bg-gray-900',
+      focus:
+        'focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:bg-gray-900',
     },
   },
 
@@ -731,7 +737,7 @@ const getColorClasses = (
 ): string => {
   const componentColorSet = componentColors[component] as Record<string, unknown>;
   const variantColors = componentColorSet[variant] as ColorVariant;
-  
+
   if (!variantColors) {
     console.warn(`Color variant '${variant}' not found for component '${component}'`);
     return '';
@@ -740,7 +746,7 @@ const getColorClasses = (
   const classes = [
     variantColors.base,
     variantColors.dark,
-    ...states.map(state => variantColors[state]).filter(Boolean)
+    ...states.map((state) => variantColors[state]).filter(Boolean),
   ];
 
   return classes.join(' ');
@@ -760,25 +766,25 @@ const buildColorClass = (
   }
 ): string => {
   const classes = [`bg-${background}`, `text-${text}`];
-  
+
   if (border) classes.push(`border-${border}`);
-  
+
   if (states?.hover) {
     if (states.hover.background) classes.push(`hover:bg-${states.hover.background}`);
     if (states.hover.text) classes.push(`hover:text-${states.hover.text}`);
     if (states.hover.border) classes.push(`hover:border-${states.hover.border}`);
   }
-  
+
   if (states?.focus?.ring) {
     classes.push(`focus:ring-2 focus:ring-${states.focus.ring}`);
   }
-  
+
   if (states?.dark) {
     if (states.dark.background) classes.push(`dark:bg-${states.dark.background}`);
     if (states.dark.text) classes.push(`dark:text-${states.dark.text}`);
     if (states.dark.border) classes.push(`dark:border-${states.dark.border}`);
   }
-  
+
   return classes.join(' ');
 };
 
@@ -792,13 +798,13 @@ const buildColorClass = (
 const colors = {
   // Raw color palette (use sparingly, prefer semantic tokens)
   raw: rawColors,
-  
+
   // Semantic color tokens (recommended for most use cases)
   semantic: semanticColors,
-  
+
   // Component-specific colors (use for components)
   component: componentColors,
-  
+
   // Utilities
   utils: {
     getColorClasses,

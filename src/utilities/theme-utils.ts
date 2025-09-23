@@ -15,8 +15,8 @@ export function withOpacity(color: string, opacity: number): string {
   if (color.startsWith('hsl(')) {
     return color.replace(')', ` / ${opacity})`);
   }
-  
-  // Handle hex colors  
+
+  // Handle hex colors
   if (color.startsWith('#')) {
     const hex = color.slice(1);
     const r = parseInt(hex.slice(0, 2), 16);
@@ -24,20 +24,23 @@ export function withOpacity(color: string, opacity: number): string {
     const b = parseInt(hex.slice(4, 6), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
-  
+
   return color;
 }
 
 /**
  * Generate responsive class variants
  */
-export function responsive(baseClass: string, breakpoints: Partial<Record<ResponsiveBreakpoint, string>> = {}): string {
+export function responsive(
+  baseClass: string,
+  breakpoints: Partial<Record<ResponsiveBreakpoint, string>> = {}
+): string {
   const classes = [baseClass];
-  
+
   Object.entries(breakpoints).forEach(([bp, value]) => {
     classes.push(`${bp}:${value}`);
   });
-  
+
   return classes.join(' ');
 }
 
