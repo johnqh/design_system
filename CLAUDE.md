@@ -6,6 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a standalone design system library (`@johnqh/design-system`) that provides comprehensive design tokens, colors, typography, and variants for UI development. It serves as the foundation for the `@johnqh/mail-box-components` library and can be reused across multiple projects.
 
+**Current Version:** 1.0.19
+**License:** MIT
+**Author:** John Q Huang
+**Type:** ES Module
+
 ## Common Development Commands
 
 ```bash
@@ -21,34 +26,62 @@ npm run type-check
 # Testing
 npm test
 npm run test:ui
+npm run test:coverage
 
 # Run single test
 npm test -- src/__tests__/index.test.ts
 
-# Lint (currently type-check only)
-npm run lint
+# Lint and format
+npm run lint          # ESLint + TypeScript check
+npm run format        # Prettier format
+npm run format:check  # Check formatting
 ```
 
 ## Architecture
 
 ### Core Design System Structure
-- `src/colors.ts` - Complete semantic color system with light/dark mode support
-- `src/tokens.ts` - Comprehensive design tokens (spacing, typography, animations)
-- `src/typography.ts` - Text variants and semantic typography system
-- `src/variants.ts` - Component style variants and utilities
-- `src/index.ts` - Main export with organized structure and utilities
+```
+src/
+├── index.ts                      # Main entry point, unified exports
+├── core/                         # Core design system modules
+│   ├── simple-variants.ts       # Simplified variant system for easy theming
+│   ├── typography.ts            # Typography system and text variants
+│   └── variants.ts              # Component style variants
+├── tokens/                       # Design token definitions
+│   ├── colors.ts                # Color system (raw, semantic, component)
+│   ├── gradients.ts             # Gradient definitions
+│   └── tokens.ts                # Core design tokens (spacing, layout)
+├── utilities/                    # Helper functions and utilities
+│   ├── ai-helpers.ts            # AI-assisted development utilities
+│   ├── component-helpers.ts     # Component creation utilities
+│   ├── theme-utils.ts          # Theme and color utilities
+│   ├── ui-constants.ts         # UI constant definitions
+│   └── utils.ts                # General utility functions
+├── types/                        # TypeScript type definitions
+│   └── variant-types.ts        # Variant system type definitions
+├── content/                      # Content optimization
+│   ├── seo-keywords.ts         # SEO keyword configurations
+│   └── structured-data.ts      # Structured data helpers
+└── __tests__/                    # Comprehensive test suite
+```
 
 ### Design Token Philosophy
 - **4px Grid System** - All spacing based on consistent 4px increments
 - **Semantic Naming** - Colors and tokens use purpose-based naming (primary, secondary, success, error)
 - **Dark Mode First** - Full support for light and dark color schemes
 - **Component-Specific** - Pre-built color combinations for common UI patterns
+- **Type-Safe** - Comprehensive TypeScript types with literal type inference
+- **AI-Optimized** - Semantic helpers and validation for better AI code generation
 
 ### Export Strategy
 The library provides multiple export patterns for flexibility:
-- **Named exports** - `colors`, `designTokens`, `textVariants`, `variants`
+- **Named exports** - `colors`, `designTokens`, `textVariants`, `variants`, `simpleVariants`
 - **Capitalized aliases** - `Colors`, `Tokens`, `Typography`, `Variants`
-- **UI utilities** - `ui` object with common design patterns
+- **UI utilities** - `ui` object with common design patterns, `uiConstants` for UI constants
+- **Theme utilities** - `createTheme`, `applyTheme`, `getThemeColors`
+- **Component helpers** - `createComponentHelpers`, `getComponentClasses`
+- **AI helpers** - `getSemanticColor`, `applyUIPattern`, `createComponentWithIntent`
+- **Validation utilities** - `validateVariantConfig`, `safeResolveVariant`
 - **Wildcard exports** - Full re-export for backward compatibility
 - **Default export** - Grouped structure for convenience
 
@@ -85,9 +118,13 @@ Ready-to-use Tailwind class combinations for:
 ## Development Workflow
 
 ### Adding New Design Tokens
-1. Add token to appropriate file (`colors.ts`, `tokens.ts`, `typography.ts`, `variants.ts`)
+1. Add token to appropriate file in the correct directory:
+   - Color tokens → `src/tokens/colors.ts`
+   - Design tokens → `src/tokens/tokens.ts`
+   - Typography → `src/core/typography.ts`
+   - Variants → `src/core/variants.ts` or `src/core/simple-variants.ts`
 2. Update exports in `src/index.ts`
-3. Add tests in `src/__tests__/index.test.ts`
+3. Add tests in appropriate test file under `src/__tests__/`
 4. Build and test: `npm run build && npm test`
 
 ### Color System Updates
@@ -112,27 +149,60 @@ Ready-to-use Tailwind class combinations for:
 
 ### Quick Reference for AI Assistants
 
-#### File Organization Map
+#### Module Organization Map
 ```
 src/
-├── index.ts       # Main entry point, exports all modules
-├── colors.ts      # Color system (raw, semantic, component colors)
-├── tokens.ts      # Design tokens (spacing, animation, layout)
-├── typography.ts  # Text variants and typography system
-├── variants.ts    # Component style variants (buttons, cards, etc.)
-└── __tests__/     # Comprehensive test suite
+├── index.ts                      # Main entry, all exports
+├── core/                         # Core modules
+│   ├── simple-variants.ts       # Simple variant system
+│   ├── typography.ts            # Typography system
+│   └── variants.ts              # Component variants
+├── tokens/                       # Design tokens
+│   ├── colors.ts                # Color system
+│   ├── gradients.ts             # Gradients
+│   └── tokens.ts                # Core tokens
+├── utilities/                    # Helpers & utils
+│   ├── ai-helpers.ts            # AI utilities
+│   ├── component-helpers.ts     # Component utils
+│   ├── theme-utils.ts          # Theme utilities
+│   ├── ui-constants.ts         # UI constants
+│   └── utils.ts                # General utils
+├── types/                        # TypeScript types
+│   └── variant-types.ts        # Variant types
+└── content/                      # Content helpers
+    ├── seo-keywords.ts         # SEO keywords
+    └── structured-data.ts      # Structured data
 ```
 
 #### Import Examples
 ```typescript
-// Named imports (recommended)
+// Core imports (most common)
 import { colors, designTokens, textVariants, variants } from '@johnqh/design-system';
 
-// Specific utilities
-import { getColorClasses, buildColorClass } from '@johnqh/design-system';
+// Simple variant system
+import { simpleVariants, createSimpleVariants } from '@johnqh/design-system';
 
-// UI utilities object
-import { ui } from '@johnqh/design-system';
+// UI utilities and constants
+import { ui, uiConstants } from '@johnqh/design-system';
+
+// Theme utilities
+import { createTheme, applyTheme, getThemeColors } from '@johnqh/design-system';
+
+// Component helpers
+import { createComponentHelpers, getComponentClasses } from '@johnqh/design-system';
+
+// AI-helper utilities
+import {
+  getSemanticColor,
+  applyUIPattern,
+  createComponentWithIntent,
+  validateVariantConfig,
+  safeResolveVariant,
+  analyzeVariantUsage
+} from '@johnqh/design-system';
+
+// SEO and structured data
+import { seoKeywords, structuredData } from '@johnqh/design-system';
 
 // Default import (all modules)
 import designSystem from '@johnqh/design-system';
@@ -164,10 +234,15 @@ const container = ui.layout.container;
 
 ### Development-Friendly Features
 - **Extensive JSDoc comments** - All major functions documented with examples
-- **Utility functions with clear types** - `getColorClasses()`, `buildColorClass()` 
+- **Comprehensive utility functions** - Color, theme, component, and AI helpers
+- **Simple variant system** - Easier theming with `simpleVariants` for common patterns
+- **Theme management** - Dynamic theme creation and application utilities
+- **Component helpers** - Utilities for building consistent components
+- **AI-optimized helpers** - Semantic functions for better code generation
+- **Built-in validation** - Config validation with detailed error messages
 - **Consistent export patterns** - Named exports, aliases, and default export
-- **Built-in color utilities** - Helper functions for dynamic color combinations
 - **Type-safe constants** - All tokens use `as const` for literal types
+- **SEO optimization** - Built-in SEO keywords and structured data helpers
 
 ### Design System Best Practices
 - **Semantic color tokens** - Prevent arbitrary color usage with purpose-based naming
@@ -197,7 +272,11 @@ const container = ui.layout.container;
 ##### Using Semantic Helpers
 ```typescript
 // AI can easily understand semantic intent
-import { getSemanticColor, applyUIPattern, createComponentWithIntent } from '@johnqh/design-system';
+import {
+  getSemanticColor,
+  applyUIPattern,
+  createComponentWithIntent
+} from '@johnqh/design-system';
 
 // Clear semantic mapping
 const errorMessage = getSemanticColor('error');
@@ -219,7 +298,10 @@ const primaryButton = createComponentWithIntent({
 ##### Type-Safe Variant Usage
 ```typescript
 // AI can leverage TypeScript intellisense
-import { createVariants, type TypedVariantConfig } from '@johnqh/design-system';
+import {
+  createSimpleVariants,
+  type TypedVariantConfig
+} from '@johnqh/design-system';
 
 // Structured variant configuration
 const config: TypedVariantConfig = {
@@ -229,7 +311,7 @@ const config: TypedVariantConfig = {
   }
 };
 
-const variants = createVariants(config);
+const variants = createSimpleVariants(config);
 ```
 
 ##### Safe Variant Resolution
@@ -261,11 +343,11 @@ console.log('Warnings:', result.warnings);
 
 #### AI Code Generation Tips
 - **Use semantic tokens** - Always prefer `colors.semantic.*` over `colors.raw.*`
-- **Leverage existing variants** - Check `variants.ts` before creating new styles
+- **Leverage existing variants** - Check `core/variants.ts` and `core/simple-variants.ts`
 - **Follow the 4px grid** - All spacing should use `designTokens.spacing.*`
 - **Export consistently** - Add both named export and to default export object
 - **Test immediately** - Run `npm test` after making changes
-- **Use AI helpers** - Leverage `ai-helpers.ts` utilities for better code generation
+- **Use AI helpers** - Leverage `utilities/ai-helpers.ts` for better code generation
 - **Validate early** - Use validation functions to catch issues during development
 
 #### Structured Error Handling for AI
