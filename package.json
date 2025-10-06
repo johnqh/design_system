@@ -1,6 +1,6 @@
 {
   "name": "@johnqh/design_system",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Design system library with tokens, colors, typography and variants",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",
