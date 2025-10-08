@@ -12,8 +12,12 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'DesignSystem',
-      formats: ['es', 'umd'],
-      fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,
+      formats: ['es', 'cjs', 'umd'],
+      fileName: (format) => {
+        if (format === 'es') return 'index.esm.js';
+        if (format === 'cjs') return 'index.cjs.js';
+        return 'index.umd.js';
+      },
     },
     rollupOptions: {
       external: [
