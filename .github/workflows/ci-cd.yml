@@ -31,8 +31,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: "Install dependencies"
-        run: npm ci
+      - name: "Clean and install dependencies"
+        run: |
+          rm -rf package-lock.json node_modules
+          npm install
 
       - name: "Run type checking"
         run: npm run type-check
@@ -111,8 +113,10 @@ jobs:
           echo "Using version: ${{ needs.check_for_release.outputs.version }}"
           echo "Package.json version: $(node -p "require('./package.json').version")"
 
-      - name: "Install dependencies"
-        run: npm ci
+      - name: "Clean and install dependencies"
+        run: |
+          rm -rf package-lock.json node_modules
+          npm install
 
       - name: "Build project"
         run: npm run build
