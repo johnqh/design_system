@@ -1855,7 +1855,7 @@ const variants: VariantsType = {
     // Dropdown menus
     dropdown: {
       container: () => 'relative inline-block',
-      trigger: () => 'inline-flex justify-center items-center',
+      trigger: () => 'inline-flex justify-center items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-950 transition-colors',
 
       menu: () =>
         'absolute z-50 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 focus:outline-none transition-all duration-200',
