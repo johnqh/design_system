@@ -31,7 +31,8 @@
       "Bash(npm audit:*)",
       "Bash(npm update:*)",
       "Bash(npm run format:check:*)",
-      "Bash(npm run format:*)"
+      "Bash(npm run format:*)",
+      "Read(//Users/johnhuang/0xmail/types/**)"
     ],
     "deny": [],
     "ask": []
