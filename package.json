@@ -1,7 +1,6 @@
 {
   "name": "@sudobility/design",
   "version": "1.0.25",
-  "private": true,
   "description": "Design system library with tokens, colors, typography and variants",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
