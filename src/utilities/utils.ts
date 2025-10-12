@@ -25,7 +25,7 @@ import { twMerge } from 'tailwind-merge';
  *
  * @example
  * ```typescript
- * import { cn } from '@johnqh/design-system';
+ * import { cn } from '@sudobility/design';
  *
  * // Basic usage
  * cn('text-red-500', 'bg-blue-500') // "text-red-500 bg-blue-500"

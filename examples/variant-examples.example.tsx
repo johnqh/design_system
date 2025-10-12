@@ -2,7 +2,7 @@
  * Examples of different variant handling approaches
  */
 import React from 'react';
-import { variants } from '@johnqh/design-system';
+import { variants } from '@sudobility/design';
 import { VariantProvider, useVariant, useNestedVariant } from './variant-provider.example';
 import { createVariantBuilder } from './variant-builder.example';
 // Note: cn utility would need to be implemented or imported from a utility library

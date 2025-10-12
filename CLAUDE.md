@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a standalone design system library (`@johnqh/design-system`) that provides comprehensive design tokens, colors, typography, and variants for UI development. It serves as the foundation for the `@johnqh/mail-box-components` library and can be reused across multiple projects.
+This is a standalone design system library (`@sudobility/design`) that provides comprehensive design tokens, colors, typography, and variants for UI development. It serves as the foundation for the `@johnqh/mail-box-components` library and can be reused across multiple projects.
 
 **Current Version:** 1.0.19
 **License:** MIT
@@ -177,19 +177,19 @@ src/
 #### Import Examples
 ```typescript
 // Core imports (most common)
-import { colors, designTokens, textVariants, variants } from '@johnqh/design-system';
+import { colors, designTokens, textVariants, variants } from '@sudobility/design';
 
 // Simple variant system
-import { simpleVariants, createSimpleVariants } from '@johnqh/design-system';
+import { simpleVariants, createSimpleVariants } from '@sudobility/design';
 
 // UI utilities and constants
-import { ui, uiConstants } from '@johnqh/design-system';
+import { ui, uiConstants } from '@sudobility/design';
 
 // Theme utilities
-import { createTheme, applyTheme, getThemeColors } from '@johnqh/design-system';
+import { createTheme, applyTheme, getThemeColors } from '@sudobility/design';
 
 // Component helpers
-import { createComponentHelpers, getComponentClasses } from '@johnqh/design-system';
+import { createComponentHelpers, getComponentClasses } from '@sudobility/design';
 
 // AI-helper utilities
 import {
@@ -199,13 +199,13 @@ import {
   validateVariantConfig,
   safeResolveVariant,
   analyzeVariantUsage
-} from '@johnqh/design-system';
+} from '@sudobility/design';
 
 // SEO and structured data
-import { seoKeywords, structuredData } from '@johnqh/design-system';
+import { seoKeywords, structuredData } from '@sudobility/design';
 
 // Default import (all modules)
-import designSystem from '@johnqh/design-system';
+import designSystem from '@sudobility/design';
 ```
 
 #### Common Usage Patterns
@@ -276,7 +276,7 @@ import {
   getSemanticColor,
   applyUIPattern,
   createComponentWithIntent
-} from '@johnqh/design-system';
+} from '@sudobility/design';
 
 // Clear semantic mapping
 const errorMessage = getSemanticColor('error');
@@ -301,7 +301,7 @@ const primaryButton = createComponentWithIntent({
 import {
   createSimpleVariants,
   type TypedVariantConfig
-} from '@johnqh/design-system';
+} from '@sudobility/design';
 
 // Structured variant configuration
 const config: TypedVariantConfig = {
@@ -317,7 +317,7 @@ const variants = createSimpleVariants(config);
 ##### Safe Variant Resolution
 ```typescript
 // AI can handle errors gracefully
-import { safeResolveVariant, validateVariantConfig } from '@johnqh/design-system';
+import { safeResolveVariant, validateVariantConfig } from '@sudobility/design';
 
 // Validate configuration
 const validation = validateVariantConfig(config, {
@@ -391,7 +391,7 @@ node -e "
 ##### Configuration Analysis
 ```typescript
 // AI can analyze and optimize variant configurations
-import { analyzeVariantUsage, getVariantSuggestions } from '@johnqh/design-system';
+import { analyzeVariantUsage, getVariantSuggestions } from '@sudobility/design';
 
 const analysis = analyzeVariantUsage(config);
 console.log('Component count:', analysis.componentCount);

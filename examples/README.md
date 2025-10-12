@@ -1,6 +1,6 @@
 # Design System Examples
 
-This directory contains various example implementations showing how to use the `@johnqh/design-system` variant system.
+This directory contains various example implementations showing how to use the `@sudobility/design` variant system.
 
 ## File Overview
 
@@ -21,7 +21,7 @@ This directory contains various example implementations showing how to use the `
 
 ## Usage Notes
 
-1. **Import Paths**: Examples use relative imports (`../src/`) for demonstration. In real usage, import from `@johnqh/design-system`.
+1. **Import Paths**: Examples use relative imports (`../src/`) for demonstration. In real usage, import from `@sudobility/design`.
 
 2. **React Dependencies**: React examples require React to be installed in your project. They are provided for reference and would need React types and runtime.
 

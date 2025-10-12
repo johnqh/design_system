@@ -1,4 +1,4 @@
-# @johnqh/design-system
+# @sudobility/design
 
 A comprehensive design system library providing semantic design tokens, colors, typography, and component variants for consistent UI development.
 
@@ -16,7 +16,7 @@ A comprehensive design system library providing semantic design tokens, colors, 
 ## Installation
 
 ```bash
-npm install @johnqh/design-system
+npm install @sudobility/design
 ```
 
 Peer dependencies:
@@ -27,7 +27,7 @@ npm install clsx tailwind-merge
 ## Quick Start
 
 ```typescript
-import { colors, designTokens, textVariants, variants } from '@johnqh/design-system';
+import { colors, designTokens, textVariants, variants } from '@sudobility/design';
 
 // Use semantic colors
 const primaryText = colors.semantic.primary.DEFAULT;
@@ -46,7 +46,7 @@ const buttonClass = variants.button.primary;
 
 ### Colors
 ```typescript
-import { colors } from '@johnqh/design-system';
+import { colors } from '@sudobility/design';
 
 // Raw colors (use sparingly)
 colors.raw.blue[500];
@@ -62,7 +62,7 @@ colors.component.alert.error;
 
 ### Design Tokens
 ```typescript
-import { designTokens } from '@johnqh/design-system';
+import { designTokens } from '@sudobility/design';
 
 // Spacing
 designTokens.spacing.margin.md;  // 16px
@@ -83,7 +83,7 @@ designTokens.layout.grid.cols.desktop;
 
 ### Typography
 ```typescript
-import { textVariants } from '@johnqh/design-system';
+import { textVariants } from '@sudobility/design';
 
 // Headings
 textVariants.h1;  // 'text-4xl font-bold text-gray-900 dark:text-gray-100'
@@ -101,7 +101,7 @@ textVariants.caption;
 
 ### Component Variants
 ```typescript
-import { variants } from '@johnqh/design-system';
+import { variants } from '@sudobility/design';
 
 // Buttons
 variants.button.primary;
@@ -128,7 +128,7 @@ variants.input.search;
 For easier theming and variant management:
 
 ```typescript
-import { simpleVariants, createSimpleVariants } from '@johnqh/design-system';
+import { simpleVariants, createSimpleVariants } from '@sudobility/design';
 
 // Use pre-configured variants
 const buttonClass = simpleVariants.get('button', 'primary');
@@ -153,7 +153,7 @@ import {
   getSemanticColor,
   applyUIPattern,
   createComponentWithIntent
-} from '@johnqh/design-system';
+} from '@sudobility/design';
 
 // Semantic color mapping
 const errorText = getSemanticColor('error');
@@ -178,7 +178,7 @@ import {
   validateVariantConfig,
   safeResolveVariant,
   analyzeVariantUsage
-} from '@johnqh/design-system';
+} from '@sudobility/design';
 
 // Validate configuration
 const validation = validateVariantConfig(config, {
@@ -200,7 +200,7 @@ console.log('Optimization suggestions:', analysis.optimizationSuggestions);
 ## Theme Management
 
 ```typescript
-import { createTheme, applyTheme, getThemeColors } from '@johnqh/design-system';
+import { createTheme, applyTheme, getThemeColors } from '@sudobility/design';
 
 // Create a custom theme
 const theme = createTheme({
@@ -219,7 +219,7 @@ const colors = getThemeColors(theme);
 ## Component Helpers
 
 ```typescript
-import { createComponentHelpers } from '@johnqh/design-system';
+import { createComponentHelpers } from '@sudobility/design';
 
 const helpers = createComponentHelpers({
   baseClass: 'rounded-lg transition-colors',
@@ -242,7 +242,7 @@ const buttonClass = helpers.getClasses({ size: 'md', variant: 'primary' });
 ## UI Constants
 
 ```typescript
-import { uiConstants } from '@johnqh/design-system';
+import { uiConstants } from '@sudobility/design';
 
 // Layout constants
 uiConstants.layout.container;
@@ -267,7 +267,7 @@ import type {
   ComponentVariant,
   TypedVariantConfig,
   VariantResolutionResult
-} from '@johnqh/design-system';
+} from '@sudobility/design';
 
 // Type-safe variant configuration
 const config: TypedVariantConfig = {

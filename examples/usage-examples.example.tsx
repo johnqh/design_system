@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { variants as designSystemVariants } from '@johnqh/design-system';
-import { createVariants, createQuickVariants } from '@johnqh/design-system';
+import { variants as designSystemVariants } from '@sudobility/design';
+import { createVariants, createQuickVariants } from '@sudobility/design';
 
 // =============================================================================
 // SETUP (Do this once in your app)

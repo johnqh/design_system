@@ -10,7 +10,7 @@
  * @since 1.0.0
  * @example
  * ```typescript
- * import { SimpleVariants, createVariants } from '@johnqh/design-system';
+ * import { SimpleVariants, createVariants } from '@sudobility/design';
  *
  * // Create a variant system
  * const variants = createVariants(designSystemVariants);
@@ -585,7 +585,7 @@ export class SimpleVariants {
  *
  * @example
  * ```typescript
- * import { createVariants } from '@johnqh/design-system';
+ * import { createVariants } from '@sudobility/design';
  * import { variants as designSystemVariants } from './design-system';
  *
  * const variants = createVariants(designSystemVariants);
@@ -607,7 +607,7 @@ export function createVariants(designSystemVariants: VariantConfig): SimpleVaria
  *
  * @example
  * ```typescript
- * import { createQuickVariants } from '@johnqh/design-system';
+ * import { createQuickVariants } from '@sudobility/design';
  *
  * const variants = createQuickVariants(designSystemVariants);
  *

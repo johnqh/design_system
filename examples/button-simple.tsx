@@ -7,8 +7,8 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 // Note: cn utility would need to be implemented or imported from a utility library
 // import { cn } from "../lib/utils"
-import { variants as designSystemVariants } from "@johnqh/design-system"
-import { createQuickVariants } from "@johnqh/design-system"
+import { variants as designSystemVariants } from "@sudobility/design"
+import { createQuickVariants } from "@sudobility/design"
 
 // Create variant resolver once
 const v = createQuickVariants(designSystemVariants);
