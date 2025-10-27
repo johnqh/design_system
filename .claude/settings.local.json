@@ -33,7 +33,9 @@
       "Bash(npm run format:check:*)",
       "Bash(npm run format:*)",
       "Read(//Users/johnhuang/0xmail/types/**)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
