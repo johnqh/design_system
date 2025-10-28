@@ -116,6 +116,29 @@ const ui = {
     gridLg: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
   },
 
+  // Section styles with backgrounds
+  section: {
+    // Standard section with white/dark background
+    default: 'py-8 sm:py-12 lg:py-16 bg-white dark:bg-gray-900',
+
+    // Hero sections (larger spacing)
+    hero: 'py-20 bg-white dark:bg-gray-900',
+
+    // Subtle background sections
+    subtle: 'py-8 sm:py-12 lg:py-16 bg-gray-50 dark:bg-gray-800',
+
+    // Accent background sections
+    accent: 'py-8 sm:py-12 lg:py-16 bg-blue-50 dark:bg-blue-900',
+
+    // Gradient sections with dark mode support
+    gradient: 'py-20 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900',
+    gradientAmber: 'py-20 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900 dark:to-yellow-900',
+    gradientBlue: 'py-20 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900',
+
+    // No background (transparent)
+    transparent: 'py-8 sm:py-12 lg:py-16',
+  },
+
   // Background utilities
   background: {
     surface: 'bg-white dark:bg-gray-800',
@@ -227,6 +250,53 @@ const ui = {
     focus: 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
     disabled: 'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
     loading: 'animate-pulse',
+  },
+
+  // Table utilities
+  table: {
+    // Table container
+    container: 'bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden',
+    wrapper: 'overflow-x-auto',
+    base: 'w-full',
+
+    // Table header
+    thead: 'bg-gray-50 dark:bg-gray-800',
+    th: 'px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-gray-100',
+
+    // Table body
+    tbody: 'divide-y divide-gray-200 dark:divide-gray-700',
+
+    // Table rows (alternating)
+    tr: 'bg-white dark:bg-gray-900',
+    trAlt: 'bg-gray-50 dark:bg-gray-800',
+
+    // Table cells
+    td: 'px-6 py-4 text-sm text-gray-900 dark:text-gray-100',
+  },
+
+  // Card utilities
+  card: {
+    // Standard cards with shadow
+    default: 'bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg',
+    large: 'bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl',
+
+    // Cards with border instead of shadow
+    bordered: 'bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700',
+
+    // Cards with hover effects
+    interactive: 'bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow',
+
+    // Feature cards (for grids)
+    feature: 'bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow',
+  },
+
+  // Badge utilities
+  badge: {
+    blue: 'inline-flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full',
+    green: 'inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-4 py-2 rounded-full',
+    purple: 'inline-flex items-center bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-4 py-2 rounded-full',
+    amber: 'inline-flex items-center bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-full',
+    gray: 'inline-flex items-center bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 px-4 py-2 rounded-full',
   },
 
   // Web3 specific utilities

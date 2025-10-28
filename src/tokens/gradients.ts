@@ -5,11 +5,11 @@
 export const GRADIENTS = {
   // Background gradients
   backgrounds: {
-    main: 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100',
-    page: 'bg-gradient-to-br from-blue-50 to-indigo-100',
+    main: 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900',
+    page: 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800',
     pageDark: 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800',
-    section: 'bg-gradient-to-r from-purple-50 to-blue-50',
-    overlay: 'bg-gradient-to-br from-blue-50/50 to-purple-50/50',
+    section: 'bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900',
+    overlay: 'bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/50 dark:to-purple-900/50',
   },
 
   // Button gradients
@@ -22,9 +22,9 @@ export const GRADIENTS = {
 
   // Text gradients (use with bg-clip-text text-transparent)
   text: {
-    primary: 'bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800',
-    secondary: 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600',
-    accent: 'bg-gradient-to-r from-blue-600 to-purple-600',
+    primary: 'bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-gray-100 dark:via-blue-200 dark:to-purple-200',
+    secondary: 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400',
+    accent: 'bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400',
   },
 
   // Special effect gradients
