@@ -69,7 +69,8 @@ describe('Colors System', () => {
     it('should have alert colors', () => {
       expect(colors.component.alert.info.base).toContain('bg-blue-50');
       expect(colors.component.alert.success.base).toContain('bg-green-50');
-      expect(colors.component.alert.warning.base).toContain('bg-amber-50');
+      expect(colors.component.alert.warning.base).toContain('bg-orange-50');
+      expect(colors.component.alert.attention.base).toContain('bg-amber-50');
       expect(colors.component.alert.error.base).toContain('bg-red-50');
     });
   });

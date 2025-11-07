@@ -127,7 +127,8 @@ describe('UI Utilities', () => {
 
     it('should have status text variants', () => {
       expect(ui.text.success).toContain('text-green-700');
-      expect(ui.text.warning).toContain('text-amber-700');
+      expect(ui.text.warning).toContain('text-orange-700');
+      expect(ui.text.attention).toContain('text-amber-700');
       expect(ui.text.error).toContain('text-red-700');
       expect(ui.text.info).toContain('text-blue-700');
     });

@@ -330,14 +330,27 @@ const semanticColors = {
     },
 
     warning: {
+      light: rawColors.orange[500],
+      dark: rawColors.orange[400],
+    },
+    warningBg: {
+      light: rawColors.orange[100],
+      dark: `${rawColors.orange[900]}/30`,
+    },
+    warningText: {
+      light: rawColors.orange[700],
+      dark: rawColors.orange[300],
+    },
+
+    attention: {
       light: rawColors.amber[500],
       dark: rawColors.amber[400],
     },
-    warningBg: {
+    attentionBg: {
       light: rawColors.amber[100],
       dark: `${rawColors.amber[900]}/30`,
     },
-    warningText: {
+    attentionText: {
       light: rawColors.amber[700],
       dark: rawColors.amber[300],
     },
@@ -581,6 +594,13 @@ const componentColors = {
 
     // Warning state card
     warning: {
+      base: 'bg-orange-50 border-orange-200',
+      dark: 'dark:bg-orange-900/20 dark:border-orange-800',
+      text: 'text-orange-800 dark:text-orange-200',
+    },
+
+    // Attention state card
+    attention: {
       base: 'bg-amber-50 border-amber-200',
       dark: 'dark:bg-amber-900/20 dark:border-amber-800',
       text: 'text-amber-800 dark:text-amber-200',
@@ -615,6 +635,12 @@ const componentColors = {
 
     // Warning badge
     warning: {
+      base: 'bg-orange-100 text-orange-800',
+      dark: 'dark:bg-orange-900/30 dark:text-orange-300',
+    },
+
+    // Attention badge
+    attention: {
       base: 'bg-amber-100 text-amber-800',
       dark: 'dark:bg-amber-900/30 dark:text-amber-300',
     },
@@ -708,6 +734,13 @@ const componentColors = {
 
     // Warning alert
     warning: {
+      base: 'bg-orange-50 border-orange-200 text-orange-800',
+      dark: 'dark:bg-orange-900/20 dark:border-orange-800 dark:text-orange-200',
+      icon: 'text-orange-600 dark:text-orange-400',
+    },
+
+    // Attention alert
+    attention: {
       base: 'bg-amber-50 border-amber-200 text-amber-800',
       dark: 'dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200',
       icon: 'text-amber-600 dark:text-amber-400',

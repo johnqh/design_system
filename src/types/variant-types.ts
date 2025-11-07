@@ -49,6 +49,7 @@ export type ComponentVariant =
   | 'destructive'
   | 'success'
   | 'warning'
+  | 'attention'
   | 'info';
 
 /**
@@ -130,6 +131,7 @@ export interface TypedBadgeVariants {
   destructive: VariantFunction;
   success: VariantFunction;
   warning: VariantFunction;
+  attention: VariantFunction;
   info: VariantFunction;
   [key: string]: VariantFunction | VariantWithArgs;
 }
@@ -168,6 +170,12 @@ export interface TypedAlertVariants {
         [key: string]: VariantFunction;
       };
   warning:
+    | VariantFunction
+    | {
+        default: VariantFunction;
+        [key: string]: VariantFunction;
+      };
+  attention:
     | VariantFunction
     | {
         default: VariantFunction;

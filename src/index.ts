@@ -222,7 +222,8 @@ const ui = {
 
     // Status text
     success: 'text-green-700 dark:text-green-300 font-medium',
-    warning: 'text-amber-700 dark:text-amber-300 font-medium',
+    warning: 'text-orange-700 dark:text-orange-300 font-medium',
+    attention: 'text-amber-700 dark:text-amber-300 font-medium',
     error: 'text-red-700 dark:text-red-300 font-medium',
     info: 'text-blue-700 dark:text-blue-300 font-medium',
 
