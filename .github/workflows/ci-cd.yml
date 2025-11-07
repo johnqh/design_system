@@ -1,8 +1,6 @@
 ---
-# Example CI/CD workflow for PUBLIC library projects
-# Projects: design_system
-#
-# Copy this file to your project's .github/workflows/ci-cd.yml
+# CI/CD workflow for design_system
+# Automatically publishes to NPM when NPM_TOKEN is configured
 
 name: CI/CD
 
@@ -23,7 +21,6 @@ jobs:
   cicd:
     uses: johnqh/workflows/.github/workflows/unified-cicd.yml@main
     with:
-      project-type: "library"
       npm-access: "public"
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
