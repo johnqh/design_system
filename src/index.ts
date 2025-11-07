@@ -34,6 +34,16 @@ export {
   cardVariant,
   textVariant,
 } from './utilities/component-helpers';
+export {
+  statusIndicatorColors,
+  getStatusIndicatorColor,
+  cardVariantColors,
+  getCardVariantColors,
+  calloutVariantColors,
+  getCalloutVariantColors,
+  sectionBadgeColors,
+  getSectionBadgeColors,
+} from './utilities/status-colors';
 
 // === PURE TYPESCRIPT UTILITIES ===
 export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './tokens/gradients';
