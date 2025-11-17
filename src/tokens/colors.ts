@@ -1,5 +1,5 @@
 /**
- * 0xmail.box Design System - Color Foundations
+ * Design System - Color Foundations
  *
  * This file defines the complete color system for the application with:
  * - Semantic color tokens that map to specific use cases

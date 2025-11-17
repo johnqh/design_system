@@ -51,8 +51,8 @@ export const DOCUMENTATION_KEYWORDS = [
   'Web3 developer documentation',
 ];
 
-export const COMPANY_KEYWORDS = [
-  'about 0xmail.box',
+export const createCompanyKeywords = (emailDomain: string): string[] => [
+  `about ${emailDomain}`,
   'Web3 email team',
   'blockchain email company',
   'crypto email platform',
@@ -121,7 +121,8 @@ export const combineKeywords = (...keywordSets: string[][]): string[] => {
 // Page-specific keyword getters
 export const getHomePageKeywords = () =>
   combineKeywords(BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, WEB3_TRENDING_KEYWORDS);
-export const getAboutPageKeywords = () => combineKeywords(BASE_KEYWORDS, COMPANY_KEYWORDS);
+export const getAboutPageKeywords = (emailDomain: string) =>
+  combineKeywords(BASE_KEYWORDS, createCompanyKeywords(emailDomain));
 export const getDocumentationKeywords = () =>
   combineKeywords(BASE_KEYWORDS, DOCUMENTATION_KEYWORDS, TECHNICAL_SEO_KEYWORDS);
 export const getUserPageKeywords = () =>
@@ -132,5 +133,5 @@ export const getWeb3ProjectsKeywords = () =>
   combineKeywords(BASE_KEYWORDS, DEVELOPER_KEYWORDS, WEB3_TRENDING_KEYWORDS);
 export const getSubscriptionKeywords = () =>
   combineKeywords(BASE_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS);
-export const getContactKeywords = () =>
-  combineKeywords(BASE_KEYWORDS, COMPANY_KEYWORDS, ACCESSIBILITY_KEYWORDS);
+export const getContactKeywords = (emailDomain: string) =>
+  combineKeywords(BASE_KEYWORDS, createCompanyKeywords(emailDomain), ACCESSIBILITY_KEYWORDS);

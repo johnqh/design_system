@@ -53,7 +53,7 @@ export {
   USER_FOCUSED_KEYWORDS,
   DEVELOPER_KEYWORDS,
   DOCUMENTATION_KEYWORDS,
-  COMPANY_KEYWORDS,
+  createCompanyKeywords,
   WEB3_TRENDING_KEYWORDS,
   TECHNICAL_SEO_KEYWORDS,
   ACCESSIBILITY_KEYWORDS,
@@ -69,7 +69,7 @@ export {
 } from './content/seo-keywords';
 export type { StructuredData } from './content/structured-data';
 export {
-  BASE_ORGANIZATION,
+  createBaseOrganization,
   createSoftwareApplicationData,
   createWebPageData,
   createAboutPageData,
