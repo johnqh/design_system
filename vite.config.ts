@@ -10,13 +10,16 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        'index.native': resolve(__dirname, 'src/index.native.ts'),
+      },
       name: 'DesignSystem',
-      formats: ['es', 'cjs', 'umd'],
-      fileName: (format) => {
-        if (format === 'es') return 'index.esm.js';
-        if (format === 'cjs') return 'index.cjs.js';
-        return 'index.umd.js';
+      formats: ['es', 'cjs'],
+      fileName: (format, entryName) => {
+        const ext = format === 'es' ? 'esm.js' : 'cjs.js';
+        if (entryName === 'index.native') return `index.native.js`;
+        return `index.${ext}`;
       },
     },
     rollupOptions: {
