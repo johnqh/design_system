@@ -6,35 +6,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a standalone design system library (`@sudobility/design`) that provides comprehensive design tokens, colors, typography, and variants for UI development. It serves as the foundation for the `@johnqh/mail-box-components` library and can be reused across multiple projects.
 
-**Current Version:** 1.0.19
+**Current Version:** 1.1.16
 **License:** MIT
 **Author:** John Q Huang
 **Type:** ES Module
+
+## Package Manager
+
+**This project uses Bun as the package manager.** Always use `bun` commands instead of `npm`:
+
+```bash
+# Install dependencies
+bun install
+
+# Run any script
+bun run <script-name>
+```
 
 ## Common Development Commands
 
 ```bash
 # Build the design system library
-npm run build
+bun run build
 
 # Development mode with watch
-npm run dev
+bun run dev
 
 # Type checking
-npm run type-check
+bun run type-check
 
 # Testing
-npm test
-npm run test:ui
-npm run test:coverage
+bun run test
+bun run test:ui
+bun run test:coverage
 
 # Run single test
-npm test -- src/__tests__/index.test.ts
+bun vitest run src/__tests__/index.test.ts
 
 # Lint and format
-npm run lint          # ESLint + TypeScript check
-npm run format        # Prettier format
-npm run format:check  # Check formatting
+bun run lint          # ESLint + TypeScript check
+bun run format        # Prettier format
+bun run format:check  # Check formatting
 ```
 
 ## Architecture
@@ -125,7 +137,7 @@ Ready-to-use Tailwind class combinations for:
    - Variants → `src/core/variants.ts` or `src/core/simple-variants.ts`
 2. Update exports in `src/index.ts`
 3. Add tests in appropriate test file under `src/__tests__/`
-4. Build and test: `npm run build && npm test`
+4. Build and test: `bun run build && bun run test`
 
 ### Color System Updates
 - Add raw colors to `rawColors` object
@@ -141,7 +153,7 @@ Ready-to-use Tailwind class combinations for:
 
 ### Integration with Main Library
 - This package is consumed as a local file dependency
-- Changes require rebuilding: `npm run build`
+- Changes require rebuilding: `bun run build`
 - Main library re-exports all functionality for backward compatibility
 - Maintains independent versioning and development lifecycle
 
@@ -346,7 +358,7 @@ console.log('Warnings:', result.warnings);
 - **Leverage existing variants** - Check `core/variants.ts` and `core/simple-variants.ts`
 - **Follow the 4px grid** - All spacing should use `designTokens.spacing.*`
 - **Export consistently** - Add both named export and to default export object
-- **Test immediately** - Run `npm test` after making changes
+- **Test immediately** - Run `bun run test` after making changes
 - **Use AI helpers** - Leverage `utilities/ai-helpers.ts` for better code generation
 - **Validate early** - Use validation functions to catch issues during development
 
@@ -367,19 +379,19 @@ try {
 #### AI-Optimized Development Workflow
 ```bash
 # 1. Validate types before starting
-npm run type-check
+bun run type-check
 
 # 2. Use development mode for real-time feedback
-npm run dev
+bun run dev
 
 # 3. Run tests continuously during development
-npm test -- --watch
+bun vitest --watch
 
 # 4. Validate your changes
-npm run build && npm test && npm run lint
+bun run build && bun run test && bun run lint
 
 # 5. Analyze variant usage for optimization
-node -e "
+bun -e "
   const { analyzeVariantUsage } = require('./dist/index.esm.js');
   const analysis = analyzeVariantUsage(yourConfig);
   console.log('Analysis:', analysis);
