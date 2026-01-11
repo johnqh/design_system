@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a standalone design system library (`@sudobility/design`) that provides comprehensive design tokens, colors, typography, and variants for UI development. It serves as the foundation for the `@johnqh/mail-box-components` library and can be reused across multiple projects.
 
-**Current Version:** 1.1.16
+**Current Version:** 1.1.17
 **License:** MIT
 **Author:** John Q Huang
 **Type:** ES Module
