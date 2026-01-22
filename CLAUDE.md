@@ -54,7 +54,8 @@ bun run format:check  # Check formatting
 ### Core Design System Structure
 ```
 src/
-├── index.ts                      # Main entry point, unified exports
+├── index.ts                      # Main entry point (web), unified exports
+├── index.native.ts               # React Native entry point
 ├── core/                         # Core design system modules
 │   ├── simple-variants.ts       # Simplified variant system for easy theming
 │   ├── typography.ts            # Typography system and text variants
