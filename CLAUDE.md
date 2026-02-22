@@ -1,454 +1,262 @@
-# CLAUDE.md
+# design_system - AI Development Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
 
-## Project Overview
+`@sudobility/design` is a standalone, framework-agnostic design system library providing design tokens, colors, typography, component variants, and utility functions for consistent UI development. It serves as the styling foundation for the 0xmail ecosystem (including `@johnqh/mail-box-components`) and supports both web (Tailwind CSS + tailwind-merge) and React Native (NativeWind) targets. All tokens are fully typed with `as const` for literal type inference and tree-shakeable named exports.
 
-This is a standalone design system library (`@sudobility/design`) that provides comprehensive design tokens, colors, typography, and variants for UI development. It serves as the foundation for the `@johnqh/mail-box-components` library and can be reused across multiple projects.
+- **Package name:** `@sudobility/design`
+- **Version:** 1.1.18
+- **License:** MIT
+- **Author:** John Q Huang
+- **Module type:** ES Module (`"type": "module"`)
+- **Package manager:** Bun
 
-**Current Version:** 1.1.17
-**License:** MIT
-**Author:** John Q Huang
-**Type:** ES Module
+## Project Structure
 
-## Package Manager
+```
+src/
+├── index.ts                      # Main web entry point - all exports
+├── index.native.ts               # React Native entry point (cn uses clsx only, no tailwind-merge)
+├── core/
+│   ├── simple-variants.ts        # SimpleVariants class, createVariants(), createQuickVariants()
+│   ├── typography.ts             # textVariants object, createTextStyle(), combineTextStyles(), createResponsiveText()
+│   └── variants.ts               # Pre-built component variant definitions (button, card, badge, input, alert, loading)
+├── tokens/
+│   ├── colors.ts                 # rawColors, semanticColors, componentColors, getColorClasses(), buildColorClass()
+│   ├── gradients.ts              # GRADIENTS, GRADIENT_CLASSES, getGradient(), combineGradient()
+│   └── tokens.ts                 # designTokens (spacing, margin, padding, gap, radius, shadow, typography, animation, z-index, breakpoints, grid, flex, width, height)
+├── utilities/
+│   ├── ai-helpers.ts             # SEMANTIC_COLOR_MAP, UI_PATTERNS, SIZE_SCALES, getSemanticColor(), applyUIPattern(), createComponentWithIntent(), validateVariantConfig(), safeResolveVariant(), getVariantSuggestions(), analyzeVariantUsage()
+│   ├── component-helpers.ts      # sizeClasses, getSizeClasses(), focusRing, focusVisible, transitions, hoverState(), disabledState(), loadingState, buttonVariant(), inputVariant(), cardVariant(), textVariant()
+│   ├── status-colors.ts          # statusIndicatorColors, cardVariantColors, calloutVariantColors, sectionBadgeColors + getter functions
+│   ├── theme-utils.ts            # withOpacity(), responsive(), themeColor(), getSemanticColor(), gradient(), spacing(), animation()
+│   ├── ui-constants.ts           # UI_CONSTANTS, UI_PATTERNS (combined class patterns), getUIConstant(), combineUI()
+│   ├── utils.ts                  # cn() - clsx + tailwind-merge (web)
+│   └── utils.native.ts           # cn() - clsx only (React Native / NativeWind)
+├── types/
+│   └── variant-types.ts          # TypedVariantConfig, TypedVariantsType, TypedButtonVariants, TypedCardVariants, TypedBadgeVariants, TypedInputVariants, TypedAlertVariants, VariantResolutionOptions, VariantResolutionResult, ComponentSize, ComponentVariant, etc.
+├── content/
+│   ├── seo-keywords.ts           # SEO keyword sets and page-specific keyword combinators
+│   └── structured-data.ts        # Schema.org structured data factories (Organization, SoftwareApplication, WebPage, AboutPage, TechArticle)
+└── __tests__/
+    ├── colors.test.ts
+    ├── complete.test.ts
+    ├── component-helpers.test.ts
+    ├── index.test.ts
+    ├── simple-variants.test.ts
+    ├── theme-utils.test.ts
+    ├── typography.test.ts
+    ├── ui-constants.test.ts
+    ├── ui.test.ts
+    ├── utils.test.ts
+    └── variants.test.ts
+```
 
-**This project uses Bun as the package manager.** Always use `bun` commands instead of `npm`:
+## Key Exports
+
+### Colors (`colors`)
+Three-tier color system:
+- `colors.raw` - Base palette values (blue, purple, neutral, red, orange, amber, green, web3 chains). Use sparingly.
+- `colors.semantic` - Purpose-based tokens (text, background, border, brand, state, action, web3) with `light`/`dark` values.
+- `colors.component` - Ready-to-use Tailwind class strings for button, card, badge, input, alert components with `base`/`dark`/`focus`/`hover`/`disabled` sub-keys.
+
+Utility functions: `getColorClasses(component, variant, states?)`, `buildColorClass(bg, text, border?, states?)`.
+
+### Design Tokens (`designTokens`)
+Tailwind class tokens on a 4px grid system:
+- `spacing`, `margin`, `padding`, `gap` (xs through 5xl)
+- `radius`, `shadow` scales
+- `typography` - comprehensive: `family`, `size`, `semantic`, `weight`, `style`, `decoration`, `decorationStyle`, `decorationThickness`, `underlineOffset`, `leading`, `tracking`, `transform`, `align`, `verticalAlign`, `whitespace`, `wordBreak`, `overflow`, `indent`
+- `animation`, `ease`, `zIndex`, `breakpoints`, `grid`, `gridResponsive`, `flex`, `width`, `height`
+
+### Text Variants (`textVariants`)
+Function-based typography system returning Tailwind class strings:
+- `heading` - display (hero/xl/lg/md/sm), h1-h6, responsive variants
+- `body` - xl/lg/md/sm/xs, plus `.strong`, `.emphasis`, `.muted` sub-variants
+- `caption` - default, emphasis, uppercase
+- `lead` - lg/md/sm
+- `link` - default, subtle, muted, external
+- `code` - inline, block, small
+- `label` - default, required, optional, helper, error, success
+- `web3` - address, addressShort, hash, amount, chain, symbol
+- `truncate` - line, lines2-4
+- `selection` - default, brand
+
+Helpers: `createTextStyle(family, size, weight, color, options)`, `combineTextStyles(...styles)`, `createResponsiveText(baseStyle, breakpoints)`.
+
+### Component Variants (`variants`)
+Pre-built Tailwind class strings for:
+- **button** - primary (default/small/large/withIcon/fullWidth), secondary, outline, destructive, ghost, link, gradient, web3
+- **card** - default, elevated, interactive, success, warning, attention, error (each with size variants)
+- **badge** - default, secondary, primary, success, warning, attention, error, web3 chains
+- **input** - default, search, error, success
+- **alert** - default, info, success, warning, attention, destructive
+- **loading** - spinner, skeleton, pulse variants
+
+### SimpleVariants System
+Platform-agnostic variant resolver class:
+- `SimpleVariants` class with `.get()`, `.sized()`, `.nested()`, `.when()`, `.combine()`, `.has()`, `.addFallback()`
+- `createVariants(config)` - factory function
+- `createQuickVariants(config)` - shorthand with `.button()`, `.alert()`, `.input()`, `.badge()` methods
+
+### `cn()` Utility
+```typescript
+cn('text-red-500', 'text-blue-500') // "text-blue-500" (tailwind-merge resolves conflicts)
+cn('base', { 'active': isActive }, isLarge && 'px-6')
+```
+Web: `clsx` + `tailwind-merge`. React Native: `clsx` only (NativeWind handles merging).
+
+### AI Helpers
+- `SEMANTIC_COLOR_MAP` - maps intents (success/error/warning/info/primary/secondary/accent/muted/emphasis/subtle) to text color classes
+- `UI_PATTERNS` - named layout and interaction patterns (centeredContainer, flexBetween, elevatedCard, clickable, focusable, disabled, etc.)
+- `SIZE_SCALES` - xs/sm/md/lg/xl with padding, text, height classes
+- `getSemanticColor(intent)`, `applyUIPattern(pattern, additional?)`, `createSizedComponent(size, baseClasses)`, `createComponentWithIntent({ intent, size, pattern, additional })`
+- `validateVariantConfig(config, options)` - returns `{ isValid, errors, warnings, suggestions }`
+- `safeResolveVariant(config, component, variant, options)` - returns `{ classes, usedFallback, warnings, requested }`
+- `getVariantSuggestions(config, component, partial)` - autocomplete helper
+- `analyzeVariantUsage(config)` - optimization analysis
+
+### Status Colors
+- `statusIndicatorColors` / `getStatusIndicatorColor()` - dot/icon colors
+- `cardVariantColors` / `getCardVariantColors()` - container bg/border/text
+- `calloutVariantColors` / `getCalloutVariantColors()` - gradient bg + text pairs
+- `sectionBadgeColors` / `getSectionBadgeColors()` - badge container + icon pairs
+
+### Gradients
+- `GRADIENTS` - backgrounds, buttons, text, effects
+- `GRADIENT_CLASSES` - pre-composed (primaryButton, heroButton, headerButton, pageLayout, gradientText)
+- `getGradient(category, variant)`, `combineGradient(gradientKey, additionalClasses)`
+
+### UI Utilities (`ui` object)
+Inline in `index.ts`, exported as `ui`. Contains ready-to-use Tailwind class strings for:
+- `ui.layout` - container, section, flex, grid patterns
+- `ui.section` - default, hero, subtle, accent, gradient backgrounds
+- `ui.background`, `ui.border`, `ui.shadow`, `ui.spacing`
+- `ui.text` - h1-h6, display, hero, body, lead, caption, label, link, code, status, emphasis, muted, uppercase
+- `ui.transition`, `ui.states` (hover, focus, disabled, loading)
+- `ui.table` - container, thead, tbody, tr, td
+- `ui.card` - default, large, bordered, interactive, feature
+- `ui.badge` - blue, green, purple, amber, gray
+- `ui.web3` - walletButton, chainBadge(chain), addressText
+
+### Capitalized Aliases
+`Colors`, `Tokens`, `Typography`, `Variants` - aliases for `colors`, `designTokens`, `textVariants`, `variants`.
+
+### Content Helpers
+- SEO keyword sets: `BASE_KEYWORDS`, `USER_FOCUSED_KEYWORDS`, `DEVELOPER_KEYWORDS`, `DOCUMENTATION_KEYWORDS`, `WEB3_TRENDING_KEYWORDS`, `TECHNICAL_SEO_KEYWORDS`, `ACCESSIBILITY_KEYWORDS`
+- Page keyword getters: `getHomePageKeywords()`, `getAboutPageKeywords(domain)`, `getDocumentationKeywords()`, etc.
+- Structured data factories: `createBaseOrganization()`, `createSoftwareApplicationData()`, `createWebPageData()`, `createAboutPageData()`, `createTechArticleData()`
+
+## Development Commands
 
 ```bash
 # Install dependencies
 bun install
 
-# Run any script
-bun run <script-name>
-```
-
-## Common Development Commands
-
-```bash
-# Build the design system library
+# Build (tsc + vite)
 bun run build
 
 # Development mode with watch
 bun run dev
 
-# Type checking
+# Type checking only
 bun run type-check
 
-# Testing
-bun run test
-bun run test:ui
-bun run test:coverage
+# Testing (vitest, jsdom environment)
+bun run test              # Run tests in watch mode
+bun run test:ui           # Vitest UI
+bun run test:coverage     # Coverage report (v8 provider, 95% threshold)
 
-# Run single test
+# Run a single test file
 bun vitest run src/__tests__/index.test.ts
 
 # Lint and format
-bun run lint          # ESLint + TypeScript check
-bun run format        # Prettier format
-bun run format:check  # Check formatting
+bun run lint              # ESLint + TypeScript check (with --fix)
+bun run format            # Prettier format
+bun run format:check      # Check formatting without writing
 ```
 
-## Architecture
-
-### Core Design System Structure
-```
-src/
-├── index.ts                      # Main entry point (web), unified exports
-├── index.native.ts               # React Native entry point
-├── core/                         # Core design system modules
-│   ├── simple-variants.ts       # Simplified variant system for easy theming
-│   ├── typography.ts            # Typography system and text variants
-│   └── variants.ts              # Component style variants
-├── tokens/                       # Design token definitions
-│   ├── colors.ts                # Color system (raw, semantic, component)
-│   ├── gradients.ts             # Gradient definitions
-│   └── tokens.ts                # Core design tokens (spacing, layout)
-├── utilities/                    # Helper functions and utilities
-│   ├── ai-helpers.ts            # AI-assisted development utilities
-│   ├── component-helpers.ts     # Component creation utilities
-│   ├── theme-utils.ts          # Theme and color utilities
-│   ├── ui-constants.ts         # UI constant definitions
-│   └── utils.ts                # General utility functions
-├── types/                        # TypeScript type definitions
-│   └── variant-types.ts        # Variant system type definitions
-├── content/                      # Content optimization
-│   ├── seo-keywords.ts         # SEO keyword configurations
-│   └── structured-data.ts      # Structured data helpers
-└── __tests__/                    # Comprehensive test suite
-```
-
-### Design Token Philosophy
-- **4px Grid System** - All spacing based on consistent 4px increments
-- **Semantic Naming** - Colors and tokens use purpose-based naming (primary, secondary, success, error)
-- **Dark Mode First** - Full support for light and dark color schemes
-- **Component-Specific** - Pre-built color combinations for common UI patterns
-- **Type-Safe** - Comprehensive TypeScript types with literal type inference
-- **AI-Optimized** - Semantic helpers and validation for better AI code generation
-
-### Export Strategy
-The library provides multiple export patterns for flexibility:
-- **Named exports** - `colors`, `designTokens`, `textVariants`, `variants`, `simpleVariants`
-- **Capitalized aliases** - `Colors`, `Tokens`, `Typography`, `Variants`
-- **UI utilities** - `ui` object with common design patterns, `uiConstants` for UI constants
-- **Theme utilities** - `createTheme`, `applyTheme`, `getThemeColors`
-- **Component helpers** - `createComponentHelpers`, `getComponentClasses`
-- **AI helpers** - `getSemanticColor`, `applyUIPattern`, `createComponentWithIntent`
-- **Validation utilities** - `validateVariantConfig`, `safeResolveVariant`
-- **Wildcard exports** - Full re-export for backward compatibility
-- **Default export** - Grouped structure for convenience
-
-## Key Implementation Details
-
-### Color System Architecture
-The color system has three levels:
-1. **Raw Colors** - Base palette values (use sparingly)
-2. **Semantic Colors** - Purpose-based tokens (recommended for most use cases)
-3. **Component Colors** - Ready-to-use Tailwind classes for components
-
-### Design Tokens Structure
-- **Typography Scale** - Comprehensive font sizes, weights, and line heights
-- **Spacing System** - Margin, padding, gap utilities with consistent scale
-- **Animation Tokens** - Duration and easing presets
-- **Layout Utilities** - Grid, flex, and responsive patterns
-- **Z-Index Scale** - Layering system for UI hierarchy
-
-### UI Utilities
-Pre-built utility combinations for:
-- Layout patterns (container, section, grid, flex)
-- Typography hierarchy (headings, body, links, code)
-- Interactive states (hover, focus, disabled)
-- Web3-specific components (wallet buttons, chain badges)
-
-### Component Style Variants
-Ready-to-use Tailwind class combinations for:
-- **Buttons** - Primary, secondary, outline, ghost, destructive, success, link, gradient
-- **Cards** - Default, elevated, interactive, success, warning, error
-- **Badges** - All variants including Web3-specific chains
-- **Inputs** - Default and search variants with focus states
-- **Alerts** - Info, success, warning, error with icons
-
-## Development Workflow
-
-### Adding New Design Tokens
-1. Add token to appropriate file in the correct directory:
-   - Color tokens → `src/tokens/colors.ts`
-   - Design tokens → `src/tokens/tokens.ts`
-   - Typography → `src/core/typography.ts`
-   - Variants → `src/core/variants.ts` or `src/core/simple-variants.ts`
-2. Update exports in `src/index.ts`
-3. Add tests in appropriate test file under `src/__tests__/`
-4. Build and test: `bun run build && bun run test`
-
-### Color System Updates
-- Add raw colors to `rawColors` object
-- Create semantic mappings in `semanticColors`
-- Add component-specific classes to `componentColors`
-- Use utility functions for complex combinations
-
-### Testing Strategy
-- Test all major exports are available
-- Verify design token consistency
-- Ensure utility functions work correctly
-- Test both named and default exports
-
-### Integration with Main Library
-- This package is consumed as a local file dependency
-- Changes require rebuilding: `bun run build`
-- Main library re-exports all functionality for backward compatibility
-- Maintains independent versioning and development lifecycle
-
-## AI-Assisted Development Optimization
-
-### Quick Reference for AI Assistants
-
-#### Module Organization Map
-```
-src/
-├── index.ts                      # Main entry, all exports
-├── core/                         # Core modules
-│   ├── simple-variants.ts       # Simple variant system
-│   ├── typography.ts            # Typography system
-│   └── variants.ts              # Component variants
-├── tokens/                       # Design tokens
-│   ├── colors.ts                # Color system
-│   ├── gradients.ts             # Gradients
-│   └── tokens.ts                # Core tokens
-├── utilities/                    # Helpers & utils
-│   ├── ai-helpers.ts            # AI utilities
-│   ├── component-helpers.ts     # Component utils
-│   ├── theme-utils.ts          # Theme utilities
-│   ├── ui-constants.ts         # UI constants
-│   └── utils.ts                # General utils
-├── types/                        # TypeScript types
-│   └── variant-types.ts        # Variant types
-└── content/                      # Content helpers
-    ├── seo-keywords.ts         # SEO keywords
-    └── structured-data.ts      # Structured data
-```
-
-#### Import Examples
-```typescript
-// Core imports (most common)
-import { colors, designTokens, textVariants, variants } from '@sudobility/design';
-
-// Simple variant system
-import { simpleVariants, createSimpleVariants } from '@sudobility/design';
-
-// UI utilities and constants
-import { ui, uiConstants } from '@sudobility/design';
-
-// Theme utilities
-import { createTheme, applyTheme, getThemeColors } from '@sudobility/design';
-
-// Component helpers
-import { createComponentHelpers, getComponentClasses } from '@sudobility/design';
-
-// AI-helper utilities
-import {
-  getSemanticColor,
-  applyUIPattern,
-  createComponentWithIntent,
-  validateVariantConfig,
-  safeResolveVariant,
-  analyzeVariantUsage
-} from '@sudobility/design';
-
-// SEO and structured data
-import { seoKeywords, structuredData } from '@sudobility/design';
-
-// Default import (all modules)
-import designSystem from '@sudobility/design';
-```
-
-#### Common Usage Patterns
-```typescript
-// Using semantic colors
-const primaryButton = colors.semantic.primary.DEFAULT;
-
-// Using design tokens
-const spacing = designTokens.spacing.margin.md;
-
-// Using text variants
-const heading = textVariants.h1;
-
-// Using component variants
-const buttonClass = variants.button.primary;
-
-// Using UI utilities
-const container = ui.layout.container;
-```
-
-### Structured Architecture
-- **Clear separation of concerns** - Each file has a single, well-defined purpose
-- **Consistent naming conventions** - camelCase for functions, PascalCase for types
-- **Comprehensive TypeScript types** - All exports are fully typed with IntelliSense support
-- **Semantic organization** - Structure mirrors design thinking and usage patterns
-
-### Development-Friendly Features
-- **Extensive JSDoc comments** - All major functions documented with examples
-- **Comprehensive utility functions** - Color, theme, component, and AI helpers
-- **Simple variant system** - Easier theming with `simpleVariants` for common patterns
-- **Theme management** - Dynamic theme creation and application utilities
-- **Component helpers** - Utilities for building consistent components
-- **AI-optimized helpers** - Semantic functions for better code generation
-- **Built-in validation** - Config validation with detailed error messages
-- **Consistent export patterns** - Named exports, aliases, and default export
-- **Type-safe constants** - All tokens use `as const` for literal types
-- **SEO optimization** - Built-in SEO keywords and structured data helpers
-
-### Design System Best Practices
-- **Semantic color tokens** - Prevent arbitrary color usage with purpose-based naming
-- **Comprehensive spacing scale** - 4px grid system ensures visual consistency  
-- **Typography system** - Semantic size/weight combinations for consistent text
-- **Component variants** - Pre-built styles reduce need for custom CSS
-- **Dark mode support** - All colors have light/dark variants built-in
-
-### AI-Assisted Development Guidelines
-
-#### Core Principles for AI Development
-1. **Semantic Understanding** - The design system uses semantic naming to help AI understand intent
-2. **Type Safety First** - Comprehensive TypeScript types enable better AI code generation
-3. **Pattern Recognition** - Consistent patterns help AI learn and replicate design decisions
-4. **Error Context** - Structured error messages provide AI with debugging context
-5. **Documentation-Driven** - Rich JSDoc comments enable AI to understand usage patterns
-
-#### When Adding Features
-1. **Check existing patterns first** - Look at similar implementations in the codebase
-2. **Maintain consistency** - Follow established naming and structure conventions
-3. **Add comprehensive tests** - Every new feature needs test coverage
-4. **Update all export points** - Ensure new features are properly exported
-5. **Document with JSDoc** - Add clear documentation with usage examples
-
-#### AI-Friendly Code Generation Patterns
-
-##### Using Semantic Helpers
-```typescript
-// AI can easily understand semantic intent
-import {
-  getSemanticColor,
-  applyUIPattern,
-  createComponentWithIntent
-} from '@sudobility/design';
-
-// Clear semantic mapping
-const errorMessage = getSemanticColor('error');
-const successButton = getSemanticColor('success');
-
-// Descriptive UI patterns
-const centeredLayout = applyUIPattern('centeredContainer');
-const clickableCard = applyUIPattern('clickable', 'bg-white rounded-lg');
-
-// Intent-based component creation
-const primaryButton = createComponentWithIntent({
-  intent: 'primary',
-  size: 'md',
-  pattern: 'clickable',
-  additional: 'rounded-md font-medium'
-});
-```
-
-##### Type-Safe Variant Usage
-```typescript
-// AI can leverage TypeScript intellisense
-import {
-  createSimpleVariants,
-  type TypedVariantConfig
-} from '@sudobility/design';
-
-// Structured variant configuration
-const config: TypedVariantConfig = {
-  button: {
-    primary: () => 'bg-blue-600 text-white px-4 py-2 rounded',
-    secondary: () => 'bg-gray-200 text-gray-900 px-4 py-2 rounded'
-  }
-};
-
-const variants = createSimpleVariants(config);
-```
-
-##### Safe Variant Resolution
-```typescript
-// AI can handle errors gracefully
-import { safeResolveVariant, validateVariantConfig } from '@sudobility/design';
-
-// Validate configuration
-const validation = validateVariantConfig(config, {
-  requireDefault: true,
-  checkTypes: true
-});
-
-if (!validation.isValid) {
-  console.log('Configuration issues:', validation.errors);
-  console.log('Suggestions:', validation.suggestions);
-}
-
-// Safe resolution with detailed feedback
-const result = safeResolveVariant(config, 'button', 'primary', {
-  strict: false,
-  logWarnings: true
-});
-
-console.log('Classes:', result.classes);
-console.log('Used fallback:', result.usedFallback);
-console.log('Warnings:', result.warnings);
-```
-
-#### AI Code Generation Tips
-- **Use semantic tokens** - Always prefer `colors.semantic.*` over `colors.raw.*`
-- **Leverage existing variants** - Check `core/variants.ts` and `core/simple-variants.ts`
-- **Follow the 4px grid** - All spacing should use `designTokens.spacing.*`
-- **Export consistently** - Add both named export and to default export object
-- **Test immediately** - Run `bun run test` after making changes
-- **Use AI helpers** - Leverage `utilities/ai-helpers.ts` for better code generation
-- **Validate early** - Use validation functions to catch issues during development
-
-#### Structured Error Handling for AI
-```typescript
-// The design system provides structured errors for better AI understanding
-try {
-  const classes = variants.get('nonexistent', 'variant');
-} catch (error) {
-  // Structured errors include:
-  // - Error codes for categorization
-  // - Context for debugging
-  // - Suggestions for fixes
-  // - Available alternatives
-}
-```
-
-#### AI-Optimized Development Workflow
-```bash
-# 1. Validate types before starting
-bun run type-check
-
-# 2. Use development mode for real-time feedback
-bun run dev
-
-# 3. Run tests continuously during development
-bun vitest --watch
-
-# 4. Validate your changes
-bun run build && bun run test && bun run lint
-
-# 5. Analyze variant usage for optimization
-bun -e "
-  const { analyzeVariantUsage } = require('./dist/index.esm.js');
-  const analysis = analyzeVariantUsage(yourConfig);
-  console.log('Analysis:', analysis);
-"
-```
-
-#### AI Debugging and Optimization
-
-##### Configuration Analysis
-```typescript
-// AI can analyze and optimize variant configurations
-import { analyzeVariantUsage, getVariantSuggestions } from '@sudobility/design';
-
-const analysis = analyzeVariantUsage(config);
-console.log('Component count:', analysis.componentCount);
-console.log('Missing defaults:', analysis.missingDefaults);
-console.log('Optimization suggestions:', analysis.optimizationSuggestions);
-
-// Get intelligent suggestions
-const suggestions = getVariantSuggestions(config, 'button', 'pri');
-console.log('Autocomplete suggestions:', suggestions); // ['primary']
-```
-
-##### Pattern Recognition
-```typescript
-// AI can identify and suggest common patterns
-const patterns = UI_PATTERNS;
-console.log('Available patterns:', Object.keys(patterns));
-
-// AI can understand size scales
-const sizes = SIZE_SCALES;
-console.log('Size options:', Object.keys(sizes));
-
-// AI can map semantic colors
-const semantics = SEMANTIC_COLOR_MAP;
-console.log('Semantic intents:', Object.keys(semantics));
-```
-
-#### Error Prevention with AI Assistance
-- **Never use magic numbers** - Always use tokens from `designTokens`
-- **Avoid inline styles** - Use variant classes or create new variants
-- **Type everything** - Leverage the enhanced TypeScript types
-- **Test edge cases** - Include tests for undefined, null, empty values
-- **Validate imports** - Ensure all imports resolve correctly
-- **Use validation helpers** - Leverage `validateVariantConfig` for early error detection
-- **Follow semantic naming** - Use intent-based naming for better AI understanding
-- **Structure errors** - Use the structured error system for better debugging
-
-### Performance Optimization
-- **Tree-shakeable exports** - Named exports allow optimal bundling
-- **Minimal dependencies** - Only peer dependencies on clsx and tailwind-merge
-- **Efficient utilities** - Helper functions are optimized for performance
-- **Cached computations** - Complex color combinations are memoizable
-
-### Integration Best Practices
-- **Version management** - Use semantic versioning for all changes
-- **Breaking changes** - Document thoroughly in commit messages
-- **Backward compatibility** - Maintain legacy exports when possible
-- **Clear migration paths** - Provide upgrade guides for breaking changes
+## Architecture / Patterns
+
+### Build Pipeline
+- **TypeScript** (`tsc`) for type checking, then **Vite** for bundling
+- Outputs: `dist/index.esm.js` (ESM), `dist/index.cjs.js` (CJS), `dist/index.native.js` (React Native), `dist/index.d.ts` (types)
+- `vite-plugin-dts` generates declaration files
+- `clsx` and `tailwind-merge` are externalized as peer dependencies
+
+### Token System
+- **4px grid** - all spacing values are multiples of 4px
+- **Semantic naming** - tokens use purpose-based names (primary, secondary, success, error, warning, attention, info)
+- **Dark mode first** - every color/component has explicit `dark:` Tailwind variants
+- **`as const`** - all token objects use `as const` for literal type inference
+- **Function-based variants** - typography and component variants are functions returning strings (lazy evaluation, composable)
+
+### Color Architecture (three levels)
+1. **Raw Colors** (`colors.raw`) - hex palette values. Do not use directly in components.
+2. **Semantic Colors** (`colors.semantic`) - purpose-based tokens with `light`/`dark` object values. Recommended for theme logic.
+3. **Component Colors** (`colors.component`) - ready-to-use Tailwind class strings with `base`/`dark`/`focus`/`hover`/`disabled` keys. Use for component styling.
+
+### Dual Entry Points
+- `src/index.ts` - web: `cn()` uses `clsx` + `tailwind-merge`, includes SEO/structured-data exports, `ui` object, legacy exports
+- `src/index.native.ts` - React Native: `cn()` uses `clsx` only (NativeWind handles merging), omits SEO/structured-data and `ui` object
+
+### Variant System
+Two approaches:
+1. **Direct variants** (`variants`) - deeply nested object with function values, accessed like `variants.button.primary.default()`
+2. **SimpleVariants class** - wrapper with `.get('button', 'primary')`, `.sized()`, `.nested()`, `.when()`, `.combine()`, built-in fallbacks, and configuration validation
+
+### Path Alias
+`@/*` maps to `./src/*` (configured in both `tsconfig.json` and `vite.config.ts`).
+
+### Test Configuration
+- Vitest with jsdom environment
+- Coverage via v8 provider with 95% statement/function/line and 90% branch thresholds
+- Tests located in `src/__tests__/`
+
+## Common Tasks
+
+### Adding a New Color
+1. Add hex values to `rawColors` in `src/tokens/colors.ts`
+2. Add semantic mapping in `semanticColors` with `light`/`dark` values
+3. Add component-specific Tailwind classes in `componentColors` with `base`/`dark`/`focus`/`hover`/`disabled` keys
+4. Add tests in `src/__tests__/colors.test.ts`
+5. Run `bun run build && bun run test`
+
+### Adding a New Component Variant
+1. Add variant functions to `src/core/variants.ts` under the appropriate component key
+2. If adding a new component, also update the `VariantsType` interface in the same file
+3. Update enhanced types in `src/types/variant-types.ts` if needed
+4. Add tests in `src/__tests__/variants.test.ts`
+5. Run `bun run build && bun run test`
+
+### Adding a New Design Token
+1. Add to the appropriate object in `src/tokens/tokens.ts` (spacing, typography, animation, etc.)
+2. Run `bun run build && bun run test`
+
+### Adding a New Utility Function
+1. Add function to the appropriate file in `src/utilities/`
+2. Export from `src/index.ts` (and `src/index.native.ts` if platform-agnostic)
+3. Add tests in the corresponding `src/__tests/` file
+4. Run `bun run build && bun run test`
+
+### Updating the `ui` Object
+The `ui` object is defined inline in `src/index.ts`. Edit it directly there. It is not available in the React Native entry point.
+
+### Publishing
+`bun run prepublishOnly` runs the build automatically. The package is published with restricted access (`"access": "restricted"`).
+
+## Peer / Key Dependencies
+
+### Peer Dependencies (required by consumers)
+- `clsx` >= 2.0.0 - conditional class name composition
+- `tailwind-merge` >= 2.0.0 - intelligent Tailwind class deduplication (web only)
+
+### Dev Dependencies (key)
+- `typescript` ^5.9.3 - strict mode, ES2019 target, bundler module resolution
+- `vite` ^7.1.12 - build tool
+- `vite-plugin-dts` ^4.5.4 - declaration file generation
+- `vitest` ^4.0.4 - test runner
+- `@vitest/coverage-v8` ^4.0.4 - coverage provider
+- `eslint` ^9.38.0 + `@typescript-eslint/*` - linting
+- `prettier` ^3.6.2 - formatting
+- `jsdom` ^27.0.1 - test environment
