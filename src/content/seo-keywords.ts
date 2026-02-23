@@ -1,4 +1,12 @@
-// Common SEO keywords used across the platform
+/**
+ * @fileoverview SEO keyword sets and page-specific keyword combinators.
+ *
+ * Provides curated keyword arrays for different audience segments and page types.
+ * Use the page-specific getters (e.g., `getHomePageKeywords()`) to combine
+ * relevant keyword sets for meta tags and structured data.
+ */
+
+/** Core Web3 email platform keywords */
 export const BASE_KEYWORDS = [
   'Web3 email platform',
   'wallet email',
@@ -12,6 +20,7 @@ export const BASE_KEYWORDS = [
   'secure email',
 ];
 
+/** Keywords targeting end users of the platform */
 export const USER_FOCUSED_KEYWORDS = [
   'Web3 email for users',
   'wallet email address',
@@ -25,6 +34,7 @@ export const USER_FOCUSED_KEYWORDS = [
   'blockchain email',
 ];
 
+/** Keywords targeting developers and API consumers */
 export const DEVELOPER_KEYWORDS = [
   'Web3 email API',
   'smart contract email integration',
@@ -38,6 +48,7 @@ export const DEVELOPER_KEYWORDS = [
   'Web3 infrastructure',
 ];
 
+/** Keywords for documentation and tutorial pages */
 export const DOCUMENTATION_KEYWORDS = [
   'Web3 email documentation',
   'wallet email guide',
@@ -51,6 +62,12 @@ export const DOCUMENTATION_KEYWORDS = [
   'Web3 developer documentation',
 ];
 
+/**
+ * Generate company-specific keywords for About/Contact pages.
+ *
+ * @param emailDomain - The company's email domain (e.g., '0xmail.io')
+ * @returns Array of company-specific keyword strings
+ */
 export const createCompanyKeywords = (emailDomain: string): string[] => [
   `about ${emailDomain}`,
   'Web3 email team',
@@ -64,6 +81,7 @@ export const createCompanyKeywords = (emailDomain: string): string[] => [
   'crypto startup team',
 ];
 
+/** Trending Web3 ecosystem keywords for broader SEO reach */
 export const WEB3_TRENDING_KEYWORDS = [
   'DeFi email notifications',
   'DAO communication platform',
@@ -81,6 +99,7 @@ export const WEB3_TRENDING_KEYWORDS = [
   'crypto compliance email',
 ];
 
+/** Technical and protocol-level SEO keywords */
 export const TECHNICAL_SEO_KEYWORDS = [
   'EIP-712 signature authentication',
   'SIWE Sign-In with Ethereum',
@@ -98,6 +117,7 @@ export const TECHNICAL_SEO_KEYWORDS = [
   'Web3 developer tools',
 ];
 
+/** Accessibility-focused keywords for inclusive design messaging */
 export const ACCESSIBILITY_KEYWORDS = [
   'accessible Web3 email',
   'screen reader crypto wallet',
@@ -111,7 +131,12 @@ export const ACCESSIBILITY_KEYWORDS = [
   'accessible blockchain tools',
 ];
 
-// Helper function to combine keywords
+/**
+ * Combine multiple keyword sets into a deduplicated array.
+ *
+ * @param keywordSets - One or more keyword arrays to merge
+ * @returns Deduplicated array of keyword strings
+ */
 export const combineKeywords = (...keywordSets: string[][]): string[] => {
   const combined = new Set<string>();
   keywordSets.forEach((set) => set.forEach((keyword) => combined.add(keyword)));
@@ -119,19 +144,41 @@ export const combineKeywords = (...keywordSets: string[][]): string[] => {
 };
 
 // Page-specific keyword getters
+
+/** @returns Keywords optimized for the home/landing page */
 export const getHomePageKeywords = () =>
   combineKeywords(BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, WEB3_TRENDING_KEYWORDS);
+
+/**
+ * @param emailDomain - Company email domain for brand keywords
+ * @returns Keywords optimized for the about page
+ */
 export const getAboutPageKeywords = (emailDomain: string) =>
   combineKeywords(BASE_KEYWORDS, createCompanyKeywords(emailDomain));
+
+/** @returns Keywords optimized for documentation pages */
 export const getDocumentationKeywords = () =>
   combineKeywords(BASE_KEYWORDS, DOCUMENTATION_KEYWORDS, TECHNICAL_SEO_KEYWORDS);
+
+/** @returns Keywords optimized for user-facing pages */
 export const getUserPageKeywords = () =>
   combineKeywords(BASE_KEYWORDS, USER_FOCUSED_KEYWORDS, ACCESSIBILITY_KEYWORDS);
+
+/** @returns Keywords optimized for developer-facing pages */
 export const getDeveloperPageKeywords = () =>
   combineKeywords(BASE_KEYWORDS, DEVELOPER_KEYWORDS, TECHNICAL_SEO_KEYWORDS);
+
+/** @returns Keywords optimized for Web3 project listing pages */
 export const getWeb3ProjectsKeywords = () =>
   combineKeywords(BASE_KEYWORDS, DEVELOPER_KEYWORDS, WEB3_TRENDING_KEYWORDS);
+
+/** @returns Keywords optimized for subscription/pricing pages */
 export const getSubscriptionKeywords = () =>
   combineKeywords(BASE_KEYWORDS, WEB3_TRENDING_KEYWORDS, TECHNICAL_SEO_KEYWORDS);
+
+/**
+ * @param emailDomain - Company email domain for brand keywords
+ * @returns Keywords optimized for the contact page
+ */
 export const getContactKeywords = (emailDomain: string) =>
   combineKeywords(BASE_KEYWORDS, createCompanyKeywords(emailDomain), ACCESSIBILITY_KEYWORDS);

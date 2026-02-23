@@ -5,7 +5,7 @@
 `@sudobility/design` is a standalone, framework-agnostic design system library providing design tokens, colors, typography, component variants, and utility functions for consistent UI development. It serves as the styling foundation for the 0xmail ecosystem (including `@johnqh/mail-box-components`) and supports both web (Tailwind CSS + tailwind-merge) and React Native (NativeWind) targets. All tokens are fully typed with `as const` for literal type inference and tree-shakeable named exports.
 
 - **Package name:** `@sudobility/design`
-- **Version:** 1.1.18
+- **Version:** 1.1.19
 - **License:** MIT
 - **Author:** John Q Huang
 - **Module type:** ES Module (`"type": "module"`)

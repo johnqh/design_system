@@ -1,8 +1,14 @@
 /**
- * Typography Variants
+ * @fileoverview Typography Variants
  *
  * Pre-built text component configurations that combine font families, sizes, weights,
  * and other typography properties into ready-to-use text styles.
+ *
+ * Exports:
+ * - `textVariants` - Nested object of functions returning Tailwind class strings
+ * - `createTextStyle()` - Build custom text styles from individual token keys
+ * - `combineTextStyles()` - Merge multiple text style strings
+ * - `createResponsiveText()` - Add responsive breakpoint overrides to a base style
  */
 
 import { designTokens } from '../tokens/tokens';
@@ -290,7 +296,19 @@ const textVariants = {
   },
 } as const;
 
-// Export utility functions for building custom text styles
+/**
+ * Build a custom text style string from individual typography token keys.
+ *
+ * Composes Tailwind classes from design token categories (family, size, weight, etc.)
+ * into a single space-separated class string.
+ *
+ * @param family - Font family token key (default: 'body')
+ * @param size - Semantic size token key (default: 'body')
+ * @param weight - Weight token key (default: 'body')
+ * @param color - Tailwind color classes (default: 'text-gray-900 dark:text-white')
+ * @param options - Optional leading, tracking, transform, and decoration overrides
+ * @returns Combined Tailwind class string
+ */
 const createTextStyle = (
   family: keyof typeof designTokens.typography.family = 'body',
   size: keyof typeof designTokens.typography.semantic = 'body',
@@ -319,12 +337,29 @@ const createTextStyle = (
     .join(' ');
 };
 
-// Helper function to combine text styles
+/**
+ * Combine multiple text style strings into one, filtering out empty values.
+ *
+ * @param styles - Text style strings to combine
+ * @returns Single space-separated class string
+ */
 const combineTextStyles = (...styles: string[]): string => {
   return styles.filter(Boolean).join(' ');
 };
 
-// Helper function to create responsive text styles
+/**
+ * Create responsive text styles by appending breakpoint-prefixed classes to a base style.
+ *
+ * @param baseStyle - Base Tailwind class string applied at all screen sizes
+ * @param breakpoints - Breakpoint-specific class overrides (sm, md, lg, xl, 2xl)
+ * @returns Combined responsive class string
+ *
+ * @example
+ * ```ts
+ * createResponsiveText('text-base', { md: 'text-lg', lg: 'text-xl' })
+ * // => 'text-base md:text-lg lg:text-xl'
+ * ```
+ */
 const createResponsiveText = (
   baseStyle: string,
   breakpoints: {
