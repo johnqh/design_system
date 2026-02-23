@@ -108,7 +108,28 @@ export { variants as Variants } from './core/variants';
 
 // === UI UTILITIES ===
 /**
- * Quick access to commonly used design patterns
+ * Quick-access object of commonly used Tailwind class strings.
+ *
+ * **When to use `ui.*`:**
+ * Use `ui` when you need a single, ready-to-apply class string for
+ * standard UI patterns (layout containers, section backgrounds,
+ * typography, cards, badges, tables). It is ideal for rapid
+ * prototyping and one-off component styling where you do not need
+ * the full power of the variant system.
+ *
+ * **When to use the primary exports instead:**
+ * - `textVariants` -- when you need function-based typography with
+ *   composable options (responsive, sub-variants like `.strong`).
+ * - `variants` -- when you need deeply nested component variants
+ *   with size, state, and intent modifiers (e.g. button, card, badge).
+ * - `designTokens` -- when you need atomic spacing, radius, shadow,
+ *   or animation tokens to compose your own class strings.
+ * - `colors` -- when you need raw hex values, semantic light/dark
+ *   tokens, or component color configurations.
+ *
+ * `ui.text.h1` and `textVariants.heading.h1()` produce similar
+ * output, but `textVariants` supports composition via
+ * `combineTextStyles()` and `createResponsiveText()`.
  */
 const ui = {
   // Layout utilities

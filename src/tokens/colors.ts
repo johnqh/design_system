@@ -28,8 +28,16 @@ interface ColorVariant {
 // =============================================================================
 
 /**
- * Base color palette - these are the raw color values
- * Do not use these directly in components, use semantic tokens instead
+ * Raw color palette values (hex codes).
+ *
+ * @warning Prefer `semanticColors` or `componentColors` for application code.
+ * Direct use of raw colors bypasses the semantic layer and may cause
+ * inconsistencies across light/dark themes.
+ *
+ * This is the **lowest tier** of the three-tier color architecture:
+ * 1. `rawColors` - hex palette (avoid in components)
+ * 2. `semanticColors` - purpose-based tokens with light/dark values
+ * 3. `componentColors` - ready-to-use Tailwind class strings
  */
 const rawColors = {
   // Blue palette - primary brand color
@@ -210,8 +218,20 @@ const rawColors = {
 // =============================================================================
 
 /**
- * Semantic color tokens - organized by purpose and context
- * These provide consistent theming across light and dark modes
+ * Semantic color tokens -- the **recommended layer** for theme logic.
+ *
+ * Organized by purpose (text, background, border, brand, state, action,
+ * web3) with explicit `light` and `dark` values for each token. Use
+ * these when you need raw color values resolved per-theme -- for
+ * example, when mapping colors to non-Tailwind contexts (inline
+ * styles, canvas, SVG fills).
+ *
+ * For Tailwind class strings, prefer `componentColors` instead.
+ *
+ * This is the **middle tier** of the three-tier color architecture:
+ * 1. `rawColors` - hex palette (avoid in components)
+ * 2. `semanticColors` - purpose-based tokens with light/dark values
+ * 3. `componentColors` - ready-to-use Tailwind class strings
  */
 const semanticColors = {
   // Text colors
@@ -489,8 +509,26 @@ const semanticColors = {
 // =============================================================================
 
 /**
- * Component-specific color configurations
- * These provide ready-to-use Tailwind classes for components
+ * Component-specific color configurations with ready-to-use Tailwind
+ * classes. Each variant provides `base`, `dark`, `focus`, `hover`, and
+ * `disabled` sub-keys that can be combined via `getColorClasses()`.
+ *
+ * Use this for component styling -- it is the **highest tier** of the
+ * three-tier color architecture and the most convenient for Tailwind
+ * consumers:
+ * 1. `rawColors` - hex palette (avoid in components)
+ * 2. `semanticColors` - purpose-based tokens with light/dark values
+ * 3. `componentColors` - ready-to-use Tailwind class strings
+ *
+ * @example
+ * ```ts
+ * // Access classes directly
+ * componentColors.button.primary.base
+ * // => 'bg-blue-600 hover:bg-blue-700 ...'
+ *
+ * // Or use the utility
+ * getColorClasses('button', 'primary', ['focus', 'disabled'])
+ * ```
  */
 const componentColors = {
   button: {
@@ -760,8 +798,26 @@ const componentColors = {
 // =============================================================================
 
 /**
- * Utility function to get complete color class string for a component variant
- * Combines base, dark, focus, and other states into a single string
+ * Returns a combined Tailwind class string for a component color variant.
+ *
+ * Merges the variant's `base` and `dark` classes with the requested
+ * interactive state classes (focus, hover, disabled, active).
+ *
+ * @param component - Component key from `componentColors`
+ * @param variant - Variant name (e.g. 'primary', 'outline')
+ * @param states - Interactive states to include (default: `['focus']`)
+ * @returns Space-separated Tailwind class string
+ *
+ * @example
+ * ```ts
+ * // Button with focus and disabled states
+ * getColorClasses('button', 'primary', ['focus', 'disabled'])
+ * // => 'bg-blue-600 hover:bg-blue-700 ... dark:bg-blue-600 ...
+ * //     focus-visible:ring-2 ... disabled:opacity-50 ...'
+ *
+ * // Card with default focus state
+ * getColorClasses('card', 'elevated')
+ * ```
  */
 const getColorClasses = (
   component: keyof typeof componentColors,
@@ -786,7 +842,26 @@ const getColorClasses = (
 };
 
 /**
- * Utility to build custom color combinations
+ * Builds a custom Tailwind color class string from individual color
+ * names. Useful when `componentColors` does not cover your use case.
+ *
+ * @param background - Tailwind color name for `bg-*`
+ * @param text - Tailwind color name for `text-*`
+ * @param border - Optional Tailwind color name for `border-*`
+ * @param states - Optional hover, focus, and dark overrides
+ * @returns Space-separated Tailwind class string
+ *
+ * @example
+ * ```ts
+ * buildColorClass('blue-100', 'blue-900', 'blue-300', {
+ *   hover: { background: 'blue-200' },
+ *   focus: { ring: 'blue-500' },
+ *   dark: { background: 'blue-900', text: 'blue-100' },
+ * })
+ * // => 'bg-blue-100 text-blue-900 border-blue-300
+ * //     hover:bg-blue-200 focus:ring-2 focus:ring-blue-500
+ * //     dark:bg-blue-900 dark:text-blue-100'
+ * ```
  */
 const buildColorClass = (
   background: string,

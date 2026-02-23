@@ -5,6 +5,11 @@
  * design system more accessible to AI assistants and improve the development
  * experience when working with AI-powered code generation.
  *
+ * @deprecated All exports in this module are unused by downstream packages.
+ * Prefer `colors.semantic` / `colors.component`, the `ui` object, or
+ * `component-helpers.ts` utilities. These exports are preserved for
+ * backward compatibility but may be removed in a future major version.
+ *
  * @module AIHelpers
  * @author Design System Team
  * @since 1.0.17
@@ -20,6 +25,10 @@ import type {
 /**
  * Semantic color mapping for better AI understanding.
  * Maps human-readable intent to specific color tokens.
+ *
+ * @deprecated Not used by any downstream package. Prefer
+ * `colors.semantic` or `colors.component` from `tokens/colors`.
+ * May be removed in a future major version.
  */
 export const SEMANTIC_COLOR_MAP = {
   // State colors
@@ -41,6 +50,10 @@ export const SEMANTIC_COLOR_MAP = {
 
 /**
  * Common UI patterns with descriptive names for AI understanding.
+ *
+ * @deprecated Not used by any downstream package. Prefer the `ui`
+ * object from `index.ts` or `UI_CONSTANTS` from `ui-constants.ts`.
+ * May be removed in a future major version.
  */
 export const UI_PATTERNS = {
   // Layout patterns
@@ -70,6 +83,10 @@ export const UI_PATTERNS = {
 
 /**
  * Component size multipliers for consistent scaling.
+ *
+ * @deprecated Not used by any downstream package. Prefer
+ * `sizeClasses` / `getSizeClasses()` from `component-helpers.ts`.
+ * May be removed in a future major version.
  */
 export const SIZE_SCALES = {
   xs: { padding: 'px-2 py-1', text: 'text-xs', height: 'h-6' },
@@ -83,15 +100,18 @@ export const SIZE_SCALES = {
  * Gets semantic color classes by intent, making it easier for AI to understand
  * color usage patterns.
  *
+ * @deprecated Not used by any downstream package. Prefer
+ * `getThemeSemanticColor()` from `theme-utils.ts` or
+ * `colors.semantic` from `tokens/colors`.
+ * May be removed in a future major version.
+ *
  * @param intent - The semantic intent of the color
  * @returns CSS class string for the specified intent
  *
  * @example
  * ```typescript
- * // AI can easily understand these semantic mappings
  * const errorText = getSemanticColor('error');
  * const successMessage = getSemanticColor('success');
- * const primaryButton = getSemanticColor('primary');
  * ```
  */
 export function getSemanticColor(intent: keyof typeof SEMANTIC_COLOR_MAP): string {
@@ -102,16 +122,18 @@ export function getSemanticColor(intent: keyof typeof SEMANTIC_COLOR_MAP): strin
  * Applies a UI pattern by name, making it easier for AI to understand
  * common layout and interaction patterns.
  *
+ * @deprecated Not used by any downstream package. Prefer the `ui`
+ * object from `index.ts` or `combineUI()` from `ui-constants.ts`.
+ * May be removed in a future major version.
+ *
  * @param pattern - The name of the UI pattern to apply
  * @param additional - Additional classes to merge with the pattern
  * @returns Combined CSS class string
  *
  * @example
  * ```typescript
- * // AI can easily understand these pattern names
  * const container = applyUIPattern('centeredContainer');
  * const card = applyUIPattern('elevatedCard', 'p-6');
- * const button = applyUIPattern('clickable', 'bg-blue-500 text-white');
  * ```
  */
 export function applyUIPattern(pattern: keyof typeof UI_PATTERNS, additional?: string): string {
@@ -122,15 +144,17 @@ export function applyUIPattern(pattern: keyof typeof UI_PATTERNS, additional?: s
  * Creates a component with consistent sizing, making it easier for AI
  * to generate properly scaled components.
  *
+ * @deprecated Not used by any downstream package. Prefer
+ * `getSizeClasses()` from `component-helpers.ts`.
+ * May be removed in a future major version.
+ *
  * @param size - The size scale to apply
  * @param baseClasses - Base CSS classes for the component
  * @returns CSS class string with applied sizing
  *
  * @example
  * ```typescript
- * // AI can easily generate consistently sized components
  * const smallButton = createSizedComponent('sm', 'bg-blue-500 text-white rounded');
- * const largeInput = createSizedComponent('lg', 'border border-gray-300 rounded');
  * ```
  */
 export function createSizedComponent(size: keyof typeof SIZE_SCALES, baseClasses: string): string {
@@ -142,23 +166,21 @@ export function createSizedComponent(size: keyof typeof SIZE_SCALES, baseClasses
  * Generates a complete component class string with semantic intent,
  * making it easier for AI to create components with proper styling.
  *
+ * @deprecated Not used by any downstream package. Prefer
+ * `buttonVariant()` / `cardVariant()` from `component-helpers.ts`
+ * or the `variants` object from `core/variants.ts`.
+ * May be removed in a future major version.
+ *
  * @param options - Configuration options for the component
  * @returns Complete CSS class string
  *
  * @example
  * ```typescript
- * // AI can easily generate complete component styles
  * const primaryButton = createComponentWithIntent({
  *   intent: 'primary',
  *   size: 'md',
  *   pattern: 'clickable',
  *   additional: 'rounded-md font-medium'
- * });
- *
- * const errorAlert = createComponentWithIntent({
- *   intent: 'error',
- *   pattern: 'elevatedCard',
- *   additional: 'p-4 border-l-4 border-red-500'
  * });
  * ```
  */
@@ -194,21 +216,20 @@ export function createComponentWithIntent(options: {
  * Validates variant configuration for better error detection.
  * Helps AI assistants understand when variant configurations are invalid.
  *
+ * @deprecated Not used by any downstream package. This is a
+ * development-time helper that does not belong in production bundles.
+ * May be removed in a future major version.
+ *
  * @param config - Variant configuration to validate
  * @param options - Validation options
  * @returns Validation result with errors and warnings
  *
  * @example
  * ```typescript
- * // AI can use this to validate generated variant configurations
  * const result = validateVariantConfig(generatedConfig, {
  *   requireDefault: true,
  *   checkTypes: true
  * });
- *
- * if (!result.isValid) {
- *   console.log('Issues found:', result.errors);
- * }
  * ```
  */
 export function validateVariantConfig(
@@ -269,6 +290,11 @@ export function validateVariantConfig(
 /**
  * Safe variant resolver that provides detailed error information.
  * Helps AI assistants understand when and why variant resolution fails.
+ *
+ * @deprecated Not used by any downstream package. Prefer
+ * `SimpleVariants.get()` from `core/simple-variants.ts` which
+ * provides built-in fallback support.
+ * May be removed in a future major version.
  *
  * @param config - Variant configuration
  * @param component - Component name
@@ -358,6 +384,10 @@ export function safeResolveVariant(
  * Generates suggested completions for variant names.
  * Helps AI assistants provide better autocomplete suggestions.
  *
+ * @deprecated Not used by any downstream package. This is a
+ * development-time helper that does not belong in production bundles.
+ * May be removed in a future major version.
+ *
  * @param config - Variant configuration
  * @param component - Component name
  * @param partial - Partial variant name to match
@@ -382,6 +412,10 @@ export function getVariantSuggestions(
 /**
  * Analyzes variant usage patterns for optimization recommendations.
  * Helps AI assistants understand and optimize variant usage.
+ *
+ * @deprecated Not used by any downstream package. This is a
+ * development-time helper that does not belong in production bundles.
+ * May be removed in a future major version.
  *
  * @param config - Variant configuration to analyze
  * @returns Analysis results with optimization suggestions
