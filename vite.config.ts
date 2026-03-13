@@ -15,11 +15,10 @@ export default defineConfig({
         'index.native': resolve(__dirname, 'src/index.native.ts'),
       },
       name: 'DesignSystem',
-      formats: ['es', 'cjs'],
-      fileName: (format, entryName) => {
-        const ext = format === 'es' ? 'esm.js' : 'cjs.js';
+      formats: ['es'],
+      fileName: (_format, entryName) => {
         if (entryName === 'index.native') return `index.native.js`;
-        return `index.${ext}`;
+        return `index.js`;
       },
     },
     rollupOptions: {
@@ -29,10 +28,6 @@ export default defineConfig({
       ],
       output: {
         exports: 'named',
-        globals: {
-          'clsx': 'clsx',
-          'tailwind-merge': 'tailwindMerge'
-        },
       },
     },
   },
