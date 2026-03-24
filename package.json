@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/design",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "description": "Design system library with tokens, colors, typography and variants",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -65,10 +65,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sudobility/design.git"
+    "url": "https://github.com/johnqh/design_system.git"
   },
   "bugs": {
     "url": "https://github.com/sudobility/design/issues"
   },
-  "homepage": "https://github.com/sudobility/design#readme"
+  "homepage": "https://github.com/sudobility/design#readme",
+  "license": "BUSL-1.1"
 }
