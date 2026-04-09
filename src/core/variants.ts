@@ -334,6 +334,7 @@ const variants: VariantsType = {
 
     // Skeleton loading
     skeleton: {
+      base: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
       default: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
       text: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-4',
       title: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-6',
