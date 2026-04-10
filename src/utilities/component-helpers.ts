@@ -98,6 +98,7 @@ export const loadingState = 'opacity-70 cursor-wait pointer-events-none';
  * Create variant classes for buttons
  */
 export function buttonVariant(variant: ComponentVariant): string {
+  const base = 'px-4 py-2';
   const variants = {
     default: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
     primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
@@ -109,7 +110,7 @@ export function buttonVariant(variant: ComponentVariant): string {
     ghost: 'bg-transparent hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800',
   };
 
-  return cn(variants[variant], transitions.default, focusVisible);
+  return cn(base, variants[variant], transitions.default, focusVisible);
 }
 
 /**
