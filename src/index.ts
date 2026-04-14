@@ -162,9 +162,12 @@ const ui = {
     accent: 'py-8 sm:py-12 lg:py-16 bg-blue-50 dark:bg-blue-900',
 
     // Gradient sections with dark mode support
-    gradient: 'py-20 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900',
-    gradientAmber: 'py-20 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900 dark:to-yellow-900',
-    gradientBlue: 'py-20 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900',
+    gradient:
+      'py-20 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900',
+    gradientAmber:
+      'py-20 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900 dark:to-yellow-900',
+    gradientBlue:
+      'py-20 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900',
 
     // No background (transparent)
     transparent: 'py-8 sm:py-12 lg:py-16',
@@ -313,21 +316,27 @@ const ui = {
     large: 'bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl',
 
     // Cards with border instead of shadow
-    bordered: 'bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700',
+    bordered:
+      'bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700',
 
     // Cards with hover effects
-    interactive: 'bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow',
+    interactive:
+      'bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow',
 
     // Feature cards (for grids)
-    feature: 'bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow',
+    feature:
+      'bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow',
   },
 
   // Badge utilities
   badge: {
     blue: 'inline-flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full',
-    green: 'inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-4 py-2 rounded-full',
-    purple: 'inline-flex items-center bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-4 py-2 rounded-full',
-    amber: 'inline-flex items-center bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-full',
+    green:
+      'inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-4 py-2 rounded-full',
+    purple:
+      'inline-flex items-center bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-4 py-2 rounded-full',
+    amber:
+      'inline-flex items-center bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-full',
     gray: 'inline-flex items-center bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 px-4 py-2 rounded-full',
   },
 

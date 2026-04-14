@@ -133,8 +133,7 @@ export const createAboutPageData = (
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
   name: `About ${emailDomain}`,
-  description:
-    `Learn about the team behind ${emailDomain}, the revolutionary Web3 email platform that connects wallets to email addresses without passwords.`,
+  description: `Learn about the team behind ${emailDomain}, the revolutionary Web3 email platform that connects wallets to email addresses without passwords.`,
   url: `https://${emailDomain}/about`,
   mainEntity: {
     ...createBaseOrganization(emailDomain),
@@ -152,8 +151,7 @@ export const createTechArticleData = (
   '@type': 'TechArticle',
   name: 'Documentation',
   headline: `${emailDomain} Documentation - Web3 Email Platform Guide`,
-  description:
-    `Complete documentation for ${emailDomain} Web3 email platform. Learn how to connect wallets, manage ENS/SNS domain emails, integrate smart contracts, and use Web3 communication features.`,
+  description: `Complete documentation for ${emailDomain} Web3 email platform. Learn how to connect wallets, manage ENS/SNS domain emails, integrate smart contracts, and use Web3 communication features.`,
   url: `https://${emailDomain}/document`,
   datePublished: '2025-01-12',
   dateModified: '2025-01-12',
