@@ -13,12 +13,14 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
         'index.native': resolve(__dirname, 'src/index.native.ts'),
+        'themes/index': resolve(__dirname, 'src/themes/index.ts'),
       },
       name: 'DesignSystem',
       formats: ['es'],
       fileName: (_format, entryName) => {
-        if (entryName === 'index.native') return `index.native.js`;
-        return `index.js`;
+        if (entryName === 'index.native') return 'index.native.js';
+        if (entryName === 'themes/index') return 'themes/index.js';
+        return 'index.js';
       },
     },
     rollupOptions: {

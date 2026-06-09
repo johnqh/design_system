@@ -354,6 +354,17 @@ const ui = {
 
 export { ui };
 
+// === THEME SYSTEM ===
+export type { ThemeTokens, ThemeDefinition, ThemeClassOverrides, ThemeName } from './themes/types';
+export {
+  configureTheme,
+  getActiveTheme,
+  getActiveThemeName,
+  getClassOverride,
+} from './themes/configure';
+export { generateThemeCSS } from './themes/css-generator';
+export { createTailwindPreset, createNativeWindPreset } from './themes/tailwind-preset';
+
 // === LEGACY NAMED EXPORTS ===
 // For backward compatibility - duplicate named exports
 export {

@@ -197,24 +197,125 @@ const analysis = analyzeVariantUsage(config);
 console.log('Optimization suggestions:', analysis.optimizationSuggestions);
 ```
 
-## Theme Management
+## Themes
+
+The design system ships 10 visual styles. Each app picks one at build time — no runtime switching needed.
+
+| Theme | Style | Primary |
+|-------|-------|---------|
+| `defaultTheme` | Clean, modern (current look) | Blue |
+| `neoBrutalismTheme` | Bold, raw, thick borders, offset shadows | Yellow/Black |
+| `glassmorphismTheme` | Frosted glass, translucent, backdrop-blur | Violet |
+| `cyberpunkTheme` | Neon-on-dark, glow effects, monospace | Cyan |
+| `vaporwaveTheme` | Retro-futuristic, pink/teal/purple | Purple |
+| `retroTheme` | Warm, vintage, serif fonts | Orange |
+| `y2kTheme` | Bubbly, bright pastels, pill shapes | Hot pink |
+| `swissTheme` | Helvetica, grid-precise, no shadows | Black/Red |
+| `linearTheme` | Dark-first, subtle, professional | Indigo |
+| `notionTheme` | Content-focused, warm gray, minimal | Warm blue |
+
+### Switching Themes
+
+**Step 1: Generate and inject the theme's CSS custom properties**
 
 ```typescript
-import { createTheme, applyTheme, getThemeColors } from '@sudobility/design';
+import { generateThemeCSS, cyberpunkTheme } from '@sudobility/design/themes';
 
-// Create a custom theme
-const theme = createTheme({
-  primary: '#007AFF',
-  secondary: '#5856D6',
-  accent: '#FF3B30'
-});
+// Generate CSS string with :root { ... } and .dark { ... } selectors
+const css = generateThemeCSS(cyberpunkTheme);
 
-// Apply theme to component
-const themedButton = applyTheme(theme, 'button');
-
-// Get theme colors
-const colors = getThemeColors(theme);
+// Inject into a <style> tag (e.g., in your app's entry point)
+const style = document.createElement('style');
+style.textContent = css;
+document.head.appendChild(style);
 ```
+
+Or add it to your global CSS file directly:
+
+```css
+/* globals.css */
+@import './theme.css'; /* paste output of generateThemeCSS() */
+```
+
+**Step 2: Activate class overrides (required for structural themes)**
+
+Some themes change more than colors — neo-brutalism adds thick borders, glassmorphism adds backdrop-blur, cyberpunk adds neon glow. Call `configureTheme()` once at app startup:
+
+```typescript
+import { configureTheme, cyberpunkTheme } from '@sudobility/design/themes';
+
+configureTheme(cyberpunkTheme);
+```
+
+**Step 3 (optional): Use the Tailwind preset**
+
+For consuming apps with their own Tailwind config, the preset maps all semantic color names to CSS custom properties:
+
+```javascript
+// tailwind.config.js
+import { createTailwindPreset } from '@sudobility/design/themes';
+import { cyberpunkTheme } from '@sudobility/design/themes';
+
+export default {
+  presets: [createTailwindPreset(cyberpunkTheme)],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+};
+```
+
+### Backward Compatibility
+
+**No theme configured = no behavior change.** Variant functions return the same hardcoded Tailwind classes as before. Theming is fully opt-in.
+
+### React Native
+
+NativeWind doesn't support CSS custom properties. Use `createNativeWindPreset()` which resolves theme colors to direct HSL values:
+
+```javascript
+// tailwind.config.js (React Native)
+import { createNativeWindPreset } from '@sudobility/design/themes';
+import { cyberpunkTheme } from '@sudobility/design/themes';
+
+module.exports = {
+  presets: [require('nativewind/preset'), createNativeWindPreset(cyberpunkTheme)],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+};
+```
+
+### Custom Themes
+
+Create your own theme by implementing the `ThemeDefinition` interface:
+
+```typescript
+import type { ThemeDefinition } from '@sudobility/design/themes';
+
+export const myTheme: ThemeDefinition = {
+  name: 'my-theme',
+  displayName: 'My Theme',
+  light: {
+    background: '0 0% 100%',       // HSL channels, no hsl() wrapper
+    foreground: '0 0% 0%',
+    primary: '262 83% 58%',         // Your brand color
+    primaryForeground: '0 0% 100%',
+    // ... all ThemeTokens fields
+  },
+  dark: { /* dark mode tokens */ },
+  classOverrides: {
+    button: { base: 'font-bold uppercase' },  // Extra classes for buttons
+    card: { base: 'shadow-xl' },
+  },
+};
+```
+
+### Available Exports from `@sudobility/design/themes`
+
+| Export | Type | Description |
+|--------|------|-------------|
+| `configureTheme(theme)` | Function | Activate a theme's class overrides |
+| `generateThemeCSS(theme)` | Function | Generate CSS custom property block |
+| `createTailwindPreset(theme)` | Function | Tailwind config preset (web) |
+| `createNativeWindPreset(theme)` | Function | NativeWind config preset (RN) |
+| `themes` | Record | All 10 themes indexed by name |
+| `defaultTheme`, `cyberpunkTheme`, ... | Object | Individual theme presets |
 
 ## Component Helpers
 

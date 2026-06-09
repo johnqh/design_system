@@ -49,6 +49,17 @@ export {
   getSectionBadgeColors,
 } from './utilities/status-colors';
 
+// === THEME SYSTEM ===
+export type { ThemeTokens, ThemeDefinition, ThemeClassOverrides, ThemeName } from './themes/types';
+export {
+  configureTheme,
+  getActiveTheme,
+  getActiveThemeName,
+  getClassOverride,
+} from './themes/configure';
+export { generateThemeCSS } from './themes/css-generator';
+export { createTailwindPreset, createNativeWindPreset } from './themes/tailwind-preset';
+
 // === PURE TYPESCRIPT UTILITIES ===
 export { GRADIENTS, GRADIENT_CLASSES, getGradient, combineGradient } from './tokens/gradients';
 export { UI_CONSTANTS, UI_PATTERNS as UI_CONSTANTS_PATTERNS } from './utilities/ui-constants';

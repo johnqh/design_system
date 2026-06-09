@@ -5,6 +5,24 @@
  * into ready-to-use component styles.
  */
 
+import { getActiveTheme, getClassOverride } from '../themes/configure';
+import type { ThemeClassOverrides } from '../themes/types';
+
+/**
+ * Returns semantic classes when a theme is configured, legacy hardcoded classes otherwise.
+ * Appends any class overrides from the active theme.
+ */
+function themed(
+  component: keyof ThemeClassOverrides | null,
+  semantic: string,
+  legacy: string
+): string {
+  if (!getActiveTheme()) return legacy;
+  if (!component) return semantic;
+  const override = getClassOverride(component, 'base');
+  return override ? `${semantic} ${override}` : semantic;
+}
+
 // TypeScript type definitions for variants
 export type VariantFunction = () => string;
 export type VariantWithArgs<T = string> = (variant?: T) => string;
@@ -91,62 +109,146 @@ const variants: VariantsType = {
   button: {
     primary: {
       default: () =>
-        'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       small: () =>
-        'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+        themed(
+          'button',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 border border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8'
+        ),
       large: () =>
-        'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12',
+        themed(
+          'button',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12',
+          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12'
+        ),
       withIcon: () =>
-        'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       fullWidth: () =>
-        'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 flex items-center justify-center w-full rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center w-full rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 border-transparent focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:active:bg-blue-800 dark:text-white dark:focus-visible:ring-blue-400 flex items-center justify-center w-full rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
     },
 
     secondary: {
       default: () =>
-        'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       small: () =>
-        'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+        themed(
+          'button',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+          'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8'
+        ),
       large: () =>
-        'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12',
+        themed(
+          'button',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12',
+          'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12'
+        ),
       withIcon: () =>
-        'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:active:bg-gray-600 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
     },
 
     outline: {
       default: () =>
-        'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent hover:bg-accent text-foreground border border-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       small: () =>
-        'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+        themed(
+          'button',
+          'bg-transparent hover:bg-accent text-foreground border border-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+          'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8'
+        ),
       large: () =>
-        'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12',
+        themed(
+          'button',
+          'bg-transparent hover:bg-accent text-foreground border border-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12',
+          'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-colors duration-200 h-12'
+        ),
       withIcon: () =>
-        'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent hover:bg-accent text-foreground border border-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-900 border border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-50 dark:border-gray-600 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
     },
 
     destructive: {
       default: () =>
-        'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 border-transparent focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-600 dark:hover:bg-red-700 dark:active:bg-red-800 dark:text-white inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 border-transparent focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-600 dark:hover:bg-red-700 dark:active:bg-red-800 dark:text-white inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       outline: () =>
-        'bg-transparent hover:bg-red-50 active:bg-red-100 text-red-600 border border-red-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-red-900/20 dark:text-red-400 dark:border-red-800 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent hover:bg-destructive/10 text-destructive border border-destructive/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-red-50 active:bg-red-100 text-red-600 border border-red-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-red-900/20 dark:text-red-400 dark:border-red-800 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       small: () =>
-        'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 border-transparent focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-600 dark:hover:bg-red-700 dark:active:bg-red-800 dark:text-white inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+        themed(
+          'button',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80 border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8',
+          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 border-transparent focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-600 dark:hover:bg-red-700 dark:active:bg-red-800 dark:text-white inline-flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 h-8'
+        ),
     },
 
     ghost: {
       default: () =>
-        'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-300 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent hover:bg-muted text-muted-foreground border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-300 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       small: () =>
-        'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-300 inline-flex items-center justify-center rounded-md px-2 py-1 text-xs font-medium transition-colors duration-200 h-8',
+        themed(
+          'button',
+          'bg-transparent hover:bg-muted text-muted-foreground border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-2 py-1 text-xs font-medium transition-colors duration-200 h-8',
+          'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-300 inline-flex items-center justify-center rounded-md px-2 py-1 text-xs font-medium transition-colors duration-200 h-8'
+        ),
       icon: () =>
-        'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-300 inline-flex items-center justify-center rounded-md p-2 transition-colors duration-200 h-10 w-10',
+        themed(
+          'button',
+          'bg-transparent hover:bg-muted text-muted-foreground border-transparent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md p-2 transition-colors duration-200 h-10 w-10',
+          'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-transparent dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:text-gray-300 inline-flex items-center justify-center rounded-md p-2 transition-colors duration-200 h-10 w-10'
+        ),
     },
 
     link: {
       default: () =>
-        'bg-transparent hover:bg-transparent active:bg-transparent text-blue-600 border-transparent underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline dark:text-blue-400 inline-flex items-center justify-center rounded-md px-0 py-0 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent text-primary underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline inline-flex items-center justify-center rounded-md px-0 py-0 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-transparent active:bg-transparent text-blue-600 border-transparent underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline dark:text-blue-400 inline-flex items-center justify-center rounded-md px-0 py-0 text-sm font-medium transition-colors duration-200'
+        ),
       muted: () =>
-        'bg-transparent hover:bg-transparent active:bg-transparent text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline inline-flex items-center justify-center rounded-md px-0 py-0 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent text-muted-foreground hover:text-foreground underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline inline-flex items-center justify-center rounded-md px-0 py-0 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-transparent active:bg-transparent text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline inline-flex items-center justify-center rounded-md px-0 py-0 text-sm font-medium transition-colors duration-200'
+        ),
     },
 
     gradient: {
@@ -161,11 +263,19 @@ const variants: VariantsType = {
     // Web3 specific button variants
     web3: {
       wallet: () =>
-        'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-card border border-input text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
       connect: () =>
         'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200',
       disconnect: () =>
-        'bg-transparent hover:bg-red-50 active:bg-red-100 text-red-600 border border-red-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-red-900/20 dark:text-red-400 dark:border-red-800 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+        themed(
+          'button',
+          'bg-transparent hover:bg-destructive/10 text-destructive border border-destructive/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200',
+          'bg-transparent hover:bg-red-50 active:bg-red-100 text-red-600 border border-red-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-red-900/20 dark:text-red-400 dark:border-red-800 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
+        ),
     },
   },
 
@@ -173,46 +283,106 @@ const variants: VariantsType = {
   card: {
     default: {
       base: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg',
+        themed(
+          'card',
+          'bg-card text-card-foreground border border-border rounded-lg',
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg'
+        ),
       padded: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6',
+        themed(
+          'card',
+          'bg-card text-card-foreground border border-border rounded-lg p-6',
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6'
+        ),
       interactive: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-all duration-200 hover:shadow-md cursor-pointer',
+        themed(
+          'card',
+          'bg-card text-card-foreground border border-border rounded-lg p-6 transition-all duration-200 hover:shadow-md cursor-pointer',
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-all duration-200 hover:shadow-md cursor-pointer'
+        ),
     },
 
     elevated: {
       base: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm',
+        themed(
+          'card',
+          'bg-card text-card-foreground border border-border rounded-lg shadow-sm',
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm'
+        ),
       padded: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6',
+        themed(
+          'card',
+          'bg-card text-card-foreground border border-border rounded-lg shadow-sm p-6',
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6'
+        ),
       interactive: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg cursor-pointer',
+        themed(
+          'card',
+          'bg-card text-card-foreground border border-border rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg cursor-pointer',
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg cursor-pointer'
+        ),
     },
 
     state: {
       success: () =>
-        'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800 text-green-800 dark:text-green-200 rounded-lg border p-4',
+        themed(
+          'card',
+          'bg-success/10 border-success/20 text-success rounded-lg border p-4',
+          'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800 text-green-800 dark:text-green-200 rounded-lg border p-4'
+        ),
       warning: () =>
-        'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-lg border p-4',
+        themed(
+          'card',
+          'bg-warning/10 border-warning/20 text-warning rounded-lg border p-4',
+          'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-lg border p-4'
+        ),
       error: () =>
-        'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 text-red-800 dark:text-red-200 rounded-lg border p-4',
+        themed(
+          'card',
+          'bg-destructive/10 border-destructive/20 text-destructive rounded-lg border p-4',
+          'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 text-red-800 dark:text-red-200 rounded-lg border p-4'
+        ),
       info: () =>
-        'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 text-blue-800 dark:text-blue-200 rounded-lg border p-4',
+        themed(
+          'card',
+          'bg-info/10 border-info/20 text-info rounded-lg border p-4',
+          'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 text-blue-800 dark:text-blue-200 rounded-lg border p-4'
+        ),
     },
   },
 
   // Badge variants
   badge: {
     default: () =>
-      'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+      themed(
+        'badge',
+        'bg-muted text-muted-foreground inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
+      ),
     primary: () =>
-      'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+      themed(
+        'badge',
+        'bg-primary/10 text-primary inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
+      ),
     success: () =>
-      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+      themed(
+        'badge',
+        'bg-success/10 text-success inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
+      ),
     warning: () =>
-      'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+      themed(
+        'badge',
+        'bg-warning/10 text-warning inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
+      ),
     error: () =>
-      'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+      themed(
+        'badge',
+        'bg-destructive/10 text-destructive inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
+      ),
 
     // Web3 specific
     ethereum: () =>
@@ -222,72 +392,160 @@ const variants: VariantsType = {
 
     // Sizes
     small: (variant: string = 'default') => {
-      const colors = {
+      const semanticColors: Record<string, string> = {
+        default: 'bg-muted text-muted-foreground',
+        primary: 'bg-primary/10 text-primary',
+        success: 'bg-success/10 text-success',
+        warning: 'bg-warning/10 text-warning',
+        error: 'bg-destructive/10 text-destructive',
+      };
+      const legacyColors: Record<string, string> = {
         default: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
         primary: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
         success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
         warning: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
         error: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
       };
-      return `${colors[variant as keyof typeof colors] || colors.default} inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium`;
+      if (!getActiveTheme()) {
+        return `${legacyColors[variant] || legacyColors.default} inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium`;
+      }
+      const override = getClassOverride('badge', 'base');
+      const base = `${semanticColors[variant] || semanticColors.default} inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium`;
+      return override ? `${base} ${override}` : base;
     },
     large: (variant: string = 'default') => {
-      const colors = {
+      const semanticColors: Record<string, string> = {
+        default: 'bg-muted text-muted-foreground',
+        primary: 'bg-primary/10 text-primary',
+        success: 'bg-success/10 text-success',
+        warning: 'bg-warning/10 text-warning',
+        error: 'bg-destructive/10 text-destructive',
+      };
+      const legacyColors: Record<string, string> = {
         default: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
         primary: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
         success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
         warning: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
         error: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
       };
-      return `${colors[variant as keyof typeof colors] || colors.default} inline-flex items-center px-3 py-1 rounded-full text-sm font-medium`;
+      if (!getActiveTheme()) {
+        return `${legacyColors[variant] || legacyColors.default} inline-flex items-center px-3 py-1 rounded-full text-sm font-medium`;
+      }
+      const override = getClassOverride('badge', 'base');
+      const base = `${semanticColors[variant] || semanticColors.default} inline-flex items-center px-3 py-1 rounded-full text-sm font-medium`;
+      return override ? `${base} ${override}` : base;
     },
   },
 
   // Input variants
   input: {
     default: () =>
-      'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      themed(
+        'input',
+        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+      ),
     search: () =>
-      'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      themed(
+        'input',
+        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+      ),
     error: () =>
-      'bg-gray-50 dark:bg-gray-800 border-red-300 dark:border-red-700 text-gray-900 dark:text-gray-100 focus:border-red-500 focus:ring-red-500 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      themed(
+        'input',
+        'bg-background border-destructive text-foreground focus:border-destructive focus:ring-destructive block w-full rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-gray-50 dark:bg-gray-800 border-red-300 dark:border-red-700 text-gray-900 dark:text-gray-100 focus:border-red-500 focus:ring-red-500 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+      ),
 
     // Sizes
     small: () =>
-      'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      themed(
+        'input',
+        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+      ),
     large: () =>
-      'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-4 py-3 text-base placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      themed(
+        'input',
+        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-4 py-3 text-base placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-4 py-3 text-base placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+      ),
 
     // Special variants
     withIcon: () =>
-      'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      themed(
+        'input',
+        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+      ),
   },
 
   // Alert variants
   alert: {
     info: () =>
-      'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 text-blue-800 dark:text-blue-200 rounded-md border p-4 flex items-start gap-3',
+      themed(
+        'alert',
+        'bg-info/10 border-info/20 text-info rounded-md border p-4 flex items-start gap-3',
+        'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 text-blue-800 dark:text-blue-200 rounded-md border p-4 flex items-start gap-3'
+      ),
     success: () =>
-      'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800 text-green-800 dark:text-green-200 rounded-md border p-4 flex items-start gap-3',
+      themed(
+        'alert',
+        'bg-success/10 border-success/20 text-success rounded-md border p-4 flex items-start gap-3',
+        'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800 text-green-800 dark:text-green-200 rounded-md border p-4 flex items-start gap-3'
+      ),
     warning: () =>
-      'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-md border p-4 flex items-start gap-3',
+      themed(
+        'alert',
+        'bg-warning/10 border-warning/20 text-warning rounded-md border p-4 flex items-start gap-3',
+        'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-md border p-4 flex items-start gap-3'
+      ),
     attention: () =>
-      'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-md border p-4 flex items-start gap-3',
+      themed(
+        'alert',
+        'bg-warning/10 border-warning/20 text-warning rounded-md border p-4 flex items-start gap-3',
+        'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-md border p-4 flex items-start gap-3'
+      ),
     error: () =>
-      'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 text-red-800 dark:text-red-200 rounded-md border p-4 flex items-start gap-3',
+      themed(
+        'alert',
+        'bg-destructive/10 border-destructive/20 text-destructive rounded-md border p-4 flex items-start gap-3',
+        'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 text-red-800 dark:text-red-200 rounded-md border p-4 flex items-start gap-3'
+      ),
 
     // Compact variants
     compact: {
       info: () =>
-        'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 text-blue-800 dark:text-blue-200 rounded border px-3 py-2 text-sm',
+        themed(
+          'alert',
+          'bg-info/10 border-info/20 text-info rounded border px-3 py-2 text-sm',
+          'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 text-blue-800 dark:text-blue-200 rounded border px-3 py-2 text-sm'
+        ),
       success: () =>
-        'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800 text-green-800 dark:text-green-200 rounded border px-3 py-2 text-sm',
+        themed(
+          'alert',
+          'bg-success/10 border-success/20 text-success rounded border px-3 py-2 text-sm',
+          'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800 text-green-800 dark:text-green-200 rounded border px-3 py-2 text-sm'
+        ),
       warning: () =>
-        'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded border px-3 py-2 text-sm',
+        themed(
+          'alert',
+          'bg-warning/10 border-warning/20 text-warning rounded border px-3 py-2 text-sm',
+          'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded border px-3 py-2 text-sm'
+        ),
       attention: () =>
-        'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded border px-3 py-2 text-sm',
+        themed(
+          'alert',
+          'bg-warning/10 border-warning/20 text-warning rounded border px-3 py-2 text-sm',
+          'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded border px-3 py-2 text-sm'
+        ),
       error: () =>
-        'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 text-red-800 dark:text-red-200 rounded border px-3 py-2 text-sm',
+        themed(
+          'alert',
+          'bg-destructive/10 border-destructive/20 text-destructive rounded border px-3 py-2 text-sm',
+          'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 text-red-800 dark:text-red-200 rounded border px-3 py-2 text-sm'
+        ),
     },
   },
 
