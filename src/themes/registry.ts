@@ -15,6 +15,11 @@ import { y2kTheme } from './presets/y2k';
 import { swissTheme } from './presets/swiss';
 import { linearTheme } from './presets/linear';
 import { notionTheme } from './presets/notion';
+import { web3Theme } from './presets/web3';
+import { gamingTheme } from './presets/gaming';
+import { defiTheme } from './presets/defi';
+import { predictionMarketTheme } from './presets/prediction-market';
+import { gamblingTheme } from './presets/gambling';
 
 export const themes: Record<ThemeName, ThemeDefinition> = {
   default: defaultTheme,
@@ -27,4 +32,9 @@ export const themes: Record<ThemeName, ThemeDefinition> = {
   swiss: swissTheme,
   linear: linearTheme,
   notion: notionTheme,
+  web3: web3Theme,
+  gaming: gamingTheme,
+  defi: defiTheme,
+  'prediction-market': predictionMarketTheme,
+  gambling: gamblingTheme,
 };

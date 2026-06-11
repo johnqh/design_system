@@ -82,4 +82,9 @@ export type ThemeName =
   | 'vaporwave'
   | 'swiss'
   | 'linear'
-  | 'notion';
+  | 'notion'
+  | 'web3'
+  | 'gaming'
+  | 'defi'
+  | 'prediction-market'
+  | 'gambling';

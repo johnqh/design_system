@@ -45,5 +45,11 @@ export { swissTheme } from './presets/swiss';
 export { linearTheme } from './presets/linear';
 export { notionTheme } from './presets/notion';
 
+export { web3Theme } from './presets/web3';
+export { gamingTheme } from './presets/gaming';
+export { defiTheme } from './presets/defi';
+export { predictionMarketTheme } from './presets/prediction-market';
+export { gamblingTheme } from './presets/gambling';
+
 // All themes as a record for iteration
 export { themes } from './registry';

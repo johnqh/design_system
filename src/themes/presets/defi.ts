@@ -1,0 +1,88 @@
+/**
+ * DeFi (Decentralized Finance) Theme
+ *
+ * Inspired by Aave, Compound, dYdX, GMX.
+ * Professional, data-dense, monospace numbers, minimal decoration.
+ */
+
+import type { ThemeDefinition } from '../types';
+
+const SHARED_STRUCTURAL = {
+  radius: '0.5rem',
+  borderWidth: '1px',
+  shadowSm: '0 1px 2px rgb(0 0 0 / 0.06)',
+  shadowMd: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+  shadowLg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+  fontSans: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif',
+  fontMono: 'JetBrains Mono, ui-monospace, SFMono-Regular, monospace',
+};
+
+export const defiTheme: ThemeDefinition = {
+  name: 'defi',
+  displayName: 'DeFi',
+  description: 'Professional crypto-finance with monospace numbers and clean data presentation',
+  light: {
+    background: '0 0% 100%',
+    foreground: '230 25% 10%',
+    card: '0 0% 100%',
+    cardForeground: '230 25% 10%',
+    popover: '0 0% 100%',
+    popoverForeground: '230 25% 10%',
+    primary: '168 62% 50%',
+    primaryForeground: '0 0% 100%',
+    secondary: '230 15% 95%',
+    secondaryForeground: '230 25% 10%',
+    muted: '230 15% 95%',
+    mutedForeground: '230 10% 45%',
+    accent: '270 60% 55%',
+    accentForeground: '0 0% 100%',
+    destructive: '0 84% 60%',
+    destructiveForeground: '0 0% 100%',
+    success: '142 71% 45%',
+    successForeground: '0 0% 100%',
+    warning: '38 92% 50%',
+    warningForeground: '0 0% 0%',
+    info: '226 100% 59%',
+    infoForeground: '0 0% 100%',
+    border: '230 15% 90%',
+    input: '230 15% 90%',
+    ring: '168 62% 50%',
+    ...SHARED_STRUCTURAL,
+  },
+  dark: {
+    background: '230 30% 10%',
+    foreground: '0 0% 95%',
+    card: '230 25% 14%',
+    cardForeground: '0 0% 95%',
+    popover: '230 25% 14%',
+    popoverForeground: '0 0% 95%',
+    primary: '168 62% 50%',
+    primaryForeground: '0 0% 100%',
+    secondary: '230 25% 18%',
+    secondaryForeground: '0 0% 95%',
+    muted: '230 25% 18%',
+    mutedForeground: '230 10% 55%',
+    accent: '270 60% 60%',
+    accentForeground: '0 0% 100%',
+    destructive: '0 62.8% 30.6%',
+    destructiveForeground: '0 0% 95%',
+    success: '142 71% 45%',
+    successForeground: '0 0% 100%',
+    warning: '38 92% 50%',
+    warningForeground: '0 0% 0%',
+    info: '226 100% 64%',
+    infoForeground: '0 0% 100%',
+    border: '230 20% 20%',
+    input: '230 20% 20%',
+    ring: '168 62% 50%',
+    ...SHARED_STRUCTURAL,
+  },
+  classOverrides: {
+    input: {
+      base: '[font-variant-numeric:tabular-nums] font-mono',
+    },
+    badge: {
+      base: '[font-variant-numeric:tabular-nums] font-mono text-[0.75rem]',
+    },
+  },
+};

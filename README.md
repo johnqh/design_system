@@ -213,6 +213,11 @@ The design system ships 10 visual styles. Each app picks one at build time — n
 | `swissTheme` | Helvetica, grid-precise, no shadows | Black/Red |
 | `linearTheme` | Dark-first, subtle, professional | Indigo |
 | `notionTheme` | Content-focused, warm gray, minimal | Warm blue |
+| `web3Theme` | Crypto-native, glassmorphic cards, pill shapes | Pink |
+| `gamingTheme` | Bold, immersive, glow effects, sharp corners | Purple |
+| `defiTheme` | Professional crypto-finance, monospace numbers | Teal |
+| `predictionMarketTheme` | Data-heavy, light-first, green/red outcomes | Blue |
+| `gamblingTheme` | Dark, luxurious, gold accents, bold CTAs | Green/Gold |
 
 ### Switching Themes
 
