@@ -12,6 +12,8 @@
  * className={colors.button.primary}
  */
 
+import { getActiveTheme } from '../themes/configure';
+
 // Type definitions for color variants
 interface ColorVariant {
   base?: string;
@@ -530,7 +532,7 @@ const semanticColors = {
  * getColorClasses('button', 'primary', ['focus', 'disabled'])
  * ```
  */
-const componentColors = {
+const legacyComponentColors = {
   button: {
     // Primary button - main brand actions
     primary: {
@@ -792,6 +794,169 @@ const componentColors = {
     },
   },
 } as const;
+
+// Brand badge colors for blockchains — intentionally NOT theme-aware (brand identity)
+const chainBadgeColors = {
+  ethereum: legacyComponentColors.badge.ethereum,
+  solana: legacyComponentColors.badge.solana,
+  polygon: legacyComponentColors.badge.polygon,
+  bitcoin: legacyComponentColors.badge.bitcoin,
+  binance: legacyComponentColors.badge.binance,
+  cardano: legacyComponentColors.badge.cardano,
+  avalanche: legacyComponentColors.badge.avalanche,
+  arbitrum: legacyComponentColors.badge.arbitrum,
+};
+
+/**
+ * Semantic (theme-aware) component color classes. `base` uses theme tokens and
+ * `dark` is empty because tokens are already light/dark aware. Used when a theme
+ * is active; otherwise `legacyComponentColors` is served (see `componentColors`).
+ */
+const semanticComponentColors = {
+  button: {
+    primary: {
+      base: 'bg-primary hover:bg-primary/90 active:bg-primary/80 text-primary-foreground border-transparent',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary',
+    },
+    secondary: {
+      base: 'bg-secondary hover:bg-secondary/80 active:bg-secondary/70 text-secondary-foreground border-transparent',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
+    },
+    outline: {
+      base: 'bg-transparent hover:bg-accent active:bg-accent text-foreground border-input',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
+    },
+    ghost: {
+      base: 'bg-transparent hover:bg-accent active:bg-accent text-foreground border-transparent',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
+    },
+    destructive: {
+      base: 'bg-destructive hover:bg-destructive/90 active:bg-destructive/80 text-destructive-foreground border-transparent',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
+    },
+    success: {
+      base: 'bg-success hover:bg-success/90 active:bg-success/80 text-success-foreground border-transparent',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
+    },
+    link: {
+      base: 'bg-transparent hover:bg-transparent active:bg-transparent text-primary border-transparent underline-offset-4 hover:underline',
+      dark: '',
+      focus: 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      disabled: 'disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline',
+    },
+    gradient: {
+      primary:
+        'bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground border-transparent shadow-lg hover:shadow-xl',
+      secondary:
+        'bg-gradient-to-r from-secondary to-muted hover:opacity-90 text-secondary-foreground border-transparent',
+      success:
+        'bg-gradient-to-r from-success to-success hover:opacity-90 text-success-foreground border-transparent',
+    },
+  },
+  card: {
+    default: {
+      base: 'bg-card border-border',
+      dark: '',
+      hover: 'hover:shadow-md transition-shadow duration-200',
+    },
+    elevated: {
+      base: 'bg-card shadow-sm border-border',
+      dark: '',
+      hover: 'hover:shadow-lg transition-shadow duration-200',
+    },
+    interactive: {
+      base: 'bg-card border-border cursor-pointer',
+      dark: '',
+      hover: 'hover:bg-muted hover:shadow-md transition-all duration-200',
+      focus: 'focus:ring-2 focus:ring-ring focus:ring-offset-2',
+    },
+    success: { base: 'bg-success/10 border-success/30', dark: '', text: 'text-success' },
+    warning: { base: 'bg-warning/10 border-warning/30', dark: '', text: 'text-warning' },
+    attention: { base: 'bg-warning/10 border-warning/30', dark: '', text: 'text-warning' },
+    error: { base: 'bg-destructive/10 border-destructive/30', dark: '', text: 'text-destructive' },
+  },
+  badge: {
+    default: { base: 'bg-muted text-muted-foreground', dark: '' },
+    primary: { base: 'bg-primary/10 text-primary', dark: '' },
+    success: { base: 'bg-success/10 text-success', dark: '' },
+    warning: { base: 'bg-warning/10 text-warning', dark: '' },
+    attention: { base: 'bg-warning/10 text-warning', dark: '' },
+    error: { base: 'bg-destructive/10 text-destructive', dark: '' },
+    ...chainBadgeColors,
+  },
+  input: {
+    default: {
+      base: 'bg-background border-input text-foreground placeholder:text-muted-foreground',
+      dark: '',
+      focus: 'focus:ring-2 focus:ring-ring focus:border-ring',
+      error: 'border-destructive focus:border-destructive focus:ring-destructive',
+    },
+    search: {
+      base: 'bg-muted border-input text-foreground placeholder:text-muted-foreground',
+      dark: '',
+      focus: 'focus:bg-background focus:ring-2 focus:ring-ring focus:border-ring',
+    },
+  },
+  alert: {
+    info: { base: 'bg-info/10 border-info/30 text-info', dark: '', icon: 'text-info' },
+    success: {
+      base: 'bg-success/10 border-success/30 text-success',
+      dark: '',
+      icon: 'text-success',
+    },
+    warning: {
+      base: 'bg-warning/10 border-warning/30 text-warning',
+      dark: '',
+      icon: 'text-warning',
+    },
+    attention: {
+      base: 'bg-warning/10 border-warning/30 text-warning',
+      dark: '',
+      icon: 'text-warning',
+    },
+    error: {
+      base: 'bg-destructive/10 border-destructive/30 text-destructive',
+      dark: '',
+      icon: 'text-destructive',
+    },
+  },
+} as const;
+
+/**
+ * Theme-aware component colors. Each group is a getter so it evaluates at access
+ * (render) time: semantic tokens when a theme is configured, legacy hardcoded
+ * classes otherwise (backward compatible). Mirrors the `tc()`/getter approach
+ * used by `ui` and `textVariants`.
+ */
+const componentColors = {
+  get button() {
+    return getActiveTheme() ? semanticComponentColors.button : legacyComponentColors.button;
+  },
+  get card() {
+    return getActiveTheme() ? semanticComponentColors.card : legacyComponentColors.card;
+  },
+  get badge() {
+    return getActiveTheme() ? semanticComponentColors.badge : legacyComponentColors.badge;
+  },
+  get input() {
+    return getActiveTheme() ? semanticComponentColors.input : legacyComponentColors.input;
+  },
+  get alert() {
+    return getActiveTheme() ? semanticComponentColors.alert : legacyComponentColors.alert;
+  },
+};
 
 // =============================================================================
 // UTILITIES
