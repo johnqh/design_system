@@ -100,8 +100,12 @@ export function createTailwindPreset(_theme?: ThemeDefinition) {
 export function createNativeWindPreset(theme: ThemeDefinition) {
   const { light } = theme;
 
+  // Emit the `<alpha-value>` placeholder so Tailwind/NativeWind opacity modifiers
+  // (e.g. bg-primary/10, border-border/20) resolve correctly. For solid usage
+  // Tailwind substitutes alpha=1. NativeWind can't use CSS custom properties, so
+  // these are concrete per-theme HSL channels rather than var() references.
   function hsl(value: string) {
-    return `hsl(${value})`;
+    return `hsl(${value} / <alpha-value>)`;
   }
 
   return {
