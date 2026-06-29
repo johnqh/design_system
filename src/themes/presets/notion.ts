@@ -78,8 +78,20 @@ export const notionTheme: ThemeDefinition = {
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {
+    button: {
+      base: 'font-medium shadow-none hover:bg-accent/80',
+    },
     card: {
-      base: 'border border-border/50',
+      base: 'border border-border/50 shadow-none bg-card',
+    },
+    input: {
+      base: 'bg-muted/35 border-border/70 shadow-none',
+    },
+    badge: {
+      base: 'rounded-md text-[0.72rem]',
+    },
+    alert: {
+      base: 'border-l-4 border-l-info bg-muted/40 text-foreground',
     },
   },
 };

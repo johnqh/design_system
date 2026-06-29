@@ -82,10 +82,16 @@ export const gamingTheme: ThemeDefinition = {
       base: 'font-bold uppercase tracking-wide shadow-[0_0_15px_hsl(var(--primary)/0.4)] hover:shadow-[0_0_25px_hsl(var(--primary)/0.6)] hover:scale-105 transition-all',
     },
     card: {
-      base: 'hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] transition-shadow',
+      base: 'border-primary/10 bg-card/95 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] transition-shadow',
+    },
+    input: {
+      base: 'border-primary/20 bg-card/90 focus:border-primary',
     },
     badge: {
       base: 'font-bold uppercase text-[0.7rem] tracking-wide',
+    },
+    alert: {
+      base: 'border-l-4 border-l-primary bg-card/90',
     },
   },
 };

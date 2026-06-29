@@ -81,8 +81,17 @@ export const gamblingTheme: ThemeDefinition = {
     button: {
       base: 'font-extrabold uppercase tracking-wide bg-gradient-to-r from-[hsl(45,100%,50%)] to-[hsl(36,90%,48%)] text-black shadow-[0_4px_15px_hsl(var(--accent)/0.4)] hover:shadow-[0_6px_20px_hsl(var(--accent)/0.5)]',
     },
+    card: {
+      base: 'bg-card border-accent/20 shadow-[0_8px_24px_hsl(var(--accent)/0.12)]',
+    },
+    input: {
+      base: 'bg-background border-accent/20 focus:border-accent',
+    },
     badge: {
-      base: 'font-bold uppercase text-[0.75rem]',
+      base: 'font-bold uppercase text-[0.75rem] border border-accent/20 bg-accent/10 text-accent',
+    },
+    alert: {
+      base: 'border-l-4 border-l-accent bg-card/95',
     },
   },
 };

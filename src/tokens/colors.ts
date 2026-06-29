@@ -898,15 +898,15 @@ const semanticComponentColors = {
   },
   input: {
     default: {
-      base: 'bg-background border-input text-foreground placeholder:text-muted-foreground',
+      base: 'bg-muted text-foreground placeholder:text-muted-foreground',
       dark: '',
-      focus: 'focus:ring-2 focus:ring-ring focus:border-ring',
-      error: 'border-destructive focus:border-destructive focus:ring-destructive',
+      focus: 'focus:bg-background focus:ring-2 focus:ring-ring',
+      error: 'focus:bg-background focus:ring-destructive',
     },
     search: {
-      base: 'bg-muted border-input text-foreground placeholder:text-muted-foreground',
+      base: 'bg-muted text-foreground placeholder:text-muted-foreground',
       dark: '',
-      focus: 'focus:bg-background focus:ring-2 focus:ring-ring focus:border-ring',
+      focus: 'focus:bg-background focus:ring-2 focus:ring-ring',
     },
   },
   alert: {

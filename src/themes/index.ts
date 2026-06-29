@@ -50,6 +50,9 @@ export { gamingTheme } from './presets/gaming';
 export { defiTheme } from './presets/defi';
 export { predictionMarketTheme } from './presets/prediction-market';
 export { gamblingTheme } from './presets/gambling';
+export { terminalTheme } from './presets/terminal';
+export { windows31Theme } from './presets/windows-3-1';
+export { windows2000Theme } from './presets/windows-2000';
 
 // All themes as a record for iteration
 export { themes } from './registry';

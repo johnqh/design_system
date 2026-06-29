@@ -442,19 +442,19 @@ const variants: VariantsType = {
     default: () =>
       themed(
         'input',
-        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
     search: () =>
       themed(
         'input',
-        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
     error: () =>
       themed(
         'input',
-        'bg-background border-destructive text-foreground focus:border-destructive focus:ring-destructive block w-full rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2',
         'bg-gray-50 dark:bg-gray-800 border-red-300 dark:border-red-700 text-gray-900 dark:text-gray-100 focus:border-red-500 focus:ring-red-500 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
 
@@ -462,13 +462,13 @@ const variants: VariantsType = {
     small: () =>
       themed(
         'input',
-        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-muted text-foreground block w-full rounded-lg px-2 py-1.5 text-xs placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
     large: () =>
       themed(
         'input',
-        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md px-4 py-3 text-base placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-muted text-foreground block w-full rounded-lg px-4 py-3 text-base placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-4 py-3 text-base placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
 
@@ -476,7 +476,7 @@ const variants: VariantsType = {
     withIcon: () =>
       themed(
         'input',
-        'bg-background border-input text-foreground focus:border-ring focus:ring-ring block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'bg-muted text-foreground block w-full rounded-lg pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
   },

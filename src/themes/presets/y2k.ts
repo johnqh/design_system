@@ -79,10 +79,19 @@ export const y2kTheme: ThemeDefinition = {
   },
   classOverrides: {
     button: {
-      base: 'font-bold shadow-[0_4px_14px_hsl(var(--primary)/0.4)] hover:shadow-[0_6px_20px_hsl(var(--primary)/0.5)]',
+      base: 'font-bold tracking-[0.02em] border-2 border-white/50 shadow-[0_4px_14px_hsl(var(--primary)/0.4)] hover:shadow-[0_6px_20px_hsl(var(--primary)/0.5)] hover:scale-[1.02]',
+    },
+    card: {
+      base: 'border-2 border-white/60 bg-gradient-to-br from-card via-card to-secondary/70 shadow-[0_10px_30px_hsl(var(--primary)/0.18)]',
+    },
+    input: {
+      base: 'border-2 border-primary/25 bg-card/90 shadow-[inset_0_1px_0_hsl(0_0%_100%_/_0.7)]',
     },
     badge: {
-      base: 'font-bold',
+      base: 'font-bold uppercase tracking-[0.08em] border border-white/50',
+    },
+    alert: {
+      base: 'border-2 border-primary/25 bg-gradient-to-r from-card to-secondary/60',
     },
   },
 };

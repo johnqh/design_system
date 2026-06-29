@@ -80,7 +80,19 @@ export const vaporwaveTheme: ThemeDefinition = {
   },
   classOverrides: {
     button: {
-      base: 'bg-gradient-to-r hover:opacity-90',
+      base: 'bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.22)] hover:-translate-y-0.5 hover:opacity-95 transition-all duration-200',
+    },
+    card: {
+      base: 'bg-gradient-to-br from-card via-card to-secondary/80 border-primary/20 shadow-[0_12px_30px_hsl(var(--primary)/0.16)]',
+    },
+    input: {
+      base: 'bg-card/80 border-primary/20 focus:border-accent',
+    },
+    badge: {
+      base: 'tracking-[0.08em] uppercase',
+    },
+    alert: {
+      base: 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20',
     },
   },
 };

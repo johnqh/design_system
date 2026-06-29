@@ -77,4 +77,21 @@ export const linearTheme: ThemeDefinition = {
     ring: '239 84% 74%',
     ...SHARED_STRUCTURAL,
   },
+  classOverrides: {
+    button: {
+      base: 'font-medium tracking-[-0.01em] shadow-none hover:brightness-110',
+    },
+    card: {
+      base: 'bg-card/95 border-white/5 shadow-sm',
+    },
+    input: {
+      base: 'bg-card/80 border-border/80 shadow-none',
+    },
+    badge: {
+      base: 'rounded-md uppercase tracking-[0.12em] text-[0.7rem]',
+    },
+    alert: {
+      base: 'rounded-lg border-l-2 border-l-primary bg-card/85',
+    },
+  },
 };

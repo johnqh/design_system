@@ -82,7 +82,16 @@ export const swissTheme: ThemeDefinition = {
       base: 'font-medium uppercase tracking-[0.2em]',
     },
     card: {
-      base: 'border',
+      base: 'border shadow-none',
+    },
+    input: {
+      base: 'rounded-none shadow-none uppercase tracking-[0.08em]',
+    },
+    badge: {
+      base: 'rounded-none uppercase tracking-[0.16em] text-[0.68rem]',
+    },
+    alert: {
+      base: 'rounded-none border-l-4 border-l-primary shadow-none',
     },
   },
 };

@@ -23,7 +23,7 @@ export const defaultTheme: ThemeDefinition = {
   displayName: 'Default',
   description: 'Clean, modern design with blue primary colors',
   light: {
-    background: '0 0% 100%',
+    background: '210 40% 98%',
     foreground: '222.2 84% 4.9%',
     card: '0 0% 100%',
     cardForeground: '222.2 84% 4.9%',

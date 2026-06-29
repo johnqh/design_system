@@ -199,7 +199,7 @@ console.log('Optimization suggestions:', analysis.optimizationSuggestions);
 
 ## Themes
 
-The design system ships 10 visual styles. Each app picks one at build time — no runtime switching needed.
+The design system ships multiple visual styles. Each app picks one at build time; no runtime switching is required.
 
 | Theme | Style | Primary |
 |-------|-------|---------|
@@ -218,6 +218,9 @@ The design system ships 10 visual styles. Each app picks one at build time — n
 | `defiTheme` | Professional crypto-finance, monospace numbers | Teal |
 | `predictionMarketTheme` | Data-heavy, light-first, green/red outcomes | Blue |
 | `gamblingTheme` | Dark, luxurious, gold accents, bold CTAs | Green/Gold |
+| `terminalTheme` | Monochrome terminal, underlined actions, square panels | Green phosphor |
+| `windows31Theme` | Classic Windows 3.1, gray chrome, chunky controls | Windows blue |
+| `windows2000Theme` | Windows 2000, beveled 3D controls, Tahoma UI | Navy |
 
 ### Switching Themes
 

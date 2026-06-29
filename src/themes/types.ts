@@ -87,4 +87,7 @@ export type ThemeName =
   | 'gaming'
   | 'defi'
   | 'prediction-market'
-  | 'gambling';
+  | 'gambling'
+  | 'terminal'
+  | 'windows-3.1'
+  | 'windows-2000';

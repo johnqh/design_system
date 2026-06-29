@@ -78,11 +78,20 @@ export const defiTheme: ThemeDefinition = {
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {
+    button: {
+      base: 'font-semibold tracking-[-0.01em] [font-variant-numeric:tabular-nums]',
+    },
+    card: {
+      base: 'border-border/80 bg-card shadow-sm',
+    },
     input: {
-      base: '[font-variant-numeric:tabular-nums] font-mono',
+      base: '[font-variant-numeric:tabular-nums] font-mono bg-card/90',
     },
     badge: {
-      base: '[font-variant-numeric:tabular-nums] font-mono text-[0.75rem]',
+      base: '[font-variant-numeric:tabular-nums] font-mono text-[0.75rem] rounded-md',
+    },
+    alert: {
+      base: 'border-l-4 border-l-info [font-variant-numeric:tabular-nums]',
     },
   },
 };

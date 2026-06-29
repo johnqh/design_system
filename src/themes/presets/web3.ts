@@ -87,6 +87,12 @@ export const web3Theme: ThemeDefinition = {
     input: {
       base: 'rounded-2xl bg-white/5 border-white/10',
     },
+    badge: {
+      base: 'rounded-full uppercase tracking-[0.12em] text-[0.68rem] border border-white/10 bg-white/5',
+    },
+    alert: {
+      base: 'rounded-2xl border-white/10 bg-white/5 backdrop-blur-sm',
+    },
   },
   nativeClassOverrides: {
     button: {
@@ -96,6 +102,12 @@ export const web3Theme: ThemeDefinition = {
       base: 'rounded-[20px]',
     },
     input: {
+      base: 'rounded-2xl',
+    },
+    badge: {
+      base: 'rounded-full uppercase tracking-[0.12em] text-[0.68rem]',
+    },
+    alert: {
       base: 'rounded-2xl',
     },
   },

@@ -79,10 +79,19 @@ export const predictionMarketTheme: ThemeDefinition = {
   },
   classOverrides: {
     button: {
-      base: 'font-semibold',
+      base: 'font-semibold [font-variant-numeric:tabular-nums]',
+    },
+    card: {
+      base: 'border-border/80 hover:border-primary/30 transition-colors',
+    },
+    input: {
+      base: '[font-variant-numeric:tabular-nums] bg-background',
     },
     badge: {
-      base: 'font-semibold [font-variant-numeric:tabular-nums]',
+      base: 'font-semibold [font-variant-numeric:tabular-nums] rounded-md',
+    },
+    alert: {
+      base: 'border-l-4 [font-variant-numeric:tabular-nums]',
     },
   },
 };

@@ -20,6 +20,9 @@ import { gamingTheme } from './presets/gaming';
 import { defiTheme } from './presets/defi';
 import { predictionMarketTheme } from './presets/prediction-market';
 import { gamblingTheme } from './presets/gambling';
+import { terminalTheme } from './presets/terminal';
+import { windows31Theme } from './presets/windows-3-1';
+import { windows2000Theme } from './presets/windows-2000';
 
 export const themes: Record<ThemeName, ThemeDefinition> = {
   default: defaultTheme,
@@ -37,4 +40,7 @@ export const themes: Record<ThemeName, ThemeDefinition> = {
   defi: defiTheme,
   'prediction-market': predictionMarketTheme,
   gambling: gamblingTheme,
+  terminal: terminalTheme,
+  'windows-3.1': windows31Theme,
+  'windows-2000': windows2000Theme,
 };

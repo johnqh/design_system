@@ -79,4 +79,21 @@ export const retroTheme: ThemeDefinition = {
     ring: '38 92% 50%',
     ...SHARED_STRUCTURAL,
   },
+  classOverrides: {
+    button: {
+      base: 'font-semibold tracking-[0.04em] shadow-[0_2px_0_hsl(var(--border))] hover:-translate-y-0.5 transition-all duration-200',
+    },
+    card: {
+      base: 'border-[1.5px] border-border/80 bg-card/95',
+    },
+    input: {
+      base: 'bg-card/70 border-border/90',
+    },
+    badge: {
+      base: 'font-semibold tracking-[0.04em]',
+    },
+    alert: {
+      base: 'border-l-[6px] border-l-primary bg-card/85',
+    },
+  },
 };
