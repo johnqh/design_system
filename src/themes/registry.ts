@@ -38,6 +38,23 @@ import { astryxTheme } from './presets/astryx';
 import { appleTheme } from './presets/apple';
 import { govukTheme } from './presets/govuk';
 import { uswdsTheme } from './presets/uswds';
+// Retro computers
+import { classicMacTheme } from './presets/classic-mac';
+import { commodore64Theme } from './presets/commodore-64';
+import { gameBoyTheme } from './presets/game-boy';
+import { amigaTheme } from './presets/amiga';
+import { nextstepTheme } from './presets/nextstep';
+// Game consoles
+import { playstationTheme } from './presets/playstation';
+import { xboxTheme } from './presets/xbox';
+import { nintendoTheme } from './presets/nintendo';
+import { steamTheme } from './presets/steam';
+// Color-scheme design systems
+import { nordTheme } from './presets/nord';
+import { draculaTheme } from './presets/dracula';
+import { solarizedTheme } from './presets/solarized';
+import { catppuccinTheme } from './presets/catppuccin';
+import { gruvboxTheme } from './presets/gruvbox';
 
 export const themes: Record<ThemeName, ThemeDefinition> = {
   default: defaultTheme,
@@ -73,4 +90,21 @@ export const themes: Record<ThemeName, ThemeDefinition> = {
   apple: appleTheme,
   govuk: govukTheme,
   uswds: uswdsTheme,
+  // Retro computers
+  'classic-mac': classicMacTheme,
+  'commodore-64': commodore64Theme,
+  'game-boy': gameBoyTheme,
+  amiga: amigaTheme,
+  nextstep: nextstepTheme,
+  // Game consoles
+  playstation: playstationTheme,
+  xbox: xboxTheme,
+  nintendo: nintendoTheme,
+  steam: steamTheme,
+  // Color-scheme design systems
+  nord: nordTheme,
+  dracula: draculaTheme,
+  solarized: solarizedTheme,
+  catppuccin: catppuccinTheme,
+  gruvbox: gruvboxTheme,
 };

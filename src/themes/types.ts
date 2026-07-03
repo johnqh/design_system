@@ -105,4 +105,21 @@ export type ThemeName =
   | 'astryx'
   | 'apple'
   | 'govuk'
-  | 'uswds';
+  | 'uswds'
+  // Retro computers
+  | 'classic-mac'
+  | 'commodore-64'
+  | 'game-boy'
+  | 'amiga'
+  | 'nextstep'
+  // Game consoles
+  | 'playstation'
+  | 'xbox'
+  | 'nintendo'
+  | 'steam'
+  // Color-scheme design systems
+  | 'nord'
+  | 'dracula'
+  | 'solarized'
+  | 'catppuccin'
+  | 'gruvbox';

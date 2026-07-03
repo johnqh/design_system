@@ -70,5 +70,25 @@ export { appleTheme } from './presets/apple';
 export { govukTheme } from './presets/govuk';
 export { uswdsTheme } from './presets/uswds';
 
+// Retro computer design systems
+export { classicMacTheme } from './presets/classic-mac';
+export { commodore64Theme } from './presets/commodore-64';
+export { gameBoyTheme } from './presets/game-boy';
+export { amigaTheme } from './presets/amiga';
+export { nextstepTheme } from './presets/nextstep';
+
+// Game console design systems
+export { playstationTheme } from './presets/playstation';
+export { xboxTheme } from './presets/xbox';
+export { nintendoTheme } from './presets/nintendo';
+export { steamTheme } from './presets/steam';
+
+// Color-scheme design systems
+export { nordTheme } from './presets/nord';
+export { draculaTheme } from './presets/dracula';
+export { solarizedTheme } from './presets/solarized';
+export { catppuccinTheme } from './presets/catppuccin';
+export { gruvboxTheme } from './presets/gruvbox';
+
 // All themes as a record for iteration
 export { themes } from './registry';

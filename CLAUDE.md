@@ -226,6 +226,9 @@ bun run format:check      # Check formatting without writing
 **Presets (`themes/presets/`, registered in `themes/registry.ts`)**
 - Aesthetic themes: `default, neo-brutalism, glassmorphism, cyberpunk, vaporwave, retro, y2k, swiss, linear, notion, web3, gaming, defi, prediction-market, gambling, terminal, windows-3.1, windows-2000`.
 - Real-world design systems: `material` (Google Material 3), `fluent` (Microsoft Fluent 2), `carbon` (IBM), `polaris` (Shopify), `primer` (GitHub), `atlassian`, `spectrum` (Adobe), `base-web` (Uber Base), `lightning` (Salesforce), `ant-design`, `astryx` (Meta), `apple` (Apple HIG), `govuk` (GOV.UK), `uswds` (U.S. Web Design System).
+- Retro computers: `classic-mac` (Apple Classic Macintosh), `commodore-64` (Pepto VIC-II palette), `game-boy` (Nintendo Game Boy DMG), `amiga` (Amiga Workbench "Old Blue"), `nextstep` (NeXTSTEP grayscale "chiseled steel" — beveled `classOverrides`).
+- Game consoles / platforms: `playstation` (Sony), `xbox` (Microsoft), `nintendo` (Switch), `steam` (Valve).
+- Color-scheme design systems: `nord`, `dracula` (+ Alucard light), `solarized`, `catppuccin` (Latte/Mocha), `gruvbox`.
 
 No CSS files are committed — CSS is generated on demand via `generateThemeCSS()`. Themes are exposed to consumers through the `@sudobility/design/themes` subpath export.
 
