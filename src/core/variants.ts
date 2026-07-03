@@ -23,6 +23,135 @@ function themed(
   return override ? `${semantic} ${override}` : semantic;
 }
 
+/**
+ * Palette-class → semantic-token map used by {@link toSemantic}. Converts the
+ * legacy hardcoded Tailwind palette classes of the advanced component variants
+ * (modal, navigation, table, notifications, …) into theme-aware tokens that
+ * resolve to the active design system's CSS variables.
+ */
+const SEMANTIC_TOKEN_MAP: Record<string, string> = {
+  // Surfaces
+  'bg-white': 'bg-card',
+  'bg-gray-50': 'bg-muted',
+  'bg-gray-100': 'bg-muted',
+  'bg-gray-200': 'bg-muted',
+  'bg-gray-800': 'bg-card',
+  'bg-gray-900': 'bg-background',
+  'bg-blue-50': 'bg-primary/10',
+  'bg-blue-100': 'bg-primary/15',
+  'bg-blue-500': 'bg-primary',
+  'bg-blue-600': 'bg-primary',
+  'bg-blue-700': 'bg-primary',
+  'bg-red-50': 'bg-destructive/10',
+  'bg-red-100': 'bg-destructive/15',
+  'bg-red-500': 'bg-destructive',
+  'bg-red-600': 'bg-destructive',
+  'bg-green-50': 'bg-success/10',
+  'bg-green-100': 'bg-success/15',
+  'bg-green-500': 'bg-success',
+  'bg-green-600': 'bg-success',
+  'bg-amber-50': 'bg-warning/10',
+  'bg-amber-100': 'bg-warning/15',
+  'bg-amber-500': 'bg-warning',
+  'bg-amber-600': 'bg-warning',
+  'bg-orange-50': 'bg-warning/10',
+  'bg-yellow-50': 'bg-warning/10',
+  // Text
+  'text-gray-900': 'text-foreground',
+  'text-gray-800': 'text-foreground',
+  'text-gray-700': 'text-foreground',
+  'text-gray-600': 'text-muted-foreground',
+  'text-gray-500': 'text-muted-foreground',
+  'text-gray-400': 'text-muted-foreground',
+  'text-gray-300': 'text-muted-foreground',
+  'text-gray-200': 'text-foreground',
+  'text-gray-100': 'text-foreground',
+  'text-gray-50': 'text-foreground',
+  'text-blue-700': 'text-primary',
+  'text-blue-600': 'text-primary',
+  'text-blue-500': 'text-primary',
+  'text-blue-400': 'text-primary',
+  'text-red-600': 'text-destructive',
+  'text-red-500': 'text-destructive',
+  'text-red-400': 'text-destructive',
+  'text-green-600': 'text-success',
+  'text-green-500': 'text-success',
+  'text-green-400': 'text-success',
+  'text-amber-600': 'text-warning',
+  'text-amber-500': 'text-warning',
+  'text-orange-600': 'text-warning',
+  'text-yellow-600': 'text-warning',
+  // Borders
+  'border-gray-100': 'border-border',
+  'border-gray-200': 'border-border',
+  'border-gray-300': 'border-input',
+  'border-gray-600': 'border-border',
+  'border-gray-700': 'border-border',
+  'border-blue-500': 'border-ring',
+  'border-blue-400': 'border-ring',
+  'border-red-300': 'border-destructive',
+  'border-red-500': 'border-destructive',
+  'border-green-500': 'border-success',
+  'border-green-200': 'border-success/40',
+  'border-amber-200': 'border-warning/40',
+  'border-red-200': 'border-destructive/40',
+  // Directional spinner borders
+  'border-t-blue-600': 'border-t-primary',
+  'border-t-blue-400': 'border-t-primary',
+  'border-t-green-600': 'border-t-success',
+  'border-t-amber-600': 'border-t-warning',
+  'border-t-red-600': 'border-t-destructive',
+  // Dividers & rings
+  'divide-gray-200': 'divide-border',
+  'divide-gray-700': 'divide-border',
+  'ring-blue-500': 'ring-ring',
+  'ring-blue-400': 'ring-ring',
+};
+
+/**
+ * Convert a legacy palette class string into theme-aware tokens. Splits on
+ * whitespace, drops `dark:` variants (tokens are already light/dark aware), and
+ * maps each palette utility — preserving variant prefixes (`hover:`, `focus:`,
+ * `before:`, …) and opacity suffixes (`/50`) — to its semantic token. Unmapped
+ * utilities (layout, spacing, `bg-black` scrims, `text-white`) pass through.
+ */
+export function toSemantic(classes: string): string {
+  let out = classes
+    .split(/\s+/)
+    .filter((t) => t.length > 0 && !t.startsWith('dark:'))
+    .map((token) => {
+      const colonIdx = token.lastIndexOf(':');
+      const prefix = colonIdx >= 0 ? token.slice(0, colonIdx + 1) : '';
+      const util = colonIdx >= 0 ? token.slice(colonIdx + 1) : token;
+      const slashIdx = util.indexOf('/');
+      const bare = slashIdx >= 0 ? util.slice(0, slashIdx) : util;
+      const opacity = slashIdx >= 0 ? util.slice(slashIdx) : '';
+      const mapped = SEMANTIC_TOKEN_MAP[bare];
+      if (!mapped) return token;
+      return prefix + (opacity && !mapped.includes('/') ? mapped + opacity : mapped);
+    })
+    .join(' ');
+
+  // On a solid brand surface, map `text-white` to that surface's foreground
+  // token so text stays legible under themes with light primaries (e.g. Game
+  // Boy). Only applies to solid (non-opacity) brand backgrounds.
+  const solid = out.match(/\bbg-(primary|destructive|success|warning)\b(?!\/)/);
+  if (solid && /\btext-white\b/.test(out)) {
+    out = out.replace(/\btext-white\b/g, `text-${solid[1]}-foreground`);
+  }
+  return out;
+}
+
+/**
+ * Theme-aware wrapper for the advanced component variants: emits semantic
+ * tokens (via {@link toSemantic}) when a theme is active, and the original
+ * legacy palette classes otherwise (backward compatible with un-themed
+ * consumers). Mirrors {@link themed} but requires no per-component override key.
+ */
+export function themedAuto(legacy: string): string {
+  return getActiveTheme() ? toSemantic(legacy) : legacy;
+}
+
 // TypeScript type definitions for variants
 export type VariantFunction = () => string;
 export type VariantWithArgs<T = string> = (variant?: T) => string;
@@ -554,29 +683,46 @@ const variants: VariantsType = {
     // Spinner variants
     spinner: {
       default: () =>
-        'animate-spin rounded-full border-2 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-5 h-5',
+        themedAuto(
+          'animate-spin rounded-full border-2 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-5 h-5'
+        ),
       small: () =>
-        'animate-spin rounded-full border-2 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-4 h-4',
+        themedAuto(
+          'animate-spin rounded-full border-2 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-4 h-4'
+        ),
       large: () =>
-        'animate-spin rounded-full border-2 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-8 h-8',
+        themedAuto(
+          'animate-spin rounded-full border-2 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-8 h-8'
+        ),
       extraLarge: () =>
-        'animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-16 h-16',
+        themedAuto(
+          'animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400 w-16 h-16'
+        ),
 
       // Color variants
-      white: () => 'animate-spin rounded-full border-2 border-white/30 border-t-white w-5 h-5',
+      white: () =>
+        themedAuto('animate-spin rounded-full border-2 border-white/30 border-t-white w-5 h-5'),
       success: () =>
-        'animate-spin rounded-full border-2 border-green-200 border-t-green-600 dark:border-green-700 dark:border-t-green-400 w-5 h-5',
+        themedAuto(
+          'animate-spin rounded-full border-2 border-green-200 border-t-green-600 dark:border-green-700 dark:border-t-green-400 w-5 h-5'
+        ),
       warning: () =>
-        'animate-spin rounded-full border-2 border-amber-200 border-t-amber-600 dark:border-amber-700 dark:border-t-amber-400 w-5 h-5',
+        themedAuto(
+          'animate-spin rounded-full border-2 border-amber-200 border-t-amber-600 dark:border-amber-700 dark:border-t-amber-400 w-5 h-5'
+        ),
       error: () =>
-        'animate-spin rounded-full border-2 border-red-200 border-t-red-600 dark:border-red-700 dark:border-t-red-400 w-5 h-5',
+        themedAuto(
+          'animate-spin rounded-full border-2 border-red-200 border-t-red-600 dark:border-red-700 dark:border-t-red-400 w-5 h-5'
+        ),
     },
 
     // Loading state containers
     state: {
       default: () => 'flex flex-col items-center justify-center py-8 px-4',
       fullScreen: () =>
-        'flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900',
+        themedAuto(
+          'flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900'
+        ),
       inline: () => 'inline-flex items-center gap-2',
       center: () => 'flex items-center justify-center',
     },
@@ -585,35 +731,43 @@ const variants: VariantsType = {
     button: {
       default: () => 'inline-flex items-center gap-2 opacity-70 cursor-wait pointer-events-none',
       primary: () =>
-        'bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center gap-2 opacity-70 cursor-wait pointer-events-none px-4 py-2 rounded-md text-sm font-medium',
+        themedAuto(
+          'bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center gap-2 opacity-70 cursor-wait pointer-events-none px-4 py-2 rounded-md text-sm font-medium'
+        ),
       secondary: () =>
-        'bg-gray-100 text-gray-900 hover:bg-gray-200 inline-flex items-center gap-2 opacity-70 cursor-wait pointer-events-none px-4 py-2 rounded-md text-sm font-medium dark:bg-gray-800 dark:text-gray-50',
+        themedAuto(
+          'bg-gray-100 text-gray-900 hover:bg-gray-200 inline-flex items-center gap-2 opacity-70 cursor-wait pointer-events-none px-4 py-2 rounded-md text-sm font-medium dark:bg-gray-800 dark:text-gray-50'
+        ),
     },
 
     // Skeleton loading
     skeleton: {
-      base: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
-      default: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
-      text: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-4',
-      title: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-6',
-      avatar: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded-full w-10 h-10',
-      card: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32',
+      base: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded'),
+      default: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded'),
+      text: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-4'),
+      title: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-6'),
+      avatar: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded-full w-10 h-10'),
+      card: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32'),
     },
 
     // Progress indicators
     progress: {
-      bar: () => 'w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700',
-      fill: () => 'bg-blue-600 h-2 rounded-full transition-all duration-300',
+      bar: () => themedAuto('w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700'),
+      fill: () => themedAuto('bg-blue-600 h-2 rounded-full transition-all duration-300'),
       indeterminate: () =>
-        'w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 overflow-hidden relative before:absolute before:inset-0 before:bg-blue-600 before:rounded-full before:animate-pulse',
+        themedAuto(
+          'w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 overflow-hidden relative before:absolute before:inset-0 before:bg-blue-600 before:rounded-full before:animate-pulse'
+        ),
     },
 
     // Dots indicator
     dots: {
       default: () => 'flex space-x-1 justify-center items-center',
-      dot: () => 'w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-pulse',
+      dot: () => themedAuto('w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-pulse'),
       dotStaggered: (delay: number = 0) =>
-        `w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-pulse animation-delay-${delay}`,
+        themedAuto(
+          `w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-pulse animation-delay-${delay}`
+        ),
     },
   },
 
@@ -632,24 +786,39 @@ const variants: VariantsType = {
     // Container variants
     container: {
       default: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden'
+        ),
       small: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-sm',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-sm'
+        ),
       medium: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-md',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-md'
+        ),
       large: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-2xl',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-2xl'
+        ),
       extraLarge: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-4xl',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-4xl'
+        ),
       fullScreen: () =>
-        'bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 w-full h-full overflow-hidden',
+        themedAuto(
+          'bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 w-full h-full overflow-hidden'
+        ),
     },
 
     // Header variants
     header: {
       default: () =>
-        'px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between',
-      centered: () => 'px-6 py-4 border-b border-gray-200 dark:border-gray-700 text-center',
+        themedAuto(
+          'px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between'
+        ),
+      centered: () =>
+        themedAuto('px-6 py-4 border-b border-gray-200 dark:border-gray-700 text-center'),
       minimal: () => 'px-6 py-4 flex items-center justify-between',
     },
 
@@ -664,32 +833,50 @@ const variants: VariantsType = {
     // Footer variants
     footer: {
       default: () =>
-        'px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end gap-3',
+        themedAuto(
+          'px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end gap-3'
+        ),
       centered: () =>
-        'px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-center gap-3',
+        themedAuto(
+          'px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-center gap-3'
+        ),
       spaceBetween: () =>
-        'px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between',
+        themedAuto(
+          'px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between'
+        ),
       minimal: () => 'px-6 py-4 flex items-center justify-end gap-3',
     },
 
     // Close button variants
     close: {
       default: () =>
-        'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700',
+        themedAuto(
+          'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700'
+        ),
       subtle: () =>
-        'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200',
+        themedAuto(
+          'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200'
+        ),
       prominent: () =>
-        'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600',
+        themedAuto(
+          'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600'
+        ),
     },
 
     // Web3 specific modal variants
     web3: {
       wallet: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-md',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-md'
+        ),
       transaction: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-lg',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-lg'
+        ),
       confirmation: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-sm',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-hidden w-full max-w-sm'
+        ),
     },
 
     // Animation variants
@@ -709,10 +896,12 @@ const variants: VariantsType = {
       container: () => 'flex items-center justify-between text-sm',
       list: () => 'flex items-center space-x-1',
       item: () => 'flex items-center',
-      separator: () => 'h-4 w-4 text-gray-400 dark:text-gray-500 mx-2 flex-shrink-0',
+      separator: () => themedAuto('h-4 w-4 text-gray-400 dark:text-gray-500 mx-2 flex-shrink-0'),
       link: () =>
-        'flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:rounded-sm',
-      current: () => 'flex items-center text-gray-900 dark:text-white font-medium',
+        themedAuto(
+          'flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:rounded-sm'
+        ),
+      current: () => themedAuto('flex items-center text-gray-900 dark:text-white font-medium'),
       home: () => 'h-4 w-4 mr-1 flex-shrink-0',
     },
 
@@ -720,67 +909,100 @@ const variants: VariantsType = {
     tabs: {
       root: () => '',
       list: () =>
-        'inline-flex h-10 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 p-1 text-gray-500 dark:text-gray-400',
-      listUnderlined: () => 'flex border-b border-gray-200 dark:border-gray-700',
-      listPills: () => 'flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1',
+        themedAuto(
+          'inline-flex h-10 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 p-1 text-gray-500 dark:text-gray-400'
+        ),
+      listUnderlined: () => themedAuto('flex border-b border-gray-200 dark:border-gray-700'),
+      listPills: () => themedAuto('flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1'),
 
       trigger: () =>
-        'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-gray-950 data-[state=active]:shadow-sm dark:ring-offset-gray-950 dark:focus-visible:ring-blue-400 dark:data-[state=active]:bg-gray-950 dark:data-[state=active]:text-gray-50',
+        themedAuto(
+          'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-gray-950 data-[state=active]:shadow-sm dark:ring-offset-gray-950 dark:focus-visible:ring-blue-400 dark:data-[state=active]:bg-gray-950 dark:data-[state=active]:text-gray-50'
+        ),
       triggerUnderlined: () =>
-        'inline-flex items-center justify-center whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 border-b-2 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-blue-600 focus:border-blue-600 dark:focus:text-blue-400 dark:focus:border-blue-400 data-[state=active]:text-blue-600 data-[state=active]:border-blue-600 dark:data-[state=active]:text-blue-400 dark:data-[state=active]:border-blue-400 transition-colors',
+        themedAuto(
+          'inline-flex items-center justify-center whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 border-b-2 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-blue-600 focus:border-blue-600 dark:focus:text-blue-400 dark:focus:border-blue-400 data-[state=active]:text-blue-600 data-[state=active]:border-blue-600 dark:data-[state=active]:text-blue-400 dark:data-[state=active]:border-blue-400 transition-colors'
+        ),
       triggerPills: () =>
-        'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-gray-100 transition-all',
+        themedAuto(
+          'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-gray-100 transition-all'
+        ),
 
       content: () =>
-        'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:ring-offset-gray-950 dark:focus-visible:ring-blue-400',
+        themedAuto(
+          'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:ring-offset-gray-950 dark:focus-visible:ring-blue-400'
+        ),
     },
 
     // Menu/Dropdown variants
     menu: {
       trigger: () =>
-        'inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors',
+        themedAuto(
+          'inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
+        ),
       content: () =>
-        'z-50 min-w-[12rem] overflow-hidden rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 text-gray-900 dark:text-gray-100 shadow-lg',
+        themedAuto(
+          'z-50 min-w-[12rem] overflow-hidden rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 text-gray-900 dark:text-gray-100 shadow-lg'
+        ),
       item: () =>
-        'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm font-medium outline-none focus:bg-gray-100 focus:text-gray-900 dark:focus:bg-gray-700 dark:focus:text-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors',
-      separator: () => '-mx-1 my-1 h-px bg-gray-200 dark:bg-gray-700',
-      label: () => 'px-2 py-1.5 text-sm font-semibold text-gray-900 dark:text-gray-100',
-      shortcut: () => 'ml-auto text-xs tracking-widest text-gray-500 dark:text-gray-400',
+        themedAuto(
+          'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm font-medium outline-none focus:bg-gray-100 focus:text-gray-900 dark:focus:bg-gray-700 dark:focus:text-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors'
+        ),
+      separator: () => themedAuto('-mx-1 my-1 h-px bg-gray-200 dark:bg-gray-700'),
+      label: () => themedAuto('px-2 py-1.5 text-sm font-semibold text-gray-900 dark:text-gray-100'),
+      shortcut: () =>
+        themedAuto('ml-auto text-xs tracking-widest text-gray-500 dark:text-gray-400'),
     },
 
     // Pagination variants
     pagination: {
       container: () =>
-        'flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 sm:px-6',
+        themedAuto(
+          'flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 sm:px-6'
+        ),
       info: () => 'flex flex-1 justify-between sm:hidden',
       nav: () => 'hidden sm:flex sm:flex-1 sm:items-center sm:justify-between',
-      results: () => 'text-sm text-gray-700 dark:text-gray-300',
+      results: () => themedAuto('text-sm text-gray-700 dark:text-gray-300'),
       buttons: () => 'relative z-0 inline-flex rounded-md shadow-sm -space-x-px',
 
       button: () =>
-        'relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors',
+        themedAuto(
+          'relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors'
+        ),
       buttonActive: () =>
-        'relative inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 z-10',
+        themedAuto(
+          'relative inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 z-10'
+        ),
       buttonFirst: () => 'rounded-l-md',
       buttonLast: () => 'rounded-r-md',
 
       // Mobile variants
       mobileButton: () =>
-        'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors',
+        themedAuto(
+          'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors'
+        ),
     },
 
     // Sidebar/Menu navigation
     sidebar: {
       container: () =>
-        'flex flex-col h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700',
+        themedAuto(
+          'flex flex-col h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700'
+        ),
       nav: () => 'flex-1 px-4 py-6 space-y-1',
       item: () =>
-        'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors',
+        themedAuto(
+          'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors'
+        ),
       itemActive: () =>
-        'group flex items-center px-3 py-2 text-sm font-medium rounded-md bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-r-2 border-blue-500',
+        themedAuto(
+          'group flex items-center px-3 py-2 text-sm font-medium rounded-md bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-r-2 border-blue-500'
+        ),
       icon: () =>
-        'mr-3 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400',
-      iconActive: () => 'mr-3 h-5 w-5 flex-shrink-0 text-blue-500 dark:text-blue-400',
+        themedAuto(
+          'mr-3 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400'
+        ),
+      iconActive: () => themedAuto('mr-3 h-5 w-5 flex-shrink-0 text-blue-500 dark:text-blue-400'),
     },
 
     // Step navigation
@@ -790,17 +1012,23 @@ const variants: VariantsType = {
       step: () => 'flex items-center space-x-2',
 
       circle: () =>
-        'flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm font-medium',
+        themedAuto(
+          'flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm font-medium'
+        ),
       circleActive: () =>
-        'flex items-center justify-center w-8 h-8 rounded-full border-2 border-blue-600 dark:border-blue-400 bg-blue-600 dark:bg-blue-400 text-white text-sm font-medium',
+        themedAuto(
+          'flex items-center justify-center w-8 h-8 rounded-full border-2 border-blue-600 dark:border-blue-400 bg-blue-600 dark:bg-blue-400 text-white text-sm font-medium'
+        ),
       circleCompleted: () =>
-        'flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-600 dark:border-green-400 bg-green-600 dark:bg-green-400 text-white text-sm font-medium',
+        themedAuto(
+          'flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-600 dark:border-green-400 bg-green-600 dark:bg-green-400 text-white text-sm font-medium'
+        ),
 
-      label: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
-      labelInactive: () => 'text-sm font-medium text-gray-500 dark:text-gray-400',
+      label: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
+      labelInactive: () => themedAuto('text-sm font-medium text-gray-500 dark:text-gray-400'),
 
-      connector: () => 'w-12 h-px bg-gray-300 dark:bg-gray-600',
-      connectorActive: () => 'w-12 h-px bg-blue-600 dark:bg-blue-400',
+      connector: () => themedAuto('w-12 h-px bg-gray-300 dark:bg-gray-600'),
+      connectorActive: () => themedAuto('w-12 h-px bg-blue-600 dark:bg-blue-400'),
     },
   },
 
@@ -809,41 +1037,55 @@ const variants: VariantsType = {
     // Table variants
     table: {
       container: () =>
-        'w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700',
+        themedAuto('w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700'),
       wrapper: () => 'overflow-x-auto',
-      table: () => 'min-w-full divide-y divide-gray-200 dark:divide-gray-700',
+      table: () => themedAuto('min-w-full divide-y divide-gray-200 dark:divide-gray-700'),
 
-      thead: () => 'bg-gray-50 dark:bg-gray-800',
-      tbody: () => 'bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700',
-      tfoot: () => 'bg-gray-50 dark:bg-gray-800',
+      thead: () => themedAuto('bg-gray-50 dark:bg-gray-800'),
+      tbody: () =>
+        themedAuto('bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700'),
+      tfoot: () => themedAuto('bg-gray-50 dark:bg-gray-800'),
 
-      tr: () => 'hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors',
+      tr: () => themedAuto('hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'),
       trSelected: () =>
-        'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30',
+        themedAuto('bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30'),
 
       th: () =>
-        'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider',
+        themedAuto(
+          'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'
+        ),
       thSortable: () =>
-        'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 transition-colors',
+        themedAuto(
+          'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 transition-colors'
+        ),
 
-      td: () => 'px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100',
-      tdCompact: () => 'px-3 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100',
+      td: () => themedAuto('px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100'),
+      tdCompact: () =>
+        themedAuto('px-3 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100'),
     },
 
     // List variants
     list: {
-      container: () => 'bg-white dark:bg-gray-900 shadow overflow-hidden rounded-lg',
-      ul: () => 'divide-y divide-gray-200 dark:divide-gray-700',
-      li: () => 'px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors',
-      liActive: () => 'px-4 py-4 sm:px-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500',
+      container: () => themedAuto('bg-white dark:bg-gray-900 shadow overflow-hidden rounded-lg'),
+      ul: () => themedAuto('divide-y divide-gray-200 dark:divide-gray-700'),
+      li: () =>
+        themedAuto('px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'),
+      liActive: () =>
+        themedAuto('px-4 py-4 sm:px-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'),
 
       // Email list specific
       emailItem: () =>
-        'flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors',
+        themedAuto(
+          'flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors'
+        ),
       emailItemRead: () =>
-        'flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors opacity-60',
+        themedAuto(
+          'flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors opacity-60'
+        ),
       emailItemSelected: () =>
-        'flex items-center px-4 py-3 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer',
+        themedAuto(
+          'flex items-center px-4 py-3 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer'
+        ),
     },
 
     // Grid variants
@@ -857,57 +1099,68 @@ const variants: VariantsType = {
 
     // Key-Value pairs
     keyValue: {
-      container: () => 'bg-white dark:bg-gray-900 shadow overflow-hidden rounded-lg',
-      list: () => 'divide-y divide-gray-200 dark:divide-gray-700',
+      container: () => themedAuto('bg-white dark:bg-gray-900 shadow overflow-hidden rounded-lg'),
+      list: () => themedAuto('divide-y divide-gray-200 dark:divide-gray-700'),
       row: () => 'px-4 py-4 sm:px-6 sm:grid sm:grid-cols-3 sm:gap-4',
-      key: () => 'text-sm font-medium text-gray-500 dark:text-gray-400',
-      value: () => 'mt-1 text-sm text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2',
+      key: () => themedAuto('text-sm font-medium text-gray-500 dark:text-gray-400'),
+      value: () =>
+        themedAuto('mt-1 text-sm text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2'),
 
       // Inline variant
       inline: () => 'flex items-center space-x-2',
-      inlineKey: () => 'text-sm font-medium text-gray-500 dark:text-gray-400',
-      inlineValue: () => 'text-sm text-gray-900 dark:text-gray-100',
+      inlineKey: () => themedAuto('text-sm font-medium text-gray-500 dark:text-gray-400'),
+      inlineValue: () => themedAuto('text-sm text-gray-900 dark:text-gray-100'),
     },
 
     // Code display
     code: {
       inline: () =>
-        'font-mono text-sm text-pink-600 dark:text-pink-400 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded',
+        themedAuto(
+          'font-mono text-sm text-pink-600 dark:text-pink-400 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded'
+        ),
       block: () =>
-        'font-mono text-sm text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto',
+        themedAuto(
+          'font-mono text-sm text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto'
+        ),
 
       // Web3 specific
       address: () =>
-        'font-mono text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded select-all',
+        themedAuto(
+          'font-mono text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded select-all'
+        ),
       hash: () =>
-        'font-mono text-sm text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-2 py-1 rounded select-all',
+        themedAuto(
+          'font-mono text-sm text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-2 py-1 rounded select-all'
+        ),
 
       // Syntax highlighting
-      keyword: () => 'text-purple-600 dark:text-purple-400',
-      string: () => 'text-green-600 dark:text-green-400',
-      number: () => 'text-blue-600 dark:text-blue-400',
-      comment: () => 'text-gray-500 dark:text-gray-500 italic',
+      keyword: () => themedAuto('text-purple-600 dark:text-purple-400'),
+      string: () => themedAuto('text-green-600 dark:text-green-400'),
+      number: () => themedAuto('text-blue-600 dark:text-blue-400'),
+      comment: () => themedAuto('text-gray-500 dark:text-gray-500 italic'),
     },
 
     // Stats/Metrics
     stats: {
-      container: () => 'bg-white dark:bg-gray-900 overflow-hidden shadow rounded-lg',
+      container: () => themedAuto('bg-white dark:bg-gray-900 overflow-hidden shadow rounded-lg'),
       grid: () =>
-        'grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700',
+        themedAuto(
+          'grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700'
+        ),
       item: () => 'px-4 py-5 sm:p-6',
-      label: () => 'text-sm font-medium text-gray-500 dark:text-gray-400 truncate',
-      value: () => 'mt-1 text-3xl font-semibold text-gray-900 dark:text-gray-100',
+      label: () => themedAuto('text-sm font-medium text-gray-500 dark:text-gray-400 truncate'),
+      value: () => themedAuto('mt-1 text-3xl font-semibold text-gray-900 dark:text-gray-100'),
       change: () => 'mt-2 flex items-center text-sm',
-      changePositive: () => 'text-green-600 dark:text-green-400',
-      changeNegative: () => 'text-red-600 dark:text-red-400',
+      changePositive: () => themedAuto('text-green-600 dark:text-green-400'),
+      changeNegative: () => themedAuto('text-red-600 dark:text-red-400'),
     },
 
     // Empty states
     empty: {
       container: () => 'text-center py-12',
-      icon: () => 'mx-auto h-12 w-12 text-gray-400',
-      title: () => 'mt-2 text-sm font-medium text-gray-900 dark:text-gray-100',
-      description: () => 'mt-1 text-sm text-gray-500 dark:text-gray-400',
+      icon: () => themedAuto('mx-auto h-12 w-12 text-gray-400'),
+      title: () => themedAuto('mt-2 text-sm font-medium text-gray-900 dark:text-gray-100'),
+      description: () => themedAuto('mt-1 text-sm text-gray-500 dark:text-gray-400'),
       action: () => 'mt-6',
     },
 
@@ -917,17 +1170,20 @@ const variants: VariantsType = {
       list: () => '-mb-8',
       item: () => 'relative pb-8',
       itemLast: () => 'relative',
-      connector: () => 'absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700',
+      connector: () =>
+        themedAuto('absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700'),
 
       dot: () =>
-        'relative flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-gray-800 ring-8 ring-white dark:ring-gray-900',
-      dotActive: () => 'bg-blue-600 dark:bg-blue-400',
-      dotComplete: () => 'bg-green-600 dark:bg-green-400',
+        themedAuto(
+          'relative flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-gray-800 ring-8 ring-white dark:ring-gray-900'
+        ),
+      dotActive: () => themedAuto('bg-blue-600 dark:bg-blue-400'),
+      dotComplete: () => themedAuto('bg-green-600 dark:bg-green-400'),
 
       content: () => 'ml-12 flex flex-col',
-      time: () => 'text-xs text-gray-500 dark:text-gray-400',
-      title: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
-      description: () => 'mt-1 text-sm text-gray-500 dark:text-gray-400',
+      time: () => themedAuto('text-xs text-gray-500 dark:text-gray-400'),
+      title: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
+      description: () => themedAuto('mt-1 text-sm text-gray-500 dark:text-gray-400'),
     },
   },
 
@@ -942,119 +1198,153 @@ const variants: VariantsType = {
       stepCircle: () =>
         'w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-all',
       stepCompleted: () =>
-        'bg-green-100 border-green-500 text-green-700 dark:bg-green-900/30 dark:border-green-400 dark:text-green-300',
+        themedAuto(
+          'bg-green-100 border-green-500 text-green-700 dark:bg-green-900/30 dark:border-green-400 dark:text-green-300'
+        ),
       stepCurrent: () =>
-        'bg-blue-100 border-blue-500 text-blue-700 dark:bg-blue-900/30 dark:border-blue-400 dark:text-blue-300',
+        themedAuto(
+          'bg-blue-100 border-blue-500 text-blue-700 dark:bg-blue-900/30 dark:border-blue-400 dark:text-blue-300'
+        ),
       stepInactive: () =>
-        'bg-gray-100 border-gray-300 text-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400',
+        themedAuto(
+          'bg-gray-100 border-gray-300 text-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400'
+        ),
 
       stepContent: () => 'mt-2 text-center',
       stepTitle: () => 'text-sm font-medium',
-      stepDescription: () => 'text-xs text-gray-500 dark:text-gray-400 mt-1',
+      stepDescription: () => themedAuto('text-xs text-gray-500 dark:text-gray-400 mt-1'),
 
-      connector: () => 'flex-1 h-px bg-gray-200 dark:bg-gray-700 mt-5',
-      connectorCompleted: () => 'flex-1 h-px bg-green-300 dark:bg-green-600 mt-5',
+      connector: () => themedAuto('flex-1 h-px bg-gray-200 dark:bg-gray-700 mt-5'),
+      connectorCompleted: () => themedAuto('flex-1 h-px bg-green-300 dark:bg-green-600 mt-5'),
     },
 
     // File upload components
     fileUpload: {
       dropzone: () =>
-        'border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center transition-colors hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer',
-      dropzoneActive: () => 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-500',
-      dropzoneError: () => 'border-red-400 bg-red-50 dark:bg-red-900/20 dark:border-red-500',
+        themedAuto(
+          'border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center transition-colors hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer'
+        ),
+      dropzoneActive: () =>
+        themedAuto('border-blue-400 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-500'),
+      dropzoneError: () =>
+        themedAuto('border-red-400 bg-red-50 dark:bg-red-900/20 dark:border-red-500'),
 
-      icon: () => 'h-12 w-12 text-gray-400 mx-auto mb-4',
-      text: () => 'text-lg font-medium text-gray-900 dark:text-gray-100 mb-2',
-      subtext: () => 'text-sm text-gray-500 dark:text-gray-400 mb-4',
+      icon: () => themedAuto('h-12 w-12 text-gray-400 mx-auto mb-4'),
+      text: () => themedAuto('text-lg font-medium text-gray-900 dark:text-gray-100 mb-2'),
+      subtext: () => themedAuto('text-sm text-gray-500 dark:text-gray-400 mb-4'),
       button: () =>
-        'inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors',
+        themedAuto(
+          'inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors'
+        ),
       input: () => 'sr-only',
 
       fileList: () => 'mt-6 space-y-2',
       fileItem: () =>
-        'flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg',
+        themedAuto('flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'),
       fileIcon: () =>
-        'w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center mr-3',
-      fileName: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
-      fileSize: () => 'text-xs text-gray-500 dark:text-gray-400',
-      removeButton: () => 'p-1 text-gray-400 hover:text-red-500 transition-colors',
+        themedAuto(
+          'w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center mr-3'
+        ),
+      fileName: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
+      fileSize: () => themedAuto('text-xs text-gray-500 dark:text-gray-400'),
+      removeButton: () => themedAuto('p-1 text-gray-400 hover:text-red-500 transition-colors'),
     },
 
     // Web3 specific inputs
     web3: {
       container: () => 'space-y-2',
-      label: () => 'text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center',
+      label: () =>
+        themedAuto('text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center'),
       labelIcon: () => 'h-4 w-4 inline mr-1',
 
       inputGroup: () => 'flex rounded-md shadow-sm',
       tokenInput: () => 'rounded-r-none font-mono',
       tokenSymbol: () =>
-        'inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium',
+        themedAuto(
+          'inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium'
+        ),
 
-      balance: () => 'text-sm text-gray-500 dark:text-gray-400',
+      balance: () => themedAuto('text-sm text-gray-500 dark:text-gray-400'),
       balanceActions: () => 'flex space-x-2',
       maxButton: () => 'text-xs',
 
       addressInput: () => 'font-mono text-sm',
-      addressValid: () => 'border-green-300 dark:border-green-600 pr-10',
-      addressInvalid: () => 'border-red-300 dark:border-red-600 pr-10',
+      addressValid: () => themedAuto('border-green-300 dark:border-green-600 pr-10'),
+      addressInvalid: () => themedAuto('border-red-300 dark:border-red-600 pr-10'),
 
       gasSettings: () => 'grid grid-cols-3 gap-2',
       gasOption: () => 'p-2 text-center border rounded-md transition-colors cursor-pointer',
-      gasOptionActive: () => 'border-blue-300 bg-blue-50 dark:border-blue-600 dark:bg-blue-900/20',
+      gasOptionActive: () =>
+        themedAuto('border-blue-300 bg-blue-50 dark:border-blue-600 dark:bg-blue-900/20'),
       gasOptionInactive: () =>
-        'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500',
+        themedAuto(
+          'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+        ),
     },
 
     // Advanced validation
     validation: {
       container: () => 'space-y-1',
-      label: () => 'text-sm font-medium text-gray-700 dark:text-gray-300',
+      label: () => themedAuto('text-sm font-medium text-gray-700 dark:text-gray-300'),
 
       input: () =>
-        'block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100',
+        themedAuto(
+          'block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100'
+        ),
       inputSuccess: () =>
-        'border-green-300 dark:border-green-600 focus:border-green-500 focus:ring-green-500 pr-10',
+        themedAuto(
+          'border-green-300 dark:border-green-600 focus:border-green-500 focus:ring-green-500 pr-10'
+        ),
       inputError: () =>
-        'border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-500 pr-10',
+        themedAuto(
+          'border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-500 pr-10'
+        ),
       inputWarning: () =>
-        'border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 focus:ring-yellow-500 pr-10',
+        themedAuto(
+          'border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 focus:ring-yellow-500 pr-10'
+        ),
 
       successIcon: () =>
-        'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-green-500',
-      errorIcon: () => 'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-red-500',
+        themedAuto('absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-green-500'),
+      errorIcon: () =>
+        themedAuto('absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-red-500'),
       warningIcon: () =>
-        'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-yellow-500',
+        themedAuto('absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-yellow-500'),
       loadingIcon: () =>
-        'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-blue-600',
+        themedAuto(
+          'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-blue-600'
+        ),
 
-      successMessage: () => 'text-xs text-green-600 dark:text-green-400',
-      errorMessage: () => 'text-xs text-red-600 dark:text-red-400',
-      warningMessage: () => 'text-xs text-yellow-600 dark:text-yellow-400',
-      helpMessage: () => 'text-xs text-gray-500 dark:text-gray-400',
+      successMessage: () => themedAuto('text-xs text-green-600 dark:text-green-400'),
+      errorMessage: () => themedAuto('text-xs text-red-600 dark:text-red-400'),
+      warningMessage: () => themedAuto('text-xs text-yellow-600 dark:text-yellow-400'),
+      helpMessage: () => themedAuto('text-xs text-gray-500 dark:text-gray-400'),
 
       requirements: () => 'space-y-1 mt-2',
       requirement: () => 'flex items-center text-xs',
-      requirementMet: () => 'text-green-600 dark:text-green-400',
-      requirementUnmet: () => 'text-gray-500 dark:text-gray-400',
+      requirementMet: () => themedAuto('text-green-600 dark:text-green-400'),
+      requirementUnmet: () => themedAuto('text-gray-500 dark:text-gray-400'),
       requirementIcon: () => 'h-3 w-3 mr-1',
     },
 
     // Form sections and layouts
     layout: {
       section: () => 'space-y-6',
-      sectionTitle: () => 'text-lg font-medium text-gray-900 dark:text-gray-100',
-      sectionDescription: () => 'text-sm text-gray-500 dark:text-gray-400',
+      sectionTitle: () => themedAuto('text-lg font-medium text-gray-900 dark:text-gray-100'),
+      sectionDescription: () => themedAuto('text-sm text-gray-500 dark:text-gray-400'),
 
       fieldGroup: () => 'space-y-4',
       fieldRow: () => 'grid grid-cols-1 md:grid-cols-2 gap-4',
       fieldColumn: () => 'space-y-4',
 
-      actions: () => 'flex justify-between pt-6 border-t border-gray-200 dark:border-gray-700',
+      actions: () =>
+        themedAuto('flex justify-between pt-6 border-t border-gray-200 dark:border-gray-700'),
       actionsRight: () =>
-        'flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700',
+        themedAuto('flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700'),
       actionsCenter: () =>
-        'flex justify-center space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700',
+        themedAuto(
+          'flex justify-center space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700'
+        ),
     },
 
     // Security and sensitive inputs
@@ -1062,20 +1352,24 @@ const variants: VariantsType = {
       container: () => 'relative',
       input: () => 'font-mono',
       toggleButton: () =>
-        'absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200',
-      strengthMeter: () => 'mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden',
+        themedAuto(
+          'absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+        ),
+      strengthMeter: () =>
+        themedAuto('mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'),
       strengthBar: () => 'h-full transition-all duration-300',
-      strengthWeak: () => 'bg-red-500 w-1/4',
-      strengthMedium: () => 'bg-yellow-500 w-1/2',
-      strengthStrong: () => 'bg-green-500 w-3/4',
-      strengthVeryStrong: () => 'bg-green-600 w-full',
+      strengthWeak: () => themedAuto('bg-red-500 w-1/4'),
+      strengthMedium: () => themedAuto('bg-yellow-500 w-1/2'),
+      strengthStrong: () => themedAuto('bg-green-500 w-3/4'),
+      strengthVeryStrong: () => themedAuto('bg-green-600 w-full'),
     },
 
     // Conditional fields and dynamic forms
     conditional: {
       container: () => 'space-y-4',
       trigger: () => 'flex items-center space-x-2',
-      content: () => 'ml-6 mt-4 pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-4',
+      content: () =>
+        themedAuto('ml-6 mt-4 pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-4'),
       contentVisible: () => 'opacity-100 max-h-none',
       contentHidden: () => 'opacity-0 max-h-0 overflow-hidden',
     },
@@ -1088,30 +1382,38 @@ const variants: VariantsType = {
       container: () =>
         'fixed top-4 right-4 z-50 max-w-sm w-full transform transition-all duration-300 ease-out',
       content: () =>
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4',
+        themedAuto(
+          'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4'
+        ),
 
       // Toast with icon and content
       wrapper: () => 'flex items-start space-x-3',
       icon: () => 'flex-shrink-0 mt-0.5',
-      successIcon: () => 'h-5 w-5 text-green-500',
-      errorIcon: () => 'h-5 w-5 text-red-500',
-      warningIcon: () => 'h-5 w-5 text-yellow-500',
-      infoIcon: () => 'h-5 w-5 text-blue-500',
+      successIcon: () => themedAuto('h-5 w-5 text-green-500'),
+      errorIcon: () => themedAuto('h-5 w-5 text-red-500'),
+      warningIcon: () => themedAuto('h-5 w-5 text-yellow-500'),
+      infoIcon: () => themedAuto('h-5 w-5 text-blue-500'),
 
       text: () => 'flex-1 min-w-0',
-      title: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
-      message: () => 'mt-1 text-sm text-gray-500 dark:text-gray-400',
+      title: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
+      message: () => themedAuto('mt-1 text-sm text-gray-500 dark:text-gray-400'),
       action: () =>
-        'mt-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 cursor-pointer',
+        themedAuto(
+          'mt-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 cursor-pointer'
+        ),
 
       closeButton: () =>
-        'ml-4 flex-shrink-0 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 cursor-pointer',
+        themedAuto(
+          'ml-4 flex-shrink-0 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 cursor-pointer'
+        ),
 
       // Toast variants by type
-      success: () => 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20',
-      error: () => 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20',
-      warning: () => 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20',
-      info: () => 'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20',
+      success: () =>
+        themedAuto('border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20'),
+      error: () => themedAuto('border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20'),
+      warning: () =>
+        themedAuto('border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'),
+      info: () => themedAuto('border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20'),
     },
 
     // Progress indicators
@@ -1119,63 +1421,74 @@ const variants: VariantsType = {
       container: () => 'w-full',
       content: () => 'flex items-center justify-between mb-2',
       text: () => 'flex-1 min-w-0 mr-4',
-      title: () => 'text-sm font-medium text-gray-700 dark:text-gray-300',
-      message: () => 'text-xs text-gray-500 dark:text-gray-400 mt-1',
+      title: () => themedAuto('text-sm font-medium text-gray-700 dark:text-gray-300'),
+      message: () => themedAuto('text-xs text-gray-500 dark:text-gray-400 mt-1'),
 
       // Progress bar
-      bar: () => 'w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden',
-      fill: () => 'h-full bg-blue-600 rounded-full transition-all duration-300',
-      fillSuccess: () => 'h-full bg-green-600 rounded-full transition-all duration-300',
-      fillError: () => 'h-full bg-red-600 rounded-full transition-all duration-300',
-      fillWarning: () => 'h-full bg-yellow-600 rounded-full transition-all duration-300',
+      bar: () => themedAuto('w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden'),
+      fill: () => themedAuto('h-full bg-blue-600 rounded-full transition-all duration-300'),
+      fillSuccess: () => themedAuto('h-full bg-green-600 rounded-full transition-all duration-300'),
+      fillError: () => themedAuto('h-full bg-red-600 rounded-full transition-all duration-300'),
+      fillWarning: () =>
+        themedAuto('h-full bg-yellow-600 rounded-full transition-all duration-300'),
 
-      percentage: () => 'text-sm text-gray-500 dark:text-gray-400 ml-2 flex-shrink-0',
+      percentage: () => themedAuto('text-sm text-gray-500 dark:text-gray-400 ml-2 flex-shrink-0'),
 
       // Circular progress
       circle: () => 'relative w-8 h-8',
       circleTrack: () =>
-        'absolute inset-0 rounded-full border-2 border-gray-200 dark:border-gray-700',
+        themedAuto('absolute inset-0 rounded-full border-2 border-gray-200 dark:border-gray-700'),
       circleFill: () =>
         'absolute inset-0 rounded-full border-2 border-transparent transition-all duration-300',
 
       // Loading spinners
       spinner: () => 'animate-spin rounded-full border-2 border-transparent',
-      spinnerPrimary: () => 'border-t-blue-600 border-r-blue-600',
-      spinnerSuccess: () => 'border-t-green-600 border-r-green-600',
-      spinnerError: () => 'border-t-red-600 border-r-red-600',
-      spinnerWarning: () => 'border-t-yellow-600 border-r-yellow-600',
+      spinnerPrimary: () => themedAuto('border-t-blue-600 border-r-blue-600'),
+      spinnerSuccess: () => themedAuto('border-t-green-600 border-r-green-600'),
+      spinnerError: () => themedAuto('border-t-red-600 border-r-red-600'),
+      spinnerWarning: () => themedAuto('border-t-yellow-600 border-r-yellow-600'),
     },
 
     // Transaction status
     transaction: {
       container: () =>
-        'border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800',
+        themedAuto(
+          'border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800'
+        ),
       wrapper: () => 'flex items-start space-x-3',
 
       icon: () => 'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0',
-      iconPending: () => 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400',
-      iconConfirming: () => 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-      iconConfirmed: () => 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
-      iconFailed: () => 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+      iconPending: () =>
+        themedAuto('bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'),
+      iconConfirming: () =>
+        themedAuto('bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'),
+      iconConfirmed: () =>
+        themedAuto('bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'),
+      iconFailed: () => themedAuto('bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'),
 
       content: () => 'flex-1 min-w-0',
       header: () => 'flex items-center justify-between mb-1',
-      type: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
+      type: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
 
       status: () => 'px-2 py-1 text-xs rounded-full font-medium',
       statusPending: () =>
-        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      statusConfirming: () => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-      statusConfirmed: () => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      statusFailed: () => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+        themedAuto('bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'),
+      statusConfirming: () =>
+        themedAuto('bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'),
+      statusConfirmed: () =>
+        themedAuto('bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'),
+      statusFailed: () =>
+        themedAuto('bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'),
 
-      details: () => 'text-xs text-gray-500 dark:text-gray-400 mt-1',
-      hash: () => 'font-mono text-xs text-gray-500 dark:text-gray-400',
-      amount: () => 'text-sm text-gray-600 dark:text-gray-400 ml-2',
+      details: () => themedAuto('text-xs text-gray-500 dark:text-gray-400 mt-1'),
+      hash: () => themedAuto('font-mono text-xs text-gray-500 dark:text-gray-400'),
+      amount: () => themedAuto('text-sm text-gray-600 dark:text-gray-400 ml-2'),
 
-      confirmations: () => 'mt-2 text-xs text-gray-500 dark:text-gray-400',
-      confirmationBar: () => 'w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-1',
-      confirmationProgress: () => 'h-1.5 bg-blue-600 rounded-full transition-all duration-300',
+      confirmations: () => themedAuto('mt-2 text-xs text-gray-500 dark:text-gray-400'),
+      confirmationBar: () =>
+        themedAuto('w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-1'),
+      confirmationProgress: () =>
+        themedAuto('h-1.5 bg-blue-600 rounded-full transition-all duration-300'),
     },
 
     // System status indicators
@@ -1185,21 +1498,21 @@ const variants: VariantsType = {
       text: () => 'text-sm font-medium',
 
       // Status variants
-      online: () => 'text-green-700 dark:text-green-300',
-      onlineDot: () => 'bg-green-500',
-      degraded: () => 'text-yellow-700 dark:text-yellow-300',
-      degradedDot: () => 'bg-yellow-500',
-      offline: () => 'text-red-700 dark:text-red-300',
-      offlineDot: () => 'bg-red-500',
+      online: () => themedAuto('text-green-700 dark:text-green-300'),
+      onlineDot: () => themedAuto('bg-green-500'),
+      degraded: () => themedAuto('text-yellow-700 dark:text-yellow-300'),
+      degradedDot: () => themedAuto('bg-yellow-500'),
+      offline: () => themedAuto('text-red-700 dark:text-red-300'),
+      offlineDot: () => themedAuto('bg-red-500'),
 
       // Animated indicators
       pulse: () => 'animate-pulse',
 
       // Connection status
       connection: () =>
-        'flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg',
-      connectionLabel: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
-      connectionDescription: () => 'text-xs text-gray-500 dark:text-gray-400',
+        themedAuto('flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'),
+      connectionLabel: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
+      connectionDescription: () => themedAuto('text-xs text-gray-500 dark:text-gray-400'),
       connectionStatus: () => 'px-2 py-1 text-xs rounded-full font-medium',
     },
 
@@ -1207,7 +1520,9 @@ const variants: VariantsType = {
     badge: {
       container: () => 'relative inline-block',
       badge: () =>
-        'absolute -top-1 -right-1 text-white text-xs rounded-full flex items-center justify-center font-medium',
+        themedAuto(
+          'absolute -top-1 -right-1 text-white text-xs rounded-full flex items-center justify-center font-medium'
+        ),
 
       // Size variants
       small: () => 'h-3 w-3 text-xs',
@@ -1215,10 +1530,10 @@ const variants: VariantsType = {
       large: () => 'h-5 w-5 text-xs',
 
       // Color variants
-      primary: () => 'bg-blue-500',
-      success: () => 'bg-green-500',
-      error: () => 'bg-red-500',
-      warning: () => 'bg-yellow-500',
+      primary: () => themedAuto('bg-blue-500'),
+      success: () => themedAuto('bg-green-500'),
+      error: () => themedAuto('bg-red-500'),
+      warning: () => themedAuto('bg-yellow-500'),
 
       // Special states
       dot: () => 'w-2 h-2 rounded-full animate-pulse',
@@ -1237,30 +1552,32 @@ const variants: VariantsType = {
       action: () => 'ml-auto flex-shrink-0',
 
       // Feedback variants
-      success: () => 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
-      successIcon: () => 'h-4 w-4 text-green-600 dark:text-green-400',
-      successTitle: () => 'text-green-800 dark:text-green-200',
-      successMessage: () => 'text-green-700 dark:text-green-300',
+      success: () =>
+        themedAuto('bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'),
+      successIcon: () => themedAuto('h-4 w-4 text-green-600 dark:text-green-400'),
+      successTitle: () => themedAuto('text-green-800 dark:text-green-200'),
+      successMessage: () => themedAuto('text-green-700 dark:text-green-300'),
 
-      error: () => 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
-      errorIcon: () => 'h-4 w-4 text-red-600 dark:text-red-400',
-      errorTitle: () => 'text-red-800 dark:text-red-200',
-      errorMessage: () => 'text-red-700 dark:text-red-300',
+      error: () => themedAuto('bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'),
+      errorIcon: () => themedAuto('h-4 w-4 text-red-600 dark:text-red-400'),
+      errorTitle: () => themedAuto('text-red-800 dark:text-red-200'),
+      errorMessage: () => themedAuto('text-red-700 dark:text-red-300'),
 
-      warning: () => 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
-      warningIcon: () => 'h-4 w-4 text-yellow-600 dark:text-yellow-400',
-      warningTitle: () => 'text-yellow-800 dark:text-yellow-200',
-      warningMessage: () => 'text-yellow-700 dark:text-yellow-300',
+      warning: () =>
+        themedAuto('bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'),
+      warningIcon: () => themedAuto('h-4 w-4 text-yellow-600 dark:text-yellow-400'),
+      warningTitle: () => themedAuto('text-yellow-800 dark:text-yellow-200'),
+      warningMessage: () => themedAuto('text-yellow-700 dark:text-yellow-300'),
 
-      info: () => 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
-      infoIcon: () => 'h-4 w-4 text-blue-600 dark:text-blue-400',
-      infoTitle: () => 'text-blue-800 dark:text-blue-200',
-      infoMessage: () => 'text-blue-700 dark:text-blue-300',
+      info: () => themedAuto('bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'),
+      infoIcon: () => themedAuto('h-4 w-4 text-blue-600 dark:text-blue-400'),
+      infoTitle: () => themedAuto('text-blue-800 dark:text-blue-200'),
+      infoMessage: () => themedAuto('text-blue-700 dark:text-blue-300'),
 
-      neutral: () => 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
-      neutralIcon: () => 'h-4 w-4 text-gray-600 dark:text-gray-400',
-      neutralTitle: () => 'text-gray-900 dark:text-gray-100',
-      neutralMessage: () => 'text-gray-600 dark:text-gray-400',
+      neutral: () => themedAuto('bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'),
+      neutralIcon: () => themedAuto('h-4 w-4 text-gray-600 dark:text-gray-400'),
+      neutralTitle: () => themedAuto('text-gray-900 dark:text-gray-100'),
+      neutralMessage: () => themedAuto('text-gray-600 dark:text-gray-400'),
     },
 
     // Alert banners (different from alerts component)
@@ -1271,28 +1588,28 @@ const variants: VariantsType = {
       icon: () => 'flex-shrink-0 mr-3',
       message: () => 'text-sm font-medium',
       action: () => 'flex-shrink-0 ml-4',
-      closeButton: () => 'text-gray-400 hover:text-gray-500 dark:hover:text-gray-300',
+      closeButton: () => themedAuto('text-gray-400 hover:text-gray-500 dark:hover:text-gray-300'),
 
       // Banner variants
-      success: () => 'bg-green-50 dark:bg-green-900/20 border-green-400',
-      error: () => 'bg-red-50 dark:bg-red-900/20 border-red-400',
-      warning: () => 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400',
-      info: () => 'bg-blue-50 dark:bg-blue-900/20 border-blue-400',
+      success: () => themedAuto('bg-green-50 dark:bg-green-900/20 border-green-400'),
+      error: () => themedAuto('bg-red-50 dark:bg-red-900/20 border-red-400'),
+      warning: () => themedAuto('bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400'),
+      info: () => themedAuto('bg-blue-50 dark:bg-blue-900/20 border-blue-400'),
     },
 
     // Loading states
     loading: {
       overlay: () => 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50',
-      container: () => 'bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm mx-4',
+      container: () => themedAuto('bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm mx-4'),
       content: () => 'text-center',
       spinner: () => 'mx-auto mb-4',
-      title: () => 'text-lg font-medium text-gray-900 dark:text-gray-100 mb-2',
-      message: () => 'text-sm text-gray-500 dark:text-gray-400',
+      title: () => themedAuto('text-lg font-medium text-gray-900 dark:text-gray-100 mb-2'),
+      message: () => themedAuto('text-sm text-gray-500 dark:text-gray-400'),
 
       // Inline loading
       inline: () => 'flex items-center space-x-2',
       inlineSpinner: () => 'flex-shrink-0',
-      inlineText: () => 'text-sm text-gray-600 dark:text-gray-400',
+      inlineText: () => themedAuto('text-sm text-gray-600 dark:text-gray-400'),
     },
   },
 
@@ -1555,7 +1872,9 @@ const variants: VariantsType = {
       wallet: {
         connect: () => 'flex flex-col items-center space-y-4 p-6',
         connected: () =>
-          'flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg',
+          themedAuto(
+            'flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg'
+          ),
         balance: () => 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4',
         portfolio: () => 'grid grid-cols-1 lg:grid-cols-3 gap-6',
       },
@@ -1563,10 +1882,12 @@ const variants: VariantsType = {
       // Transaction layouts
       transaction: {
         form: () => 'space-y-6',
-        preview: () => 'bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3',
+        preview: () => themedAuto('bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3'),
         history: () => 'space-y-2',
         historyItem: () =>
-          'flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700',
+          themedAuto(
+            'flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'
+          ),
         details: () => 'grid grid-cols-1 md:grid-cols-2 gap-4',
       },
 
@@ -1575,10 +1896,14 @@ const variants: VariantsType = {
         gallery: () =>
           'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6',
         card: () =>
-          'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden',
+          themedAuto(
+            'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden'
+          ),
         cardContent: () => 'p-4 space-y-3',
         cardActions: () =>
-          'flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700',
+          themedAuto(
+            'flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700'
+          ),
 
         // Collection view
         collection: () => 'grid grid-cols-1 lg:grid-cols-4 gap-6',
@@ -1590,7 +1915,9 @@ const variants: VariantsType = {
       defi: {
         dashboard: () => 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
         pool: () =>
-          'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6',
+          themedAuto(
+            'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6'
+          ),
         poolStats: () => 'grid grid-cols-2 md:grid-cols-4 gap-4',
         liquidity: () => 'space-y-4',
         farming: () => 'grid grid-cols-1 lg:grid-cols-2 gap-6',
@@ -1600,7 +1927,9 @@ const variants: VariantsType = {
       dao: {
         governance: () => 'grid grid-cols-1 lg:grid-cols-3 gap-6',
         proposal: () =>
-          'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6',
+          themedAuto(
+            'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6'
+          ),
         proposalHeader: () => 'flex items-start justify-between mb-6',
         proposalContent: () => 'space-y-6',
         voting: () => 'grid grid-cols-1 md:grid-cols-2 gap-4',
@@ -1677,27 +2006,32 @@ const variants: VariantsType = {
 
       // Header patterns
       header: () =>
-        'sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700',
+        themedAuto(
+          'sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700'
+        ),
       headerContent: () =>
         'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between',
 
       // Sidebar patterns
-      sidebarLayout: () => 'flex h-screen bg-gray-100 dark:bg-gray-900',
-      sidebar: () => 'w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700',
+      sidebarLayout: () => themedAuto('flex h-screen bg-gray-100 dark:bg-gray-900'),
+      sidebar: () =>
+        themedAuto('w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700'),
       mainContent: () => 'flex-1 flex flex-col overflow-hidden',
 
       // Modal patterns
       modalOverlay: () =>
         'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50',
       modalContent: () =>
-        'bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-hidden',
+        themedAuto(
+          'bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-hidden'
+        ),
 
       // Card patterns
       cardGrid: () => 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
       cardStack: () => 'space-y-6',
 
       // List patterns
-      dividedList: () => 'divide-y divide-gray-200 dark:divide-gray-700',
+      dividedList: () => themedAuto('divide-y divide-gray-200 dark:divide-gray-700'),
       spacedList: () => 'space-y-4',
 
       // Form patterns
@@ -1707,39 +2041,55 @@ const variants: VariantsType = {
 
       // Loading patterns
       loadingOverlay: () =>
-        'absolute inset-0 bg-white bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75 flex items-center justify-center',
+        themedAuto(
+          'absolute inset-0 bg-white bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75 flex items-center justify-center'
+        ),
       loadingInline: () => 'flex items-center space-x-2',
 
       // Empty state patterns
       emptyState: () => 'text-center py-12',
-      emptyStateIcon: () => 'mx-auto h-12 w-12 text-gray-400 mb-4',
+      emptyStateIcon: () => themedAuto('mx-auto h-12 w-12 text-gray-400 mb-4'),
     },
   },
 
   // Table variants
   table: {
     container: () =>
-      'overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800',
+      themedAuto(
+        'overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'
+      ),
 
-    table: () => 'min-w-full divide-y divide-gray-200 dark:divide-gray-700',
+    table: () => themedAuto('min-w-full divide-y divide-gray-200 dark:divide-gray-700'),
 
     header: {
-      row: () => 'bg-gray-50 dark:bg-gray-900/50',
+      row: () => themedAuto('bg-gray-50 dark:bg-gray-900/50'),
       cell: () =>
-        'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider',
+        themedAuto(
+          'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'
+        ),
       sortable: () =>
-        'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 select-none group',
+        themedAuto(
+          'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 select-none group'
+        ),
     },
 
     body: {
       row: () =>
-        'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200',
+        themedAuto(
+          'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200'
+        ),
       rowSelected: () =>
-        'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200',
+        themedAuto(
+          'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200'
+        ),
       rowClickable: () =>
-        'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200 cursor-pointer',
-      cell: () => 'px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100',
-      cellMuted: () => 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400',
+        themedAuto(
+          'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200 cursor-pointer'
+        ),
+      cell: () =>
+        themedAuto('px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100'),
+      cellMuted: () =>
+        themedAuto('px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400'),
       cellAction: () => 'px-6 py-4 whitespace-nowrap text-right text-sm font-medium',
     },
 
@@ -1747,13 +2097,19 @@ const variants: VariantsType = {
     compact: {
       header: {
         cell: () =>
-          'px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider',
+          themedAuto(
+            'px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'
+          ),
         sortable: () =>
-          'px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 select-none group',
+          themedAuto(
+            'px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 select-none group'
+          ),
       },
       body: {
-        cell: () => 'px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100',
-        cellMuted: () => 'px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400',
+        cell: () =>
+          themedAuto('px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100'),
+        cellMuted: () =>
+          themedAuto('px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400'),
         cellAction: () => 'px-4 py-3 whitespace-nowrap text-right text-sm font-medium',
       },
     },
@@ -1761,42 +2117,64 @@ const variants: VariantsType = {
     // Table states
     states: {
       loading: () => 'opacity-50 pointer-events-none',
-      empty: () => 'text-center py-12 text-gray-500 dark:text-gray-400',
-      error: () => 'text-center py-12 text-red-500 dark:text-red-400',
+      empty: () => themedAuto('text-center py-12 text-gray-500 dark:text-gray-400'),
+      error: () => themedAuto('text-center py-12 text-red-500 dark:text-red-400'),
     },
 
     // Pagination styles
     pagination: {
       container: () =>
-        'bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6',
-      info: () => 'flex-1 flex justify-between sm:hidden text-sm text-gray-700 dark:text-gray-300',
+        themedAuto(
+          'bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6'
+        ),
+      info: () =>
+        themedAuto(
+          'flex-1 flex justify-between sm:hidden text-sm text-gray-700 dark:text-gray-300'
+        ),
       nav: () => 'hidden sm:flex-1 sm:flex sm:items-center sm:justify-between',
       button: () =>
-        'relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200',
+        themedAuto(
+          'relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200'
+        ),
       buttonCurrent: () =>
-        'relative inline-flex items-center px-4 py-2 border border-blue-500 dark:border-blue-400 text-sm font-medium rounded-md text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200',
+        themedAuto(
+          'relative inline-flex items-center px-4 py-2 border border-blue-500 dark:border-blue-400 text-sm font-medium rounded-md text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200'
+        ),
     },
 
     // Data grid specific variants
     grid: {
-      container: () => 'overflow-auto rounded-lg border border-gray-200 dark:border-gray-700',
+      container: () =>
+        themedAuto('overflow-auto rounded-lg border border-gray-200 dark:border-gray-700'),
       table: () => 'min-w-full table-fixed',
       resizeHandle: () =>
-        'absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-blue-500 dark:hover:bg-blue-400 transition-colors duration-200',
+        themedAuto(
+          'absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-blue-500 dark:hover:bg-blue-400 transition-colors duration-200'
+        ),
       filterContainer: () =>
-        'border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-3',
+        themedAuto(
+          'border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-3'
+        ),
       filterInput: () =>
-        'block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 focus:outline-none focus:ring-2',
+        themedAuto(
+          'block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 focus:outline-none focus:ring-2'
+        ),
     },
 
     // Sorting indicators
     sort: {
       indicator: () =>
-        'ml-2 h-4 w-4 flex-none rounded text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300',
+        themedAuto(
+          'ml-2 h-4 w-4 flex-none rounded text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300'
+        ),
       ascending: () =>
-        'ml-2 h-4 w-4 flex-none rounded text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transform rotate-0',
+        themedAuto(
+          'ml-2 h-4 w-4 flex-none rounded text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transform rotate-0'
+        ),
       descending: () =>
-        'ml-2 h-4 w-4 flex-none rounded text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transform rotate-180',
+        themedAuto(
+          'ml-2 h-4 w-4 flex-none rounded text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transform rotate-180'
+        ),
     },
   },
 
@@ -1816,92 +2194,106 @@ const variants: VariantsType = {
     // Color variants
     color: {
       // Neutral colors
-      default: () => 'text-gray-500 dark:text-gray-400',
-      muted: () => 'text-gray-400 dark:text-gray-500',
-      subtle: () => 'text-gray-300 dark:text-gray-600',
-      primary: () => 'text-gray-900 dark:text-gray-100',
+      default: () => themedAuto('text-gray-500 dark:text-gray-400'),
+      muted: () => themedAuto('text-gray-400 dark:text-gray-500'),
+      subtle: () => themedAuto('text-gray-300 dark:text-gray-600'),
+      primary: () => themedAuto('text-gray-900 dark:text-gray-100'),
 
       // Brand colors
-      brand: () => 'text-blue-600 dark:text-blue-400',
-      brandMuted: () => 'text-blue-500 dark:text-blue-500',
+      brand: () => themedAuto('text-blue-600 dark:text-blue-400'),
+      brandMuted: () => themedAuto('text-blue-500 dark:text-blue-500'),
 
       // Semantic colors
-      success: () => 'text-green-600 dark:text-green-400',
-      warning: () => 'text-amber-600 dark:text-amber-400',
-      error: () => 'text-red-600 dark:text-red-400',
-      info: () => 'text-blue-600 dark:text-blue-400',
+      success: () => themedAuto('text-green-600 dark:text-green-400'),
+      warning: () => themedAuto('text-amber-600 dark:text-amber-400'),
+      error: () => themedAuto('text-red-600 dark:text-red-400'),
+      info: () => themedAuto('text-blue-600 dark:text-blue-400'),
 
       // Interactive colors
       interactive: () =>
-        'text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200',
+        themedAuto(
+          'text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200'
+        ),
       interactiveSubtle: () =>
-        'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200',
+        themedAuto(
+          'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200'
+        ),
 
       // Web3 specific colors
-      ethereum: () => 'text-blue-600 dark:text-blue-400',
-      solana: () => 'text-purple-600 dark:text-purple-400',
-      bitcoin: () => 'text-orange-600 dark:text-orange-400',
+      ethereum: () => themedAuto('text-blue-600 dark:text-blue-400'),
+      solana: () => themedAuto('text-purple-600 dark:text-purple-400'),
+      bitcoin: () => themedAuto('text-orange-600 dark:text-orange-400'),
     },
 
     // Combined size and color variants
     variant: {
       // Default variants (most common combinations)
       default: {
-        xs: () => 'h-3 w-3 text-gray-500 dark:text-gray-400',
-        sm: () => 'h-4 w-4 text-gray-500 dark:text-gray-400',
-        md: () => 'h-5 w-5 text-gray-500 dark:text-gray-400',
-        lg: () => 'h-6 w-6 text-gray-500 dark:text-gray-400',
-        xl: () => 'h-8 w-8 text-gray-500 dark:text-gray-400',
+        xs: () => themedAuto('h-3 w-3 text-gray-500 dark:text-gray-400'),
+        sm: () => themedAuto('h-4 w-4 text-gray-500 dark:text-gray-400'),
+        md: () => themedAuto('h-5 w-5 text-gray-500 dark:text-gray-400'),
+        lg: () => themedAuto('h-6 w-6 text-gray-500 dark:text-gray-400'),
+        xl: () => themedAuto('h-8 w-8 text-gray-500 dark:text-gray-400'),
       },
 
       // Interactive variants
       interactive: {
         xs: () =>
-          'h-3 w-3 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer',
+          themedAuto(
+            'h-3 w-3 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer'
+          ),
         sm: () =>
-          'h-4 w-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer',
+          themedAuto(
+            'h-4 w-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer'
+          ),
         md: () =>
-          'h-5 w-5 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer',
+          themedAuto(
+            'h-5 w-5 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer'
+          ),
         lg: () =>
-          'h-6 w-6 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer',
+          themedAuto(
+            'h-6 w-6 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer'
+          ),
         xl: () =>
-          'h-8 w-8 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer',
+          themedAuto(
+            'h-8 w-8 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 cursor-pointer'
+          ),
       },
 
       // Success variants
       success: {
-        xs: () => 'h-3 w-3 text-green-600 dark:text-green-400',
-        sm: () => 'h-4 w-4 text-green-600 dark:text-green-400',
-        md: () => 'h-5 w-5 text-green-600 dark:text-green-400',
-        lg: () => 'h-6 w-6 text-green-600 dark:text-green-400',
-        xl: () => 'h-8 w-8 text-green-600 dark:text-green-400',
+        xs: () => themedAuto('h-3 w-3 text-green-600 dark:text-green-400'),
+        sm: () => themedAuto('h-4 w-4 text-green-600 dark:text-green-400'),
+        md: () => themedAuto('h-5 w-5 text-green-600 dark:text-green-400'),
+        lg: () => themedAuto('h-6 w-6 text-green-600 dark:text-green-400'),
+        xl: () => themedAuto('h-8 w-8 text-green-600 dark:text-green-400'),
       },
 
       // Warning variants
       warning: {
-        xs: () => 'h-3 w-3 text-amber-600 dark:text-amber-400',
-        sm: () => 'h-4 w-4 text-amber-600 dark:text-amber-400',
-        md: () => 'h-5 w-5 text-amber-600 dark:text-amber-400',
-        lg: () => 'h-6 w-6 text-amber-600 dark:text-amber-400',
-        xl: () => 'h-8 w-8 text-amber-600 dark:text-amber-400',
+        xs: () => themedAuto('h-3 w-3 text-amber-600 dark:text-amber-400'),
+        sm: () => themedAuto('h-4 w-4 text-amber-600 dark:text-amber-400'),
+        md: () => themedAuto('h-5 w-5 text-amber-600 dark:text-amber-400'),
+        lg: () => themedAuto('h-6 w-6 text-amber-600 dark:text-amber-400'),
+        xl: () => themedAuto('h-8 w-8 text-amber-600 dark:text-amber-400'),
       },
 
       // Error variants
       error: {
-        xs: () => 'h-3 w-3 text-red-600 dark:text-red-400',
-        sm: () => 'h-4 w-4 text-red-600 dark:text-red-400',
-        md: () => 'h-5 w-5 text-red-600 dark:text-red-400',
-        lg: () => 'h-6 w-6 text-red-600 dark:text-red-400',
-        xl: () => 'h-8 w-8 text-red-600 dark:text-red-400',
+        xs: () => themedAuto('h-3 w-3 text-red-600 dark:text-red-400'),
+        sm: () => themedAuto('h-4 w-4 text-red-600 dark:text-red-400'),
+        md: () => themedAuto('h-5 w-5 text-red-600 dark:text-red-400'),
+        lg: () => themedAuto('h-6 w-6 text-red-600 dark:text-red-400'),
+        xl: () => themedAuto('h-8 w-8 text-red-600 dark:text-red-400'),
       },
 
       // Muted variants
       muted: {
-        xs: () => 'h-3 w-3 text-gray-400 dark:text-gray-500',
-        sm: () => 'h-4 w-4 text-gray-400 dark:text-gray-500',
-        md: () => 'h-5 w-5 text-gray-400 dark:text-gray-500',
-        lg: () => 'h-6 w-6 text-gray-400 dark:text-gray-500',
-        xl: () => 'h-8 w-8 text-gray-400 dark:text-gray-500',
+        xs: () => themedAuto('h-3 w-3 text-gray-400 dark:text-gray-500'),
+        sm: () => themedAuto('h-4 w-4 text-gray-400 dark:text-gray-500'),
+        md: () => themedAuto('h-5 w-5 text-gray-400 dark:text-gray-500'),
+        lg: () => themedAuto('h-6 w-6 text-gray-400 dark:text-gray-500'),
+        xl: () => themedAuto('h-8 w-8 text-gray-400 dark:text-gray-500'),
       },
     },
 
@@ -1919,92 +2311,101 @@ const variants: VariantsType = {
       // Input icons
       input: {
         leading: () =>
-          'absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none',
-        trailing: () => 'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400',
+          themedAuto(
+            'absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none'
+          ),
+        trailing: () =>
+          themedAuto('absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400'),
         interactive: () =>
-          'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors duration-200',
+          themedAuto(
+            'absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors duration-200'
+          ),
       },
 
       // Navigation icons
       navigation: {
-        menu: () => 'h-5 w-5 text-gray-600 dark:text-gray-400',
-        menuActive: () => 'h-5 w-5 text-blue-600 dark:text-blue-400',
-        breadcrumb: () => 'h-4 w-4 text-gray-400 mx-2',
+        menu: () => themedAuto('h-5 w-5 text-gray-600 dark:text-gray-400'),
+        menuActive: () => themedAuto('h-5 w-5 text-blue-600 dark:text-blue-400'),
+        breadcrumb: () => themedAuto('h-4 w-4 text-gray-400 mx-2'),
         tab: () => 'h-4 w-4 mr-2',
       },
 
       // Status icons
       status: {
-        success: () => 'h-5 w-5 text-green-500 flex-shrink-0',
-        warning: () => 'h-5 w-5 text-amber-500 flex-shrink-0',
-        error: () => 'h-5 w-5 text-red-500 flex-shrink-0',
-        info: () => 'h-5 w-5 text-blue-500 flex-shrink-0',
-        loading: () => 'h-5 w-5 text-gray-400 animate-spin flex-shrink-0',
+        success: () => themedAuto('h-5 w-5 text-green-500 flex-shrink-0'),
+        warning: () => themedAuto('h-5 w-5 text-amber-500 flex-shrink-0'),
+        error: () => themedAuto('h-5 w-5 text-red-500 flex-shrink-0'),
+        info: () => themedAuto('h-5 w-5 text-blue-500 flex-shrink-0'),
+        loading: () => themedAuto('h-5 w-5 text-gray-400 animate-spin flex-shrink-0'),
       },
 
       // Avatar/Profile icons
       avatar: {
-        small: () => 'h-6 w-6 text-gray-400',
-        medium: () => 'h-8 w-8 text-gray-400',
-        large: () => 'h-10 w-10 text-gray-400',
-        fallback: () => 'h-full w-full text-gray-300',
+        small: () => themedAuto('h-6 w-6 text-gray-400'),
+        medium: () => themedAuto('h-8 w-8 text-gray-400'),
+        large: () => themedAuto('h-10 w-10 text-gray-400'),
+        fallback: () => themedAuto('h-full w-full text-gray-300'),
       },
 
       // Web3 context icons
       web3: {
-        wallet: () => 'h-5 w-5 text-gray-600 dark:text-gray-400',
-        walletConnected: () => 'h-5 w-5 text-green-600 dark:text-green-400',
-        walletDisconnected: () => 'h-5 w-5 text-gray-400 dark:text-gray-500',
-        transaction: () => 'h-4 w-4 text-blue-600 dark:text-blue-400',
+        wallet: () => themedAuto('h-5 w-5 text-gray-600 dark:text-gray-400'),
+        walletConnected: () => themedAuto('h-5 w-5 text-green-600 dark:text-green-400'),
+        walletDisconnected: () => themedAuto('h-5 w-5 text-gray-400 dark:text-gray-500'),
+        transaction: () => themedAuto('h-4 w-4 text-blue-600 dark:text-blue-400'),
         blockchain: {
-          ethereum: () => 'h-5 w-5 text-blue-600 dark:text-blue-400',
-          solana: () => 'h-5 w-5 text-purple-600 dark:text-purple-400',
-          bitcoin: () => 'h-5 w-5 text-orange-600 dark:text-orange-400',
+          ethereum: () => themedAuto('h-5 w-5 text-blue-600 dark:text-blue-400'),
+          solana: () => themedAuto('h-5 w-5 text-purple-600 dark:text-purple-400'),
+          bitcoin: () => themedAuto('h-5 w-5 text-orange-600 dark:text-orange-400'),
         },
       },
 
       // Card and content icons
       card: {
-        header: () => 'h-5 w-5 text-gray-600 dark:text-gray-400 mr-2',
+        header: () => themedAuto('h-5 w-5 text-gray-600 dark:text-gray-400 mr-2'),
         action: () =>
-          'h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200',
-        feature: () => 'h-6 w-6 text-blue-600 dark:text-blue-400',
-        featureLarge: () => 'h-8 w-8 text-blue-600 dark:text-blue-400',
+          themedAuto(
+            'h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200'
+          ),
+        feature: () => themedAuto('h-6 w-6 text-blue-600 dark:text-blue-400'),
+        featureLarge: () => themedAuto('h-8 w-8 text-blue-600 dark:text-blue-400'),
       },
 
       // List and table icons
       list: {
-        item: () => 'h-4 w-4 text-gray-500 dark:text-gray-400 mr-3 flex-shrink-0',
+        item: () => themedAuto('h-4 w-4 text-gray-500 dark:text-gray-400 mr-3 flex-shrink-0'),
         action: () =>
-          'h-4 w-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200',
-        bullet: () => 'h-1.5 w-1.5 text-gray-400 mt-2 mr-3 flex-shrink-0',
+          themedAuto(
+            'h-4 w-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200'
+          ),
+        bullet: () => themedAuto('h-1.5 w-1.5 text-gray-400 mt-2 mr-3 flex-shrink-0'),
       },
     },
 
     // Decorative icon patterns
     decorative: {
       hero: {
-        small: () => 'h-12 w-12 text-blue-600 dark:text-blue-400',
-        medium: () => 'h-16 w-16 text-blue-600 dark:text-blue-400',
-        large: () => 'h-20 w-20 text-blue-600 dark:text-blue-400',
-        xlarge: () => 'h-24 w-24 text-blue-600 dark:text-blue-400',
+        small: () => themedAuto('h-12 w-12 text-blue-600 dark:text-blue-400'),
+        medium: () => themedAuto('h-16 w-16 text-blue-600 dark:text-blue-400'),
+        large: () => themedAuto('h-20 w-20 text-blue-600 dark:text-blue-400'),
+        xlarge: () => themedAuto('h-24 w-24 text-blue-600 dark:text-blue-400'),
       },
 
       feature: {
-        small: () => 'h-8 w-8 text-gray-600 dark:text-gray-400',
-        medium: () => 'h-10 w-10 text-gray-600 dark:text-gray-400',
-        large: () => 'h-12 w-12 text-gray-600 dark:text-gray-400',
+        small: () => themedAuto('h-8 w-8 text-gray-600 dark:text-gray-400'),
+        medium: () => themedAuto('h-10 w-10 text-gray-600 dark:text-gray-400'),
+        large: () => themedAuto('h-12 w-12 text-gray-600 dark:text-gray-400'),
       },
 
       background: {
-        subtle: () => 'h-32 w-32 text-gray-100 dark:text-gray-800 opacity-50',
-        muted: () => 'h-24 w-24 text-gray-200 dark:text-gray-700 opacity-30',
+        subtle: () => themedAuto('h-32 w-32 text-gray-100 dark:text-gray-800 opacity-50'),
+        muted: () => themedAuto('h-24 w-24 text-gray-200 dark:text-gray-700 opacity-30'),
       },
 
       empty: {
-        small: () => 'h-8 w-8 text-gray-400 dark:text-gray-500 mb-2',
-        medium: () => 'h-12 w-12 text-gray-400 dark:text-gray-500 mb-4',
-        large: () => 'h-16 w-16 text-gray-400 dark:text-gray-500 mb-6',
+        small: () => themedAuto('h-8 w-8 text-gray-400 dark:text-gray-500 mb-2'),
+        medium: () => themedAuto('h-12 w-12 text-gray-400 dark:text-gray-500 mb-4'),
+        large: () => themedAuto('h-16 w-16 text-gray-400 dark:text-gray-500 mb-6'),
       },
     },
   },
@@ -2026,7 +2427,9 @@ const variants: VariantsType = {
       containerExiting: () => 'opacity-0 scale-95',
 
       content: () =>
-        'relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-hidden',
+        themedAuto(
+          'relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-hidden'
+        ),
 
       // Size variants
       small: () => 'max-w-sm',
@@ -2037,21 +2440,27 @@ const variants: VariantsType = {
 
       // Header and content areas
       header: () =>
-        'flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700',
-      title: () => 'text-lg font-semibold text-gray-900 dark:text-gray-100',
+        themedAuto(
+          'flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700'
+        ),
+      title: () => themedAuto('text-lg font-semibold text-gray-900 dark:text-gray-100'),
       closeButton: () =>
-        'p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors',
+        themedAuto('p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors'),
 
       body: () => 'p-4 sm:p-6 overflow-y-auto',
       footer: () =>
-        'flex items-center justify-end space-x-3 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50',
+        themedAuto(
+          'flex items-center justify-end space-x-3 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50'
+        ),
     },
 
     // Tooltip overlays
     tooltip: {
       container: () =>
-        'absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900 dark:bg-gray-800 rounded shadow-lg transition-all duration-200 pointer-events-none',
-      arrow: () => 'absolute w-2 h-2 bg-gray-900 dark:bg-gray-800 transform rotate-45',
+        themedAuto(
+          'absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900 dark:bg-gray-800 rounded shadow-lg transition-all duration-200 pointer-events-none'
+        ),
+      arrow: () => themedAuto('absolute w-2 h-2 bg-gray-900 dark:bg-gray-800 transform rotate-45'),
 
       // Position variants
       top: () => '-translate-x-1/2 -translate-y-full left-1/2 bottom-full mb-2',
@@ -2067,21 +2476,25 @@ const variants: VariantsType = {
       rightArrow: () => 'right-full top-1/2 -translate-y-1/2 translate-x-1/2',
 
       // Content variants
-      light: () => 'text-gray-900 bg-white border border-gray-200 shadow-md',
-      dark: () => 'text-white bg-gray-900 dark:bg-gray-800',
-      info: () => 'text-blue-50 bg-blue-600',
-      success: () => 'text-green-50 bg-green-600',
-      warning: () => 'text-amber-50 bg-amber-600',
-      error: () => 'text-red-50 bg-red-600',
+      light: () => themedAuto('text-gray-900 bg-white border border-gray-200 shadow-md'),
+      dark: () => themedAuto('text-white bg-gray-900 dark:bg-gray-800'),
+      info: () => themedAuto('text-blue-50 bg-blue-600'),
+      success: () => themedAuto('text-green-50 bg-green-600'),
+      warning: () => themedAuto('text-amber-50 bg-amber-600'),
+      error: () => themedAuto('text-red-50 bg-red-600'),
     },
 
     // Popover overlays (more complex than tooltips)
     popover: {
       backdrop: () => 'fixed inset-0 z-30',
       container: () =>
-        'absolute z-40 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200',
+        themedAuto(
+          'absolute z-40 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200'
+        ),
       arrow: () =>
-        'absolute w-3 h-3 bg-white dark:bg-gray-800 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45',
+        themedAuto(
+          'absolute w-3 h-3 bg-white dark:bg-gray-800 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45'
+        ),
 
       // Size variants
       small: () => 'w-48',
@@ -2103,11 +2516,13 @@ const variants: VariantsType = {
       rightArrow: () => 'right-full top-1/2 -translate-y-1/2 translate-x-1/2',
 
       // Content areas
-      header: () => 'px-4 py-3 border-b border-gray-200 dark:border-gray-700',
-      title: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
+      header: () => themedAuto('px-4 py-3 border-b border-gray-200 dark:border-gray-700'),
+      title: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
       body: () => 'px-4 py-3',
       footer: () =>
-        'px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50',
+        themedAuto(
+          'px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50'
+        ),
 
       // Animation states
       entering: () => 'opacity-0 scale-95 transform',
@@ -2119,12 +2534,18 @@ const variants: VariantsType = {
     dropdown: {
       container: () => 'relative inline-block',
       trigger: () =>
-        'inline-flex justify-center items-center bg-transparent border-0 text-gray-900 dark:text-gray-100 focus:outline-none transition-colors',
+        themedAuto(
+          'inline-flex justify-center items-center bg-transparent border-0 text-gray-900 dark:text-gray-100 focus:outline-none transition-colors'
+        ),
       triggerBordered: () =>
-        'inline-flex justify-center items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-950 transition-colors',
+        themedAuto(
+          'inline-flex justify-center items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-950 transition-colors'
+        ),
 
       menu: () =>
-        'absolute z-50 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg focus:outline-none transition-all duration-200',
+        themedAuto(
+          'absolute z-50 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg focus:outline-none transition-all duration-200'
+        ),
       menuSmall: () => 'w-40',
       menuLarge: () => 'w-72',
       menuAuto: () => 'w-auto min-w-40',
@@ -2143,16 +2564,22 @@ const variants: VariantsType = {
       // Menu items
       itemContainer: () => 'py-1 px-1',
       item: () =>
-        'flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-200 cursor-pointer hover:shadow-sm rounded-sm',
+        themedAuto(
+          'flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-200 cursor-pointer hover:shadow-sm rounded-sm'
+        ),
       itemActive: () =>
-        'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 shadow-sm',
+        themedAuto('bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 shadow-sm'),
       itemDisabled: () =>
-        'text-gray-400 dark:text-gray-600 cursor-not-allowed hover:bg-transparent hover:text-gray-400 dark:hover:text-gray-600',
+        themedAuto(
+          'text-gray-400 dark:text-gray-600 cursor-not-allowed hover:bg-transparent hover:text-gray-400 dark:hover:text-gray-600'
+        ),
 
       // Special item types
-      divider: () => 'my-1 border-t border-gray-200 dark:border-gray-700',
+      divider: () => themedAuto('my-1 border-t border-gray-200 dark:border-gray-700'),
       header: () =>
-        'px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide',
+        themedAuto(
+          'px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide'
+        ),
 
       // Icons in menu items
       itemIcon: () => 'mr-3 h-4 w-4 flex-shrink-0',
@@ -2178,18 +2605,24 @@ const variants: VariantsType = {
 
       // Content
       content: () =>
-        'relative flex w-full flex-col bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 shadow-xl',
-      contentLeft: () => 'border-r border-l-0 border-gray-200 dark:border-gray-700',
+        themedAuto(
+          'relative flex w-full flex-col bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 shadow-xl'
+        ),
+      contentLeft: () => themedAuto('border-r border-l-0 border-gray-200 dark:border-gray-700'),
 
       header: () =>
-        'flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700',
-      title: () => 'text-lg font-semibold text-gray-900 dark:text-gray-100',
+        themedAuto(
+          'flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700'
+        ),
+      title: () => themedAuto('text-lg font-semibold text-gray-900 dark:text-gray-100'),
       closeButton: () =>
-        'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors',
+        themedAuto('p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors'),
 
       body: () => 'flex-1 px-4 sm:px-6 py-4 overflow-y-auto',
       footer: () =>
-        'flex items-center justify-end space-x-3 px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50',
+        themedAuto(
+          'flex items-center justify-end space-x-3 px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50'
+        ),
 
       // Animation states
       entering: () => 'translate-x-full',
@@ -2206,19 +2639,25 @@ const variants: VariantsType = {
       container: () => 'fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out',
 
       content: () =>
-        'relative bg-white dark:bg-gray-900 rounded-t-lg shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[85vh] overflow-hidden',
+        themedAuto(
+          'relative bg-white dark:bg-gray-900 rounded-t-lg shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[85vh] overflow-hidden'
+        ),
       handle: () => 'flex justify-center py-2',
-      handleBar: () => 'w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full',
+      handleBar: () => themedAuto('w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full'),
 
       header: () =>
-        'flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700',
-      title: () => 'text-lg font-semibold text-gray-900 dark:text-gray-100',
+        themedAuto(
+          'flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700'
+        ),
+      title: () => themedAuto('text-lg font-semibold text-gray-900 dark:text-gray-100'),
       closeButton: () =>
-        'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors',
+        themedAuto('p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors'),
 
       body: () => 'px-4 sm:px-6 py-4 overflow-y-auto',
       footer: () =>
-        'flex items-center justify-center space-x-3 px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50',
+        themedAuto(
+          'flex items-center justify-center space-x-3 px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50'
+        ),
 
       // Animation states
       entering: () => 'translate-y-full',
@@ -2230,38 +2669,52 @@ const variants: VariantsType = {
     contextMenu: {
       backdrop: () => 'fixed inset-0 z-30',
       container: () =>
-        'absolute z-50 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 focus:outline-none transition-all duration-150',
+        themedAuto(
+          'absolute z-50 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 focus:outline-none transition-all duration-150'
+        ),
 
       item: () =>
-        'flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer',
+        themedAuto(
+          'flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer'
+        ),
       itemDisabled: () =>
-        'text-gray-400 dark:text-gray-600 cursor-not-allowed hover:bg-transparent',
+        themedAuto('text-gray-400 dark:text-gray-600 cursor-not-allowed hover:bg-transparent'),
       itemDanger: () =>
-        'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300',
+        themedAuto(
+          'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300'
+        ),
 
-      divider: () => 'my-1 border-t border-gray-200 dark:border-gray-700',
+      divider: () => themedAuto('my-1 border-t border-gray-200 dark:border-gray-700'),
       icon: () => 'mr-2 h-4 w-4 flex-shrink-0',
-      shortcut: () => 'ml-auto text-xs text-gray-400 dark:text-gray-500',
+      shortcut: () => themedAuto('ml-auto text-xs text-gray-400 dark:text-gray-500'),
 
       // Nested menu indicators
-      submenuIndicator: () => 'ml-auto h-4 w-4 text-gray-400 dark:text-gray-500',
+      submenuIndicator: () => themedAuto('ml-auto h-4 w-4 text-gray-400 dark:text-gray-500'),
       submenu: () => 'absolute left-full top-0 ml-1',
     },
 
     // Loading overlays
     loading: {
       backdrop: () =>
-        'fixed inset-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center justify-center transition-all duration-300',
+        themedAuto(
+          'fixed inset-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center justify-center transition-all duration-300'
+        ),
       container: () =>
-        'flex flex-col items-center space-y-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700',
+        themedAuto(
+          'flex flex-col items-center space-y-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700'
+        ),
 
       spinner: () =>
-        'w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin',
+        themedAuto(
+          'w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin'
+        ),
       spinnerLarge: () =>
-        'w-12 h-12 border-3 border-blue-600 border-t-transparent rounded-full animate-spin',
+        themedAuto(
+          'w-12 h-12 border-3 border-blue-600 border-t-transparent rounded-full animate-spin'
+        ),
 
-      text: () => 'text-sm font-medium text-gray-900 dark:text-gray-100',
-      subtext: () => 'text-xs text-gray-500 dark:text-gray-400 text-center max-w-xs',
+      text: () => themedAuto('text-sm font-medium text-gray-900 dark:text-gray-100'),
+      subtext: () => themedAuto('text-xs text-gray-500 dark:text-gray-400 text-center max-w-xs'),
     },
 
     // Portal utilities for managing overlay z-index and positioning
@@ -2281,7 +2734,7 @@ const variants: VariantsType = {
       // Focus trap utilities
       focusTrap: () => 'focus:outline-none',
       focusVisible: () =>
-        'focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+        themedAuto('focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'),
 
       // Screen reader utilities
       srOnly: () => 'sr-only',
@@ -2298,18 +2751,28 @@ const variants: VariantsType = {
         subtle: () => 'transition-all duration-200 hover:shadow-md hover:-translate-y-0.5',
         lift: () => 'transition-all duration-300 hover:shadow-lg hover:-translate-y-1',
         glow: () =>
-          'transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 dark:hover:shadow-blue-400/25',
+          themedAuto(
+            'transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 dark:hover:shadow-blue-400/25'
+          ),
         scale: () => 'transition-transform duration-200 hover:scale-105',
         border: () =>
-          'transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600',
+          themedAuto(
+            'transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600'
+          ),
 
         // Web3 specific card hovers
         nft: () =>
-          'transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.02]',
+          themedAuto(
+            'transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.02]'
+          ),
         wallet: () =>
-          'transition-all duration-200 hover:shadow-md hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20',
+          themedAuto(
+            'transition-all duration-200 hover:shadow-md hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20'
+          ),
         transaction: () =>
-          'transition-all duration-200 hover:shadow-md hover:border-green-300 dark:hover:border-green-600',
+          themedAuto(
+            'transition-all duration-200 hover:shadow-md hover:border-green-300 dark:hover:border-green-600'
+          ),
       },
 
       // Button hover effects
@@ -2318,13 +2781,19 @@ const variants: VariantsType = {
         glow: () => 'transition-all duration-200 hover:shadow-lg hover:shadow-current/25',
         scale: () => 'transition-transform duration-150 hover:scale-105',
         shimmer: () =>
-          'relative overflow-hidden transition-all duration-200 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent hover:before:translate-x-full',
+          themedAuto(
+            'relative overflow-hidden transition-all duration-200 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent hover:before:translate-x-full'
+          ),
 
         // Web3 button hovers
         connect: () =>
-          'transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-[1.02]',
-        transaction: () => 'transition-all duration-200 hover:shadow-lg hover:shadow-green-500/30',
-        disconnect: () => 'transition-all duration-200 hover:shadow-lg hover:shadow-red-500/30',
+          themedAuto(
+            'transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-[1.02]'
+          ),
+        transaction: () =>
+          themedAuto('transition-all duration-200 hover:shadow-lg hover:shadow-green-500/30'),
+        disconnect: () =>
+          themedAuto('transition-all duration-200 hover:shadow-lg hover:shadow-red-500/30'),
       },
 
       // Icon hover effects
@@ -2332,9 +2801,13 @@ const variants: VariantsType = {
         bounce: () => 'transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5',
         rotate: () => 'transition-transform duration-200 hover:rotate-12',
         pulse: () =>
-          'transition-all duration-200 hover:scale-110 hover:text-blue-600 dark:hover:text-blue-400',
+          themedAuto(
+            'transition-all duration-200 hover:scale-110 hover:text-blue-600 dark:hover:text-blue-400'
+          ),
         glow: () =>
-          'transition-all duration-200 hover:text-blue-600 dark:hover:text-blue-400 hover:drop-shadow-sm',
+          themedAuto(
+            'transition-all duration-200 hover:text-blue-600 dark:hover:text-blue-400 hover:drop-shadow-sm'
+          ),
       },
     },
 
@@ -2352,30 +2825,39 @@ const variants: VariantsType = {
 
       // Skeleton loaders
       skeleton: {
-        base: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
-        line: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 h-4 rounded',
-        circle: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded-full',
-        card: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32',
+        base: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded'),
+        line: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 h-4 rounded'),
+        circle: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded-full'),
+        card: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32'),
 
         // Shimmer effect
         shimmer: () =>
-          'relative overflow-hidden bg-gray-200 dark:bg-gray-700 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-gray-200 before:via-white before:to-gray-200 dark:before:from-gray-700 dark:before:via-gray-600 dark:before:to-gray-700',
+          themedAuto(
+            'relative overflow-hidden bg-gray-200 dark:bg-gray-700 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-gray-200 before:via-white before:to-gray-200 dark:before:from-gray-700 dark:before:via-gray-600 dark:before:to-gray-700'
+          ),
 
         // Progressive loading
         progressive: () =>
-          'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 bg-[length:200%_100%] animate-shimmer-bg',
+          themedAuto(
+            'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 bg-[length:200%_100%] animate-shimmer-bg'
+          ),
       },
 
       // Progress indicators
       progress: {
         bar: () => 'transition-all duration-300 ease-out',
         indeterminate: () =>
-          'animate-progress-indeterminate bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-[length:200%_100%]',
+          themedAuto(
+            'animate-progress-indeterminate bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-[length:200%_100%]'
+          ),
 
         // Web3 progress indicators
-        transaction: () => 'animate-progress-glow bg-gradient-to-r from-green-400 to-blue-500',
+        transaction: () =>
+          themedAuto('animate-progress-glow bg-gradient-to-r from-green-400 to-blue-500'),
         minting: () =>
-          'animate-progress-rainbow bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500',
+          themedAuto(
+            'animate-progress-rainbow bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500'
+          ),
       },
     },
 
@@ -2439,29 +2921,40 @@ const variants: VariantsType = {
 
         // Material Design ripple effect
         materialRipple: () =>
-          'relative overflow-hidden after:absolute after:inset-0 after:rounded-[inherit] after:pointer-events-none after:transition-opacity after:duration-300 after:opacity-0 active:after:opacity-100 active:after:bg-white/20',
+          themedAuto(
+            'relative overflow-hidden after:absolute after:inset-0 after:rounded-[inherit] after:pointer-events-none after:transition-opacity after:duration-300 after:opacity-0 active:after:opacity-100 active:after:bg-white/20'
+          ),
       },
 
       // Focus feedback
       focus: {
         ring: () =>
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+          themedAuto(
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+          ),
         glow: () =>
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:shadow-lg focus-visible:shadow-blue-500/25',
+          themedAuto(
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:shadow-lg focus-visible:shadow-blue-500/25'
+          ),
         scale: () =>
-          'focus-visible:outline-none focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-blue-500',
+          themedAuto(
+            'focus-visible:outline-none focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-blue-500'
+          ),
 
         // Web3 focus styles
         wallet: () =>
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:bg-blue-50 dark:focus-visible:bg-blue-900/20',
+          themedAuto(
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:bg-blue-50 dark:focus-visible:bg-blue-900/20'
+          ),
       },
 
       // Drag feedback
       drag: {
         dragging: () => 'opacity-50 scale-95 rotate-3 shadow-xl z-50',
         dropzone: () => 'transition-all duration-200 border-2 border-dashed',
-        dropzoneActive: () => 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 scale-105',
-        dropzoneInactive: () => 'border-gray-300 dark:border-gray-600',
+        dropzoneActive: () =>
+          themedAuto('border-blue-400 bg-blue-50 dark:bg-blue-900/20 scale-105'),
+        dropzoneInactive: () => themedAuto('border-gray-300 dark:border-gray-600'),
       },
     },
 
@@ -2505,32 +2998,49 @@ const variants: VariantsType = {
       // Wallet connection animations
       wallet: {
         connecting: () =>
-          'animate-pulse bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-[length:200%_100%] animate-shimmer-bg',
-        connected: () => 'animate-bounce-gentle bg-gradient-to-r from-green-400 to-blue-500',
+          themedAuto(
+            'animate-pulse bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-[length:200%_100%] animate-shimmer-bg'
+          ),
+        connected: () =>
+          themedAuto('animate-bounce-gentle bg-gradient-to-r from-green-400 to-blue-500'),
         disconnected: () => 'animate-fade-out opacity-50',
-        error: () => 'animate-shake bg-red-100 dark:bg-red-900/20',
+        error: () => themedAuto('animate-shake bg-red-100 dark:bg-red-900/20'),
       },
 
       // Transaction animations
       transaction: {
         pending: () =>
-          'animate-pulse border border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-900/20',
-        confirming: () => 'animate-progress-dots bg-gradient-to-r from-blue-500 to-purple-500',
+          themedAuto(
+            'animate-pulse border border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-900/20'
+          ),
+        confirming: () =>
+          themedAuto('animate-progress-dots bg-gradient-to-r from-blue-500 to-purple-500'),
         confirmed: () =>
-          'animate-success-pulse border border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-900/20',
+          themedAuto(
+            'animate-success-pulse border border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-900/20'
+          ),
         failed: () =>
-          'animate-error-flash border border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/20',
+          themedAuto(
+            'animate-error-flash border border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/20'
+          ),
       },
 
       // Blockchain activity
       blockchain: {
         mining: () =>
-          'animate-mining-pulse bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 bg-[length:200%_100%]',
+          themedAuto(
+            'animate-mining-pulse bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 bg-[length:200%_100%]'
+          ),
         minting: () =>
-          'animate-rainbow bg-gradient-to-r from-pink-500 via-purple-500 via-blue-500 to-pink-500 bg-[length:300%_100%]',
-        staking: () => 'animate-glow-pulse bg-gradient-to-r from-green-400 to-emerald-500',
+          themedAuto(
+            'animate-rainbow bg-gradient-to-r from-pink-500 via-purple-500 via-blue-500 to-pink-500 bg-[length:300%_100%]'
+          ),
+        staking: () =>
+          themedAuto('animate-glow-pulse bg-gradient-to-r from-green-400 to-emerald-500'),
         burning: () =>
-          'animate-fire bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-[length:200%_100%]',
+          themedAuto(
+            'animate-fire bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-[length:200%_100%]'
+          ),
       },
     },
 
@@ -2561,7 +3071,9 @@ const variants: VariantsType = {
         scaleOnly: () => 'transition-transform duration-200 ease-out',
         instant: () => 'transition-none',
         respectPrefers: () =>
-          'motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none',
+          themedAuto(
+            'motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none'
+          ),
       },
     },
   },
@@ -2573,61 +3085,83 @@ const variants: VariantsType = {
       // Visually hidden but accessible to screen readers
       only: () => 'sr-only',
       focusable: () =>
-        'sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-2 focus:bg-white focus:text-black focus:border focus:rounded',
+        themedAuto(
+          'sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-2 focus:bg-white focus:text-black focus:border focus:rounded'
+        ),
 
       // Skip links for navigation
       skipLink: () =>
-        'sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded focus:m-2 focus:no-underline',
+        themedAuto(
+          'sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded focus:m-2 focus:no-underline'
+        ),
     },
 
     // Focus management
     focus: {
       // Focus indicators
       ring: () =>
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+        ),
       ringInset: () =>
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500'
+        ),
       ringDark: () =>
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900'
+        ),
 
       // High contrast focus for better visibility
       highContrast: () =>
-        'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:bg-yellow-50 dark:focus-visible:bg-yellow-900/20',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:bg-yellow-50 dark:focus-visible:bg-yellow-900/20'
+        ),
 
       // Web3 specific focus styles
       wallet: () =>
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:bg-blue-50 dark:focus-visible:bg-blue-900/20',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:bg-blue-50 dark:focus-visible:bg-blue-900/20'
+        ),
       transaction: () =>
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
+        ),
       error: () =>
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2',
+        themedAuto(
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2'
+        ),
     },
 
     // Color contrast and visibility
     contrast: {
       // High contrast text
       text: {
-        high: () => 'text-gray-900 dark:text-gray-100',
-        medium: () => 'text-gray-700 dark:text-gray-300',
-        low: () => 'text-gray-600 dark:text-gray-400',
-        inverse: () => 'text-white dark:text-gray-900',
+        high: () => themedAuto('text-gray-900 dark:text-gray-100'),
+        medium: () => themedAuto('text-gray-700 dark:text-gray-300'),
+        low: () => themedAuto('text-gray-600 dark:text-gray-400'),
+        inverse: () => themedAuto('text-white dark:text-gray-900'),
       },
 
       // High contrast backgrounds
       background: {
-        primary: () => 'bg-blue-700 text-white dark:bg-blue-300 dark:text-gray-900',
-        secondary: () => 'bg-gray-700 text-white dark:bg-gray-300 dark:text-gray-900',
-        success: () => 'bg-green-700 text-white dark:bg-green-300 dark:text-gray-900',
-        warning: () => 'bg-yellow-700 text-white dark:bg-yellow-300 dark:text-gray-900',
-        error: () => 'bg-red-700 text-white dark:bg-red-300 dark:text-gray-900',
+        primary: () => themedAuto('bg-blue-700 text-white dark:bg-blue-300 dark:text-gray-900'),
+        secondary: () => themedAuto('bg-gray-700 text-white dark:bg-gray-300 dark:text-gray-900'),
+        success: () => themedAuto('bg-green-700 text-white dark:bg-green-300 dark:text-gray-900'),
+        warning: () => themedAuto('bg-yellow-700 text-white dark:bg-yellow-300 dark:text-gray-900'),
+        error: () => themedAuto('bg-red-700 text-white dark:bg-red-300 dark:text-gray-900'),
       },
 
       // Link contrast
       link: {
         default: () =>
-          'text-blue-700 dark:text-blue-300 underline hover:text-blue-900 dark:hover:text-blue-100',
+          themedAuto(
+            'text-blue-700 dark:text-blue-300 underline hover:text-blue-900 dark:hover:text-blue-100'
+          ),
         visited: () =>
-          'text-purple-700 dark:text-purple-300 underline hover:text-purple-900 dark:hover:text-purple-100',
+          themedAuto(
+            'text-purple-700 dark:text-purple-300 underline hover:text-purple-900 dark:hover:text-purple-100'
+          ),
       },
     },
 
@@ -2635,24 +3169,32 @@ const variants: VariantsType = {
     motion: {
       // Respect user's motion preferences
       respectPrefers: () =>
-        'motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none',
-      reduceMotion: () => 'motion-reduce:transition-none motion-reduce:animate-none',
+        themedAuto(
+          'motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none'
+        ),
+      reduceMotion: () => themedAuto('motion-reduce:transition-none motion-reduce:animate-none'),
 
       // Safe animations that work with reduced motion
       safe: {
         fade: () =>
-          'motion-safe:transition-opacity motion-safe:duration-300 motion-reduce:transition-none',
+          themedAuto(
+            'motion-safe:transition-opacity motion-safe:duration-300 motion-reduce:transition-none'
+          ),
         scale: () =>
-          'motion-safe:transition-transform motion-safe:duration-200 motion-reduce:transition-none',
+          themedAuto(
+            'motion-safe:transition-transform motion-safe:duration-200 motion-reduce:transition-none'
+          ),
         slide: () =>
-          'motion-safe:transition-transform motion-safe:duration-300 motion-reduce:transition-none',
+          themedAuto(
+            'motion-safe:transition-transform motion-safe:duration-300 motion-reduce:transition-none'
+          ),
       },
 
       // Loading animations that respect motion preferences
       loading: {
-        spin: () => 'motion-safe:animate-spin motion-reduce:animate-none',
-        pulse: () => 'motion-safe:animate-pulse motion-reduce:animate-none',
-        bounce: () => 'motion-safe:animate-bounce motion-reduce:animate-none',
+        spin: () => themedAuto('motion-safe:animate-spin motion-reduce:animate-none'),
+        pulse: () => themedAuto('motion-safe:animate-pulse motion-reduce:animate-none'),
+        bounce: () => themedAuto('motion-safe:animate-bounce motion-reduce:animate-none'),
       },
     },
 
@@ -2690,16 +3232,18 @@ const variants: VariantsType = {
     form: {
       // Required field indicators
       required: {
-        indicator: () => 'text-red-500 dark:text-red-400',
+        indicator: () => themedAuto('text-red-500 dark:text-red-400'),
         text: () => 'aria-required="true" required',
-        visual: () => 'after:content-["*"] after:ml-1 after:text-red-500 dark:after:text-red-400',
+        visual: () =>
+          themedAuto('after:content-["*"] after:ml-1 after:text-red-500 dark:after:text-red-400'),
       },
 
       // Validation states
       validation: {
-        valid: () => 'border-green-500 dark:border-green-400 focus:ring-green-500',
-        invalid: () => 'border-red-500 dark:border-red-400 focus:ring-red-500 aria-invalid="true"',
-        pending: () => 'border-yellow-500 dark:border-yellow-400 focus:ring-yellow-500',
+        valid: () => themedAuto('border-green-500 dark:border-green-400 focus:ring-green-500'),
+        invalid: () =>
+          themedAuto('border-red-500 dark:border-red-400 focus:ring-red-500 aria-invalid="true"'),
+        pending: () => themedAuto('border-yellow-500 dark:border-yellow-400 focus:ring-yellow-500'),
       },
     },
 
@@ -2708,21 +3252,31 @@ const variants: VariantsType = {
       // Button patterns
       button: {
         primary: () =>
-          'inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed',
+          themedAuto(
+            'inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
+          ),
         secondary: () =>
-          'inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed',
+          themedAuto(
+            'inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
+          ),
 
         // Icon buttons with proper labels
         icon: () =>
-          'inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500',
+          themedAuto(
+            'inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500'
+          ),
       },
 
       // Link patterns
       link: {
         default: () =>
-          'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+          themedAuto(
+            'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+          ),
         external: () =>
-          'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 after:content-["↗"] after:ml-1 after:text-xs',
+          themedAuto(
+            'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 after:content-["↗"] after:ml-1 after:text-xs'
+          ),
       },
     },
 
@@ -2740,17 +3294,21 @@ const variants: VariantsType = {
       // Error messages
       error: {
         container: () =>
-          'border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 rounded-md p-4',
-        title: () => 'text-sm font-medium text-red-800 dark:text-red-200',
-        message: () => 'text-sm text-red-700 dark:text-red-300 mt-2',
+          themedAuto(
+            'border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 rounded-md p-4'
+          ),
+        title: () => themedAuto('text-sm font-medium text-red-800 dark:text-red-200'),
+        message: () => themedAuto('text-sm text-red-700 dark:text-red-300 mt-2'),
       },
 
       // Success messages
       success: {
         container: () =>
-          'border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded-md p-4',
-        title: () => 'text-sm font-medium text-green-800 dark:text-green-200',
-        message: () => 'text-sm text-green-700 dark:text-green-300 mt-2',
+          themedAuto(
+            'border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded-md p-4'
+          ),
+        title: () => themedAuto('text-sm font-medium text-green-800 dark:text-green-200'),
+        message: () => themedAuto('text-sm text-green-700 dark:text-green-300 mt-2'),
       },
 
       // Live regions for dynamic content
@@ -2773,14 +3331,14 @@ const variants: VariantsType = {
         componentLoaded: () => 'opacity-100',
         image: () => 'blur-sm transition-all duration-300',
         imageLoaded: () => 'blur-none',
-        skeleton: () => 'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
+        skeleton: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700 rounded'),
       },
 
       // Code splitting indicators
       splitting: {
         loading: () => 'flex items-center justify-center py-8',
-        error: () => 'text-red-600 dark:text-red-400 text-center py-8',
-        fallback: () => 'bg-gray-100 dark:bg-gray-800 animate-pulse rounded',
+        error: () => themedAuto('text-red-600 dark:text-red-400 text-center py-8'),
+        fallback: () => themedAuto('bg-gray-100 dark:bg-gray-800 animate-pulse rounded'),
       },
     },
 
@@ -2823,22 +3381,22 @@ const variants: VariantsType = {
       // Caching patterns
       cache: {
         // Service worker states
-        cached: () => 'border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20',
-        updating: () => 'border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20',
-        offline: () => 'border-l-4 border-gray-500 bg-gray-50 dark:bg-gray-900/20',
-        error: () => 'border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20',
+        cached: () => themedAuto('border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20'),
+        updating: () => themedAuto('border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20'),
+        offline: () => themedAuto('border-l-4 border-gray-500 bg-gray-50 dark:bg-gray-900/20'),
+        error: () => themedAuto('border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20'),
 
         // Cache status indicators
-        fresh: () => 'text-green-600 dark:text-green-400',
-        stale: () => 'text-yellow-600 dark:text-yellow-400',
-        expired: () => 'text-red-600 dark:text-red-400',
+        fresh: () => themedAuto('text-green-600 dark:text-green-400'),
+        stale: () => themedAuto('text-yellow-600 dark:text-yellow-400'),
+        expired: () => themedAuto('text-red-600 dark:text-red-400'),
       },
 
       // Connection quality
       connection: {
-        fast: () => 'border-green-500 bg-green-50 dark:bg-green-900/20',
-        slow: () => 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20',
-        offline: () => 'border-red-500 bg-red-50 dark:bg-red-900/20',
+        fast: () => themedAuto('border-green-500 bg-green-50 dark:bg-green-900/20'),
+        slow: () => themedAuto('border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'),
+        offline: () => themedAuto('border-red-500 bg-red-50 dark:bg-red-900/20'),
       },
     },
 
@@ -2863,8 +3421,8 @@ const variants: VariantsType = {
       layoutStability: {
         // Prevent layout shifts
         stable: () => 'aspect-square contain-layout',
-        placeholder: () => 'min-h-[200px] bg-gray-100 dark:bg-gray-800',
-        skeleton: () => 'animate-pulse bg-gray-200 dark:bg-gray-700',
+        placeholder: () => themedAuto('min-h-[200px] bg-gray-100 dark:bg-gray-800'),
+        skeleton: () => themedAuto('animate-pulse bg-gray-200 dark:bg-gray-700'),
 
         // Image container stability
         imageContainer: () => 'overflow-hidden relative',
@@ -2885,21 +3443,21 @@ const variants: VariantsType = {
       // Transaction optimization
       transaction: {
         // Batching indicators
-        batched: () => 'border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20',
-        individual: () => 'border-l-4 border-gray-500 bg-gray-50 dark:bg-gray-900/20',
+        batched: () => themedAuto('border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20'),
+        individual: () => themedAuto('border-l-4 border-gray-500 bg-gray-50 dark:bg-gray-900/20'),
 
         // Gas optimization
-        gasOptimal: () => 'text-green-600 dark:text-green-400',
-        gasHigh: () => 'text-yellow-600 dark:text-yellow-400',
-        gasVeryHigh: () => 'text-red-600 dark:text-red-400',
+        gasOptimal: () => themedAuto('text-green-600 dark:text-green-400'),
+        gasHigh: () => themedAuto('text-yellow-600 dark:text-yellow-400'),
+        gasVeryHigh: () => themedAuto('text-red-600 dark:text-red-400'),
       },
 
       // Blockchain data optimization
       blockchain: {
         // Data freshness
-        realtime: () => 'border-green-500 bg-green-50 dark:bg-green-900/20',
-        cached: () => 'border-blue-500 bg-blue-50 dark:bg-blue-900/20',
-        stale: () => 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20',
+        realtime: () => themedAuto('border-green-500 bg-green-50 dark:bg-green-900/20'),
+        cached: () => themedAuto('border-blue-500 bg-blue-50 dark:bg-blue-900/20'),
+        stale: () => themedAuto('border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'),
 
         // Query optimization
         optimistic: () => 'opacity-75 transition-opacity duration-200',
@@ -2912,21 +3470,26 @@ const variants: VariantsType = {
     monitoring: {
       // Performance metrics
       metrics: {
-        good: () => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20',
+        good: () =>
+          themedAuto('text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20'),
         needsImprovement: () =>
-          'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/20',
-        poor: () => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20',
+          themedAuto('text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/20'),
+        poor: () => themedAuto('text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20'),
       },
 
       // Error boundaries
       errorBoundary: {
         container: () =>
-          'border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 rounded-lg p-4',
-        title: () => 'text-lg font-semibold text-red-800 dark:text-red-200',
-        message: () => 'text-red-700 dark:text-red-300 mt-2',
+          themedAuto(
+            'border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 rounded-lg p-4'
+          ),
+        title: () => themedAuto('text-lg font-semibold text-red-800 dark:text-red-200'),
+        message: () => themedAuto('text-red-700 dark:text-red-300 mt-2'),
         retry: () =>
-          'mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500',
-        fallback: () => 'text-center text-gray-500 dark:text-gray-400 py-8',
+          themedAuto(
+            'mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500'
+          ),
+        fallback: () => themedAuto('text-center text-gray-500 dark:text-gray-400 py-8'),
       },
     },
 
@@ -2941,7 +3504,7 @@ const variants: VariantsType = {
         avatar: () => 'w-10 h-10 object-cover rounded-full',
 
         // Loading states
-        placeholder: () => 'bg-gray-200 dark:bg-gray-700 animate-pulse',
+        placeholder: () => themedAuto('bg-gray-200 dark:bg-gray-700 animate-pulse'),
         blurred: () => 'filter blur-sm',
         sharp: () => 'filter blur-none transition-all duration-300',
       },
@@ -2960,12 +3523,12 @@ const variants: VariantsType = {
       query: {
         cached: () => 'opacity-100',
         loading: () => 'opacity-75 animate-pulse',
-        error: () => 'opacity-50 text-red-600 dark:text-red-400',
+        error: () => themedAuto('opacity-50 text-red-600 dark:text-red-400'),
 
         // REST optimization
-        fresh: () => 'border-l-2 border-green-500',
-        stale: () => 'border-l-2 border-yellow-500',
-        invalid: () => 'border-l-2 border-red-500',
+        fresh: () => themedAuto('border-l-2 border-green-500'),
+        stale: () => themedAuto('border-l-2 border-yellow-500'),
+        invalid: () => themedAuto('border-l-2 border-red-500'),
 
         // Optimistic updates
         optimistic: () => 'opacity-75',
@@ -2976,14 +3539,14 @@ const variants: VariantsType = {
       // Real-time optimization
       realtime: {
         // WebSocket states
-        connected: () => 'border-green-500 bg-green-50 dark:bg-green-900/20',
-        connecting: () => 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20',
-        disconnected: () => 'border-red-500 bg-red-50 dark:bg-red-900/20',
+        connected: () => themedAuto('border-green-500 bg-green-50 dark:bg-green-900/20'),
+        connecting: () => themedAuto('border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'),
+        disconnected: () => themedAuto('border-red-500 bg-red-50 dark:bg-red-900/20'),
 
         // Update indicators
-        live: () => 'animate-pulse text-green-600 dark:text-green-400',
-        delayed: () => 'text-yellow-600 dark:text-yellow-400',
-        offline: () => 'text-gray-500 dark:text-gray-400',
+        live: () => themedAuto('animate-pulse text-green-600 dark:text-green-400'),
+        delayed: () => themedAuto('text-yellow-600 dark:text-yellow-400'),
+        offline: () => themedAuto('text-gray-500 dark:text-gray-400'),
       },
     },
   },
