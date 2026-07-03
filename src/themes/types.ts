@@ -90,4 +90,19 @@ export type ThemeName =
   | 'gambling'
   | 'terminal'
   | 'windows-3.1'
-  | 'windows-2000';
+  | 'windows-2000'
+  // Real-world design systems
+  | 'material'
+  | 'fluent'
+  | 'carbon'
+  | 'polaris'
+  | 'primer'
+  | 'atlassian'
+  | 'spectrum'
+  | 'base-web'
+  | 'lightning'
+  | 'ant-design'
+  | 'astryx'
+  | 'apple'
+  | 'govuk'
+  | 'uswds';

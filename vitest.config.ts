@@ -10,12 +10,10 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       exclude: ['src/**/*.test.ts', 'src/**/__tests__/**'],
       thresholds: {
-        global: {
-          statements: 95,
-          branches: 90,
-          functions: 95,
-          lines: 95,
-        },
+        statements: 95,
+        branches: 90,
+        functions: 95,
+        lines: 95,
       },
     },
     // setupFiles: ['./vitest.setup.ts'],

@@ -54,5 +54,21 @@ export { terminalTheme } from './presets/terminal';
 export { windows31Theme } from './presets/windows-3-1';
 export { windows2000Theme } from './presets/windows-2000';
 
+// Real-world design system presets
+export { materialTheme } from './presets/material';
+export { fluentTheme } from './presets/fluent';
+export { carbonTheme } from './presets/carbon';
+export { polarisTheme } from './presets/polaris';
+export { primerTheme } from './presets/primer';
+export { atlassianTheme } from './presets/atlassian';
+export { spectrumTheme } from './presets/spectrum';
+export { baseWebTheme } from './presets/base-web';
+export { lightningTheme } from './presets/lightning';
+export { antDesignTheme } from './presets/ant-design';
+export { astryxTheme } from './presets/astryx';
+export { appleTheme } from './presets/apple';
+export { govukTheme } from './presets/govuk';
+export { uswdsTheme } from './presets/uswds';
+
 // All themes as a record for iteration
 export { themes } from './registry';

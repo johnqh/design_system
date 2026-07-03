@@ -23,6 +23,21 @@ import { gamblingTheme } from './presets/gambling';
 import { terminalTheme } from './presets/terminal';
 import { windows31Theme } from './presets/windows-3-1';
 import { windows2000Theme } from './presets/windows-2000';
+// Real-world design systems
+import { materialTheme } from './presets/material';
+import { fluentTheme } from './presets/fluent';
+import { carbonTheme } from './presets/carbon';
+import { polarisTheme } from './presets/polaris';
+import { primerTheme } from './presets/primer';
+import { atlassianTheme } from './presets/atlassian';
+import { spectrumTheme } from './presets/spectrum';
+import { baseWebTheme } from './presets/base-web';
+import { lightningTheme } from './presets/lightning';
+import { antDesignTheme } from './presets/ant-design';
+import { astryxTheme } from './presets/astryx';
+import { appleTheme } from './presets/apple';
+import { govukTheme } from './presets/govuk';
+import { uswdsTheme } from './presets/uswds';
 
 export const themes: Record<ThemeName, ThemeDefinition> = {
   default: defaultTheme,
@@ -43,4 +58,19 @@ export const themes: Record<ThemeName, ThemeDefinition> = {
   terminal: terminalTheme,
   'windows-3.1': windows31Theme,
   'windows-2000': windows2000Theme,
+  // Real-world design systems
+  material: materialTheme,
+  fluent: fluentTheme,
+  carbon: carbonTheme,
+  polaris: polarisTheme,
+  primer: primerTheme,
+  atlassian: atlassianTheme,
+  spectrum: spectrumTheme,
+  'base-web': baseWebTheme,
+  lightning: lightningTheme,
+  'ant-design': antDesignTheme,
+  astryx: astryxTheme,
+  apple: appleTheme,
+  govuk: govukTheme,
+  uswds: uswdsTheme,
 };

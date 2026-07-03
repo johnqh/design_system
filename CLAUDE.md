@@ -5,7 +5,7 @@
 `@sudobility/design` is a standalone, framework-agnostic design system library providing design tokens, colors, typography, component variants, and utility functions for consistent UI development. It serves as the styling foundation for the 0xmail ecosystem (including `@johnqh/mail-box-components`) and supports both web (Tailwind CSS + tailwind-merge) and React Native (NativeWind) targets. All tokens are fully typed with `as const` for literal type inference and tree-shakeable named exports.
 
 - **Package name:** `@sudobility/design`
-- **Version:** 1.1.19
+- **Version:** 1.1.40
 - **License:** MIT
 - **Author:** John Q Huang
 - **Module type:** ES Module (`"type": "module"`)
@@ -25,6 +25,14 @@ src/
 │   ├── colors.ts                 # rawColors, semanticColors, componentColors, getColorClasses(), buildColorClass()
 │   ├── gradients.ts              # GRADIENTS, GRADIENT_CLASSES, getGradient(), combineGradient()
 │   └── tokens.ts                 # designTokens (spacing, margin, padding, gap, radius, shadow, typography, animation, z-index, breakpoints, grid, flex, width, height)
+├── themes/                       # Swappable, framework-agnostic theme engine (see "Theme System" below)
+│   ├── types.ts                  # ThemeDefinition, ThemeTokens (HSL-channel colors + structural tokens), ThemeClassOverrides, ThemeName
+│   ├── configure.ts              # Module-level active-theme state: configureTheme(), getActiveTheme(), getActiveThemeName(), getClassOverride()
+│   ├── css-generator.ts          # generateThemeCSS() → :root (light) + .dark CSS custom properties
+│   ├── tailwind-preset.ts        # createTailwindPreset() (web, hsl(var(--token))), createNativeWindPreset() (RN, resolved HSL)
+│   ├── registry.ts               # themes: Record<ThemeName, ThemeDefinition>
+│   ├── index.ts                  # Public theme exports (@sudobility/design/themes)
+│   └── presets/                  # One file per theme (defaultTheme, materialTheme, carbonTheme, ...)
 ├── utilities/
 │   ├── ai-helpers.ts             # SEMANTIC_COLOR_MAP, UI_PATTERNS, SIZE_SCALES, getSemanticColor(), applyUIPattern(), createComponentWithIntent(), validateVariantConfig(), safeResolveVariant(), getVariantSuggestions(), analyzeVariantUsage()
 │   ├── component-helpers.ts      # sizeClasses, getSizeClasses(), focusRing, focusVisible, transitions, hoverState(), disabledState(), loadingState, buttonVariant(), inputVariant(), cardVariant(), textVariant()
@@ -196,6 +204,31 @@ bun run format:check      # Check formatting without writing
 2. **Semantic Colors** (`colors.semantic`) - purpose-based tokens with `light`/`dark` object values. Recommended for theme logic.
 3. **Component Colors** (`colors.component`) - ready-to-use Tailwind class strings with `base`/`dark`/`focus`/`hover`/`disabled` keys. Use for component styling.
 
+### Theme System (multi-style)
+
+`src/themes/` layers a swappable, framework-agnostic theme engine on top of the token/variant system. A theme is **pure data** (`ThemeDefinition`) — no React — that can be projected onto web (CSS variables) or React Native (resolved values). This is the shadcn/ui CSS-variable convention formalized into a typed, multi-theme engine.
+
+**A theme = data (`themes/types.ts`)**
+- `ThemeTokens` — color roles stored as **HSL channels without the `hsl()` wrapper** (e.g. `primary: '221.2 83.2% 53.3%'`) so Tailwind can apply `<alpha-value>` (this is what makes `bg-primary/10` work). Separate `light` and `dark` token sets.
+- Color roles follow the shadcn/Radix convention: `background/foreground`, `card`, `popover`, `primary`, `secondary`, `muted`, `accent`, `destructive`, plus state roles `success/warning/info`, and `border/input/ring`. Every surface role pairs with a `*Foreground` (text-on-surface).
+- Structural tokens: `radius`, `borderWidth`, `shadowSm/Md/Lg`, `fontSans`, `fontMono`.
+- Optional `classOverrides` / `nativeClassOverrides` — extra Tailwind classes for structural signatures CSS vars can't express (e.g. neo-brutalism's thick borders + hard-offset shadows, glassmorphism's `backdrop-blur`, Material's pill buttons). `nativeClassOverrides` is used on React Native to drop web-only utilities like `backdrop-blur`.
+
+**Projection (same tokens → two targets)**
+- **Web:** `generateThemeCSS(theme)` emits `:root { --primary: ... }` (light) + `.dark { ... }`. `createTailwindPreset()` maps tokens to Tailwind colors via `hsl(var(--token) / <alpha-value>)`. Dark mode is a runtime `.dark` class cascade.
+- **React Native:** NativeWind can't read CSS custom properties, so `createNativeWindPreset(theme)` resolves tokens to concrete HSL values from `theme.light` at build time (dark is baked per build, not a runtime cascade).
+
+**Activation & dual-mode fallback (`themes/configure.ts`)**
+- `configureTheme(theme, { native? })` sets a module-level singleton once at app startup. `getActiveTheme()` / `getClassOverride()` read it.
+- The token/variant/typography layers use a **`tc(semantic, legacy)` helper** (`getActiveTheme() ? semantic : legacy`): with a theme active, components emit **semantic classes** (`bg-primary`, `text-muted-foreground`, `border-border`); with no theme they emit the **legacy hardcoded classes** (`bg-blue-600`, `dark:bg-blue-700`) for backward compatibility. See `tokens/colors.ts` (`componentColors` getters selecting `semanticComponentColors` vs `legacyComponentColors`), `core/variants.ts` (`themed()`), and `core/typography.ts`.
+- Structural themes append their `classOverrides.<component>.base` on top of the semantic classes via `themed()`.
+
+**Presets (`themes/presets/`, registered in `themes/registry.ts`)**
+- Aesthetic themes: `default, neo-brutalism, glassmorphism, cyberpunk, vaporwave, retro, y2k, swiss, linear, notion, web3, gaming, defi, prediction-market, gambling, terminal, windows-3.1, windows-2000`.
+- Real-world design systems: `material` (Google Material 3), `fluent` (Microsoft Fluent 2), `carbon` (IBM), `polaris` (Shopify), `primer` (GitHub), `atlassian`, `spectrum` (Adobe), `base-web` (Uber Base), `lightning` (Salesforce), `ant-design`, `astryx` (Meta), `apple` (Apple HIG), `govuk` (GOV.UK), `uswds` (U.S. Web Design System).
+
+No CSS files are committed — CSS is generated on demand via `generateThemeCSS()`. Themes are exposed to consumers through the `@sudobility/design/themes` subpath export.
+
 ### Dual Entry Points
 - `src/index.ts` - web: `cn()` uses `clsx` + `tailwind-merge`, includes SEO/structured-data exports, `ui` object, legacy exports
 - `src/index.native.ts` - React Native: `cn()` uses `clsx` only (NativeWind handles merging), omits SEO/structured-data and `ui` object
@@ -232,6 +265,12 @@ Two approaches:
 ### Adding a New Design Token
 1. Add to the appropriate object in `src/tokens/tokens.ts` (spacing, typography, animation, etc.)
 2. Run `bun run build && bun run test`
+
+### Adding a New Theme
+1. Create `src/themes/presets/<name>.ts` exporting a `ThemeDefinition` (copy `default.ts`). Fill `light`/`dark` `ThemeTokens` as **HSL channels** (`'H S% L%'`, no `hsl()` wrapper), the structural tokens (`radius`, `borderWidth`, `shadow*`, `font*`), and optional `classOverrides`/`nativeClassOverrides` for structural signatures CSS vars can't express.
+2. Add the slug to the `ThemeName` union in `src/themes/types.ts`.
+3. Register it in `src/themes/registry.ts` (import + `themes` record) and re-export it from `src/themes/index.ts`.
+4. Run `bun run build && bun run test`
 
 ### Adding a New Utility Function
 1. Add function to the appropriate file in `src/utilities/`
