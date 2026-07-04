@@ -86,6 +86,10 @@ describe('theme registry & presets', () => {
       expect(css).toContain('.dark {');
       expect(css).toContain('--primary:');
       expect(css).toContain('--font-sans:');
+      // Base body surface is owned by the design system so apps inherit it.
+      expect(css).toContain('body {');
+      expect(css).toContain('background-color: hsl(var(--background));');
+      expect(css).toContain('color: hsl(var(--foreground));');
     }
   });
 

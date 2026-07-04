@@ -45,9 +45,21 @@ function tokenToCSS(tokens: ThemeTokens): string {
 }
 
 /**
+ * Base element styling owned by the design system so every consuming app gets a
+ * themed base surface without redefining it locally. The body follows the active
+ * theme's semantic tokens (background/foreground/font), and the values flip with
+ * light/dark because --background etc. are redefined under .dark above.
+ */
+const BASE_CSS = `body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+}`;
+
+/**
  * Generate a complete CSS block from a theme definition.
- * Includes :root (light mode) and .dark selectors.
+ * Includes :root (light mode), .dark selectors, and the base body surface.
  */
 export function generateThemeCSS(theme: ThemeDefinition): string {
-  return `:root {\n${tokenToCSS(theme.light)}\n}\n\n.dark {\n${tokenToCSS(theme.dark)}\n}\n`;
+  return `:root {\n${tokenToCSS(theme.light)}\n}\n\n.dark {\n${tokenToCSS(theme.dark)}\n}\n\n${BASE_CSS}\n`;
 }
