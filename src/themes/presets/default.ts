@@ -20,7 +20,7 @@ const SHARED_STRUCTURAL = {
 
 export const defaultTheme: ThemeDefinition = {
   name: 'default',
-  displayName: 'Default',
+  displayName: 'Sudobility',
   description: 'Clean, modern design with blue primary colors',
   light: {
     background: '210 40% 98%',
