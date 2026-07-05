@@ -24,7 +24,7 @@ export const primerTheme: ThemeDefinition = {
   displayName: 'GitHub Primer',
   description: 'GitHub Primer — green primary, blue accent, iconic #0D1117 dark canvas',
   light: {
-    background: '0 0% 100%',
+    background: '210 29% 97%',
     foreground: '213.3 12.7% 13.9%',
     card: '0 0% 100%',
     cardForeground: '213.3 12.7% 13.9%',

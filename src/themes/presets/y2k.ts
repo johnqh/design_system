@@ -22,7 +22,7 @@ export const y2kTheme: ThemeDefinition = {
   displayName: 'Y2K',
   description: 'Early 2000s bubbly aesthetic with hot pink and baby blue',
   light: {
-    background: '0 0% 100%',
+    background: '300 40% 95%',
     foreground: '270 50% 15%',
     card: '300 50% 99%',
     cardForeground: '270 50% 15%',

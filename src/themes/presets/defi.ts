@@ -22,7 +22,7 @@ export const defiTheme: ThemeDefinition = {
   displayName: 'DeFi',
   description: 'Professional crypto-finance with monospace numbers and clean data presentation',
   light: {
-    background: '0 0% 100%',
+    background: '210 40% 97%',
     foreground: '230 25% 10%',
     card: '0 0% 100%',
     cardForeground: '230 25% 10%',

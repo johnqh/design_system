@@ -22,7 +22,7 @@ export const predictionMarketTheme: ThemeDefinition = {
   displayName: 'Prediction Market',
   description: 'Data-heavy, light-first design with green/red outcome indicators',
   light: {
-    background: '0 0% 100%',
+    background: '220 20% 96.5%',
     foreground: '0 0% 9%',
     card: '0 0% 100%',
     cardForeground: '0 0% 9%',

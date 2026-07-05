@@ -26,7 +26,7 @@ export const antDesignTheme: ThemeDefinition = {
   displayName: 'Ant Design',
   description: 'Ant Design v5 — daybreak blue #1677FF, 6px corners, system font',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96.1%',
     foreground: '0 0% 12.2%',
     card: '0 0% 100%',
     cardForeground: '0 0% 12.2%',

@@ -23,7 +23,7 @@ export const astryxTheme: ThemeDefinition = {
   displayName: 'Meta Astryx',
   description: 'Meta Astryx — Meta blue #0866FF, system font (approximated from Meta brand tokens)',
   light: {
-    background: '0 0% 100%',
+    background: '220 20% 96.5%',
     foreground: '216 8.2% 12%',
     card: '0 0% 100%',
     cardForeground: '216 8.2% 12%',

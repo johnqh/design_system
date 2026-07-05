@@ -23,7 +23,7 @@ export const baseWebTheme: ThemeDefinition = {
   displayName: 'Uber Base Web',
   description: 'Uber Base — black primary, #276EF1 accent, Uber Move, minimal geometric',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96.5%',
     foreground: '0 0% 0%',
     card: '0 0% 100%',
     cardForeground: '0 0% 0%',

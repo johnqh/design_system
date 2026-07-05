@@ -23,7 +23,7 @@ export const neoBrutalismTheme: ThemeDefinition = {
   displayName: 'Neo-Brutalism',
   description: 'Bold, raw aesthetic with thick borders, hard shadows, and sharp corners',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96%',
     foreground: '0 0% 0%',
     card: '0 0% 100%',
     cardForeground: '0 0% 0%',

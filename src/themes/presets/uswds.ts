@@ -23,7 +23,7 @@ export const uswdsTheme: ThemeDefinition = {
   displayName: 'U.S. Web Design System',
   description: 'U.S. Web Design System — primary blue #005EA2, Public Sans',
   light: {
-    background: '0 0% 100%',
+    background: '210 17% 97.6%',
     foreground: '0 0% 10.6%',
     card: '0 0% 100%',
     cardForeground: '0 0% 10.6%',

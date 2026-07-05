@@ -23,7 +23,7 @@ export const spectrumTheme: ThemeDefinition = {
   displayName: 'Adobe Spectrum',
   description: 'Adobe Spectrum — blue accent (#2680EB), Adobe Clean, neutral grays',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96.5%',
     foreground: '0 0% 13.3%',
     card: '0 0% 100%',
     cardForeground: '0 0% 13.3%',

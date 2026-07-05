@@ -22,7 +22,7 @@ export const govukTheme: ThemeDefinition = {
   displayName: 'GOV.UK Design System',
   description: 'GOV.UK Design System — green buttons, GDS Transport, square corners, yellow focus',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96.5%',
     foreground: '180 4.3% 4.5%',
     card: '0 0% 100%',
     cardForeground: '180 4.3% 4.5%',

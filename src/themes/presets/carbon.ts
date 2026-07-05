@@ -22,9 +22,9 @@ export const carbonTheme: ThemeDefinition = {
   displayName: 'IBM Carbon',
   description: 'IBM Carbon — Blue 60 (#0F62FE), IBM Plex Sans, sharp corners (radius 0)',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 95.7%',
     foreground: '0 0% 8.6%',
-    card: '0 0% 95.7%',
+    card: '0 0% 100%',
     cardForeground: '0 0% 8.6%',
     popover: '0 0% 100%',
     popoverForeground: '0 0% 8.6%',

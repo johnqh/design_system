@@ -23,7 +23,7 @@ export const appleTheme: ThemeDefinition = {
   displayName: 'Apple Human Interface Guidelines',
   description: 'Apple Human Interface Guidelines — iOS system colors, SF font, rounded corners',
   light: {
-    background: '0 0% 100%',
+    background: '240 24% 96.5%',
     foreground: '0 0% 0%',
     card: '0 0% 100%',
     cardForeground: '0 0% 0%',

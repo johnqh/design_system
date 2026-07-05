@@ -22,7 +22,7 @@ export const windows31Theme: ThemeDefinition = {
   displayName: 'Windows 3.1',
   description: 'Classic Windows 3.1 styling with gray chrome and hard-edged controls',
   light: {
-    background: '0 0% 75%',
+    background: '0 0% 71%',
     foreground: '0 0% 0%',
     card: '0 0% 75%',
     cardForeground: '0 0% 0%',

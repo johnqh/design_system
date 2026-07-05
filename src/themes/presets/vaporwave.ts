@@ -23,7 +23,7 @@ export const vaporwaveTheme: ThemeDefinition = {
   displayName: 'Vaporwave',
   description: 'Retro-futuristic pastel aesthetic with pink, teal, and purple tones',
   light: {
-    background: '320 30% 97%',
+    background: '320 30% 94%',
     foreground: '270 50% 15%',
     card: '300 25% 98%',
     cardForeground: '270 50% 15%',

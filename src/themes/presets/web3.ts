@@ -22,7 +22,7 @@ export const web3Theme: ThemeDefinition = {
   displayName: 'Web3',
   description: 'Crypto-native with gradient buttons, glassmorphic cards, and pill shapes',
   light: {
-    background: '0 0% 100%',
+    background: '210 40% 97%',
     foreground: '0 0% 7%',
     card: '0 0% 100%',
     cardForeground: '0 0% 7%',

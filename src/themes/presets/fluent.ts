@@ -22,7 +22,7 @@ export const fluentTheme: ThemeDefinition = {
   displayName: 'Microsoft Fluent 2',
   description: 'Microsoft Fluent 2 — communication blue, Segoe UI, 4px corners',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 97.6%',
     foreground: '0 0% 14.1%',
     card: '0 0% 100%',
     cardForeground: '0 0% 14.1%',

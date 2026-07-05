@@ -22,7 +22,7 @@ export const classicMacTheme: ThemeDefinition = {
   displayName: 'Apple Classic Macintosh',
   description: 'Classic Mac OS (System / Platinum) — 1-bit black & white, Chicago, square windows',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96%',
     foreground: '0 0% 0%',
     card: '0 0% 100%',
     cardForeground: '0 0% 0%',

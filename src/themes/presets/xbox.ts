@@ -23,9 +23,9 @@ export const xboxTheme: ThemeDefinition = {
   displayName: 'Microsoft Xbox',
   description: 'Microsoft Xbox — signature green #107C10 on near-black dashboard',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 96%',
     foreground: '0 0% 5.5%',
-    card: '0 0% 94.9%',
+    card: '0 0% 100%',
     cardForeground: '0 0% 5.5%',
     popover: '0 0% 94.9%',
     popoverForeground: '0 0% 5.5%',

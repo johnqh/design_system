@@ -22,7 +22,7 @@ export const notionTheme: ThemeDefinition = {
   displayName: 'Notion',
   description: 'Warm, content-focused design with minimal chrome',
   light: {
-    background: '0 0% 100%',
+    background: '48 12% 97.5%',
     foreground: '24 10% 10%',
     card: '0 0% 100%',
     cardForeground: '24 10% 10%',

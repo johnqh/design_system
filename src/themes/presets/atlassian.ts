@@ -23,7 +23,7 @@ export const atlassianTheme: ThemeDefinition = {
   displayName: 'Atlassian Design System',
   description: 'Atlassian Design System — Jira/Confluence blue, 3px corners',
   light: {
-    background: '0 0% 100%',
+    background: '220 23% 96.5%',
     foreground: '217.8 54% 19.6%',
     card: '0 0% 100%',
     cardForeground: '217.8 54% 19.6%',

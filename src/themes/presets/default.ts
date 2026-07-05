@@ -23,7 +23,7 @@ export const defaultTheme: ThemeDefinition = {
   displayName: 'Sudobility',
   description: 'Clean, modern design with blue primary colors',
   light: {
-    background: '210 40% 98%',
+    background: '210 40% 96.1%',
     foreground: '222.2 84% 4.9%',
     card: '0 0% 100%',
     cardForeground: '222.2 84% 4.9%',
@@ -53,7 +53,7 @@ export const defaultTheme: ThemeDefinition = {
   dark: {
     background: '222.2 84% 4.9%',
     foreground: '210 40% 98%',
-    card: '222.2 84% 4.9%',
+    card: '222.2 84% 9.9%',
     cardForeground: '210 40% 98%',
     popover: '222.2 84% 4.9%',
     popoverForeground: '210 40% 98%',

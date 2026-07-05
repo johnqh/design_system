@@ -23,7 +23,7 @@ export const lightningTheme: ThemeDefinition = {
   displayName: 'Salesforce Lightning',
   description: 'Salesforce Lightning (SLDS) — brand blue #0176D3, Salesforce Sans',
   light: {
-    background: '0 0% 100%',
+    background: '0 0% 95.3%',
     foreground: '0 0% 9.4%',
     card: '0 0% 100%',
     cardForeground: '0 0% 9.4%',

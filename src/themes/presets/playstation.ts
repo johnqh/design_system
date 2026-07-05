@@ -23,9 +23,9 @@ export const playstationTheme: ThemeDefinition = {
   displayName: 'Sony PlayStation',
   description: 'Sony PlayStation — deep blue #003791 with the △○✕□ shape colors',
   light: {
-    background: '0 0% 100%',
+    background: '220 30% 96.7%',
     foreground: '217.2 100% 28.4%',
-    card: '220 52.9% 96.7%',
+    card: '0 0% 100%',
     cardForeground: '217.2 100% 28.4%',
     popover: '220 52.9% 96.7%',
     popoverForeground: '217.2 100% 28.4%',
