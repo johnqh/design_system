@@ -85,7 +85,13 @@ export const swissTheme: ThemeDefinition = {
       base: 'border shadow-none',
     },
     input: {
-      base: 'rounded-none shadow-none uppercase tracking-[0.08em]',
+      // `border border-input` because the base semantic classes carry no border
+      // at all — they lean on `bg-muted` to separate the field from the page.
+      // On a light surface that fill is nearly the page colour, so the control
+      // had no edge and did not read as somewhere you could type. The palette
+      // already defines an `input` colour (80% light, 20% dark) for exactly
+      // this and nothing was using it; `card` above takes its border the same way.
+      base: 'border border-input rounded-none shadow-none uppercase tracking-[0.08em]',
     },
     badge: {
       base: 'rounded-none uppercase tracking-[0.16em] text-[0.68rem]',
