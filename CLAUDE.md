@@ -1,5 +1,10 @@
 # design_system - AI Development Guide
 
+> **Git policy — never auto-commit or auto-push.** Leave your work in the working tree.
+> Run `git commit`, `git push`, `gh pr create`, or `scripts/push_all.sh` **only when the user
+> explicitly asks in that turn**. Approval for an earlier change does not carry forward, and
+> finishing a task is not permission to commit it.
+
 ## Overview
 
 `@sudobility/design` is a standalone, framework-agnostic design system library providing design tokens, colors, typography, component variants, and utility functions for consistent UI development. It serves as the styling foundation for the 0xmail ecosystem (including `@johnqh/mail-box-components`) and supports both web (Tailwind CSS + tailwind-merge) and React Native (NativeWind) targets. All tokens are fully typed with `as const` for literal type inference and tree-shakeable named exports.
@@ -302,3 +307,7 @@ The `ui` object is defined inline in `src/index.ts`. Edit it directly there. It 
 - `eslint` ^9.38.0 + `@typescript-eslint/*` - linting
 - `prettier` ^3.6.2 - formatting
 - `jsdom` ^27.0.1 - test environment
+
+## Git Workflow
+
+- Do not use feature branches for code changes. Always stay on the current branch.
