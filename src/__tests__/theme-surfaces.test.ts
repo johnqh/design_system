@@ -30,7 +30,7 @@ describe('theme surfaces', () => {
       it(`${name}/${mode}: muted, secondary and accent differ from background`, () => {
         const scheme = theme[mode] as unknown as ThemeColors & Record<string, string>;
         const background = scheme.background;
-        const collapsed = SURFACES.filter(token => scheme[token] === background);
+        const collapsed = SURFACES.filter((token) => scheme[token] === background);
         expect(collapsed, `${collapsed.join(', ')} === background (${background})`).toEqual([]);
       });
     }
