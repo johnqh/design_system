@@ -32,7 +32,7 @@ export const polarisTheme: ThemeDefinition = {
     primaryForeground: '0 0% 100%',
     secondary: '0 0% 94.5%',
     secondaryForeground: '200 4.5% 13.1%',
-    muted: '240 5.9% 96.7%',
+    muted: '240 5.9% 92%',
     mutedForeground: '210 3.5% 44.3%',
     accent: '162.9 53.8% 94.9%',
     accentForeground: '165 100% 25.1%',

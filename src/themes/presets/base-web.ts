@@ -31,7 +31,7 @@ export const baseWebTheme: ThemeDefinition = {
     popoverForeground: '0 0% 0%',
     primary: '0 0% 0%',
     primaryForeground: '0 0% 100%',
-    secondary: '0 0% 96.5%',
+    secondary: '0 0% 93.3%',
     secondaryForeground: '0 0% 0%',
     muted: '0 0% 93.3%',
     mutedForeground: '0 0% 32.9%',

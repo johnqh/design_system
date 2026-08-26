@@ -32,7 +32,7 @@ export const carbonTheme: ThemeDefinition = {
     primaryForeground: '0 0% 100%',
     secondary: '0 0% 22.4%',
     secondaryForeground: '0 0% 100%',
-    muted: '0 0% 95.7%',
+    muted: '0 0% 91%',
     mutedForeground: '0 0% 32.2%',
     accent: '0 0% 87.8%',
     accentForeground: '0 0% 8.6%',
