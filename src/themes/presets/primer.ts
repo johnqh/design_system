@@ -49,6 +49,8 @@ export const primerTheme: ThemeDefinition = {
     border: '210 17.5% 84.3%',
     input: '210 17.5% 84.3%',
     ring: '212.4 92.1% 44.5%',
+    well: '210 29% 94%',
+    wellForeground: '213.3 12.7% 13.9%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -77,6 +79,8 @@ export const primerTheme: ThemeDefinition = {
     border: '212.3 11.9% 21.4%',
     input: '212.3 11.9% 21.4%',
     ring: '216.5 83.6% 52.2%',
+    well: '222.9 77.8% 2.0%',
+    wellForeground: '207.7 35.1% 92.7%',
     ...SHARED_STRUCTURAL,
   },
 };

@@ -48,6 +48,8 @@ export const nextstepTheme: ThemeDefinition = {
     border: '0 0% 0%',
     input: '0 0% 33.3%',
     ring: '0 0% 0%',
+    well: '0 0% 63.7%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const nextstepTheme: ThemeDefinition = {
     border: '0 0% 0%',
     input: '0 0% 41.6%',
     ring: '0 0% 100%',
+    well: '0 0% 19.7%',
+    wellForeground: '0 0% 91.8%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

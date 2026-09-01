@@ -48,6 +48,8 @@ export const gruvboxTheme: ThemeDefinition = {
     border: '40.4 38.2% 73.3%',
     input: '38.6 24.1% 65.9%',
     ring: '19.2 96.6% 34.9%',
+    well: '48.5 86.7% 85.2%',
+    wellForeground: '20 5.3% 22.4%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const gruvboxTheme: ThemeDefinition = {
     border: '21.8 7.4% 29.2%',
     input: '26.7 9.7% 36.5%',
     ring: '27 99.1% 54.7%',
+    well: '180 4.3% 12.4%',
+    wellForeground: '43.2 58.8% 81%',
     ...SHARED_STRUCTURAL,
   },
 };

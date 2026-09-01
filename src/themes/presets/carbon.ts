@@ -47,6 +47,8 @@ export const carbonTheme: ThemeDefinition = {
     border: '0 0% 87.8%',
     input: '0 0% 55.3%',
     ring: '219.2 99.2% 52.7%',
+    well: '0 0% 92.7%',
+    wellForeground: '0 0% 8.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const carbonTheme: ThemeDefinition = {
     border: '0 0% 22.4%',
     input: '0 0% 43.5%',
     ring: '0 0% 100%',
+    well: '0 0% 5.6%',
+    wellForeground: '0 0% 95.7%',
     ...SHARED_STRUCTURAL,
   },
 };

@@ -47,6 +47,8 @@ export const windows31Theme: ThemeDefinition = {
     border: '0 0% 0%',
     input: '0 0% 0%',
     ring: '226 100% 45%',
+    well: '0 0% 68%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const windows31Theme: ThemeDefinition = {
     border: '0 0% 100%',
     input: '0 0% 100%',
     ring: '220 100% 55%',
+    well: '0 0% 32%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

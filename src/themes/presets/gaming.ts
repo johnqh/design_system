@@ -47,6 +47,8 @@ export const gamingTheme: ThemeDefinition = {
     border: '220 13% 87%',
     input: '220 13% 87%',
     ring: '276 100% 64%',
+    well: '0 0% 93%',
+    wellForeground: '210 10% 15%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const gamingTheme: ThemeDefinition = {
     border: '220 13% 24%',
     input: '220 13% 24%',
     ring: '276 100% 64%',
+    well: '210 10% 12%',
+    wellForeground: '0 0% 95%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

@@ -48,6 +48,8 @@ export const solarizedTheme: ThemeDefinition = {
     border: '45.6 42.4% 88.4%',
     input: '180 6.9% 60.4%',
     ring: '204.8 69.4% 48.6%',
+    well: '43.8 86.7% 91.1%',
+    wellForeground: '196 12.9% 45.5%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const solarizedTheme: ThemeDefinition = {
     border: '192.2 80.8% 14.3%',
     input: '194.5 14.1% 40.2%',
     ring: '204.8 69.4% 48.6%',
+    well: '192.2 100% 7.6%',
+    wellForeground: '186.3 8.3% 55.1%',
     ...SHARED_STRUCTURAL,
   },
 };

@@ -48,6 +48,8 @@ export const uswdsTheme: ThemeDefinition = {
     border: '200 4.9% 88%',
     input: '216 8% 36.7%',
     ring: '210.1 100% 57.1%',
+    well: '210 17% 94.6%',
+    wellForeground: '0 0% 10.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const uswdsTheme: ThemeDefinition = {
     border: '216 8% 36.7%',
     input: '202.5 4.9% 67.8%',
     ring: '206.9 70.7% 67.8%',
+    well: '0 0% 7.6%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

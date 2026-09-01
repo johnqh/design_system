@@ -47,6 +47,8 @@ export const notionTheme: ThemeDefinition = {
     border: '30 10% 90%',
     input: '30 10% 90%',
     ring: '213 62% 48%',
+    well: '48 12% 94.5%',
+    wellForeground: '24 10% 10%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const notionTheme: ThemeDefinition = {
     border: '24 8% 22%',
     input: '24 8% 22%',
     ring: '213 58% 60%',
+    well: '24 8% 9%',
+    wellForeground: '30 15% 90%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

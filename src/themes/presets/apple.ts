@@ -48,6 +48,8 @@ export const appleTheme: ThemeDefinition = {
     border: '240 1.8% 78%',
     input: '240 1.8% 78%',
     ring: '211.3 100% 50%',
+    well: '240 24% 93.5%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const appleTheme: ThemeDefinition = {
     border: '240 1.8% 22.4%',
     input: '240 1.8% 22.4%',
     ring: '210.1 100% 52%',
+    well: '0 0% 5%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

@@ -47,6 +47,8 @@ export const materialTheme: ThemeDefinition = {
     border: '270 11.3% 79.2%',
     input: '270 11.3% 79.2%',
     ring: '256.4 34.4% 47.8%',
+    well: '292.5 100% 95.4%',
+    wellForeground: '264 8.5% 11.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const materialTheme: ThemeDefinition = {
     border: '264 6.8% 29%',
     input: '264 6.8% 29%',
     ring: '257.9 100% 86.9%',
+    well: '260 14.3% 5.2%',
+    wellForeground: '280 17% 89.6%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

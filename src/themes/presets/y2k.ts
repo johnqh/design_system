@@ -47,6 +47,8 @@ export const y2kTheme: ThemeDefinition = {
     border: '300 40% 88%',
     input: '300 40% 88%',
     ring: '330 81% 60%',
+    well: '300 40% 92%',
+    wellForeground: '270 50% 15%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const y2kTheme: ThemeDefinition = {
     border: '260 40% 22%',
     input: '260 40% 22%',
     ring: '330 81% 60%',
+    well: '260 60% 5%',
+    wellForeground: '300 30% 95%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

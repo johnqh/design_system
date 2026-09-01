@@ -48,6 +48,8 @@ export const draculaTheme: ThemeDefinition = {
     border: '49.3 31.1% 82.4%',
     input: '49.3 31.1% 82.4%',
     ring: '252.3 54% 53.9%',
+    well: '48 100% 93.1%',
+    wellForeground: '0 0% 12.2%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const draculaTheme: ThemeDefinition = {
     border: '231.8 13.9% 31%',
     input: '231.8 13.9% 31%',
     ring: '264.7 89.5% 77.6%',
+    well: '231.8 15.1% 15.1%',
+    wellForeground: '60 30% 96.1%',
     ...SHARED_STRUCTURAL,
   },
 };

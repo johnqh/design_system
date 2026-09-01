@@ -216,6 +216,7 @@ bun run format:check      # Check formatting without writing
 **A theme = data (`themes/types.ts`)**
 - `ThemeTokens` — color roles stored as **HSL channels without the `hsl()` wrapper** (e.g. `primary: '221.2 83.2% 53.3%'`) so Tailwind can apply `<alpha-value>` (this is what makes `bg-primary/10` work). Separate `light` and `dark` token sets.
 - Color roles follow the shadcn/Radix convention: `background/foreground`, `card`, `popover`, `primary`, `secondary`, `muted`, `accent`, `destructive`, plus state roles `success/warning/info`, and `border/input/ring`. Every surface role pairs with a `*Foreground` (text-on-surface).
+- `well`/`wellForeground` is the one addition to that convention: the plane *below* `background` (code wells, input troughs, table bodies) — GitHub Primer's `canvas.inset`. It is **optional** on `ThemeTokens` so themes authored before the role stay valid; `generateThemeCSS()` falls back to `background`. Every shipped preset defines it anyway, and `themes.test.ts` enforces that. It is named `well` rather than `inset` because a Tailwind color called `inset` generates `.ring-inset`, which shadows the built-in ring-style utility of the same name and silently overrides `--tw-ring-color`.
 - Structural tokens: `radius`, `borderWidth`, `shadowSm/Md/Lg`, `fontSans`, `fontMono`.
 - Optional `classOverrides` / `nativeClassOverrides` — extra Tailwind classes for structural signatures CSS vars can't express (e.g. neo-brutalism's thick borders + hard-offset shadows, glassmorphism's `backdrop-blur`, Material's pill buttons). `nativeClassOverrides` is used on React Native to drop web-only utilities like `backdrop-blur`.
 
@@ -229,7 +230,7 @@ bun run format:check      # Check formatting without writing
 - Structural themes append their `classOverrides.<component>.base` on top of the semantic classes via `themed()`.
 
 **Presets (`themes/presets/`, registered in `themes/registry.ts`)**
-- Aesthetic themes: `default, neo-brutalism, glassmorphism, cyberpunk, vaporwave, retro, y2k, swiss, linear, notion, web3, gaming, defi, prediction-market, gambling, terminal, windows-3.1, windows-2000`.
+- Aesthetic themes: `default, navy, radiograph, neo-brutalism, glassmorphism, cyberpunk, vaporwave, retro, y2k, swiss, linear, notion, web3, gaming, defi, prediction-market, gambling, terminal, windows-3.1, windows-2000`. `navy` (deep navy / neon violet / ice cyan) was extracted from `sanity-web` and `radiograph` (near-black film / bone type / exposure blue / amber flare) from `raidr_web`; both are dark-only, with identical `light` and `dark` token sets. `radiograph` is the one that inverts *sections* rather than the document, which it does by swapping `foreground` and `background` — no second token set needed.
 - Real-world design systems: `material` (Google Material 3), `fluent` (Microsoft Fluent 2), `carbon` (IBM), `polaris` (Shopify), `primer` (GitHub), `atlassian`, `spectrum` (Adobe), `base-web` (Uber Base), `lightning` (Salesforce), `ant-design`, `astryx` (Meta), `apple` (Apple HIG), `govuk` (GOV.UK), `uswds` (U.S. Web Design System).
 - Retro computers: `classic-mac` (Apple Classic Macintosh), `commodore-64` (Pepto VIC-II palette), `game-boy` (Nintendo Game Boy DMG), `amiga` (Amiga Workbench "Old Blue"), `nextstep` (NeXTSTEP grayscale "chiseled steel" — beveled `classOverrides`).
 - Game consoles / platforms: `playstation` (Sony), `xbox` (Microsoft), `nintendo` (Switch), `steam` (Valve).
@@ -275,7 +276,8 @@ Two approaches:
 2. Run `bun run build && bun run test`
 
 ### Adding a New Theme
-1. Create `src/themes/presets/<name>.ts` exporting a `ThemeDefinition` (copy `default.ts`). Fill `light`/`dark` `ThemeTokens` as **HSL channels** (`'H S% L%'`, no `hsl()` wrapper), the structural tokens (`radius`, `borderWidth`, `shadow*`, `font*`), and optional `classOverrides`/`nativeClassOverrides` for structural signatures CSS vars can't express.
+1. Create `src/themes/presets/<name>.ts` exporting a `ThemeDefinition` (copy `default.ts`). Fill `light`/`dark` `ThemeTokens` as **HSL channels** (`'H S% L%'`, no `hsl()` wrapper), the structural tokens (`radius`, `borderWidth`, `shadow*`, `font*`), and optional `classOverrides`/`nativeClassOverrides` for structural signatures CSS vars can't express. Include `well`/`wellForeground`; the tests require every preset to define them.
+   When a value must reproduce an existing rendered color, take it from a screenshot rather than from arithmetic — compositing two alpha layers in a browser rounds a step below the naive product, which is how `navy`'s `well` came out one unit off on first pass.
 2. Add the slug to the `ThemeName` union in `src/themes/types.ts`.
 3. Register it in `src/themes/registry.ts` (import + `themes` record) and re-export it from `src/themes/index.ts`.
 4. Run `bun run build && bun run test`

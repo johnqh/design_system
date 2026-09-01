@@ -48,6 +48,8 @@ export const xboxTheme: ThemeDefinition = {
     border: '0 0% 83.9%',
     input: '0 0% 83.9%',
     ring: '120 77.1% 27.5%',
+    well: '0 0% 93%',
+    wellForeground: '0 0% 5.5%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const xboxTheme: ThemeDefinition = {
     border: '0 0% 20%',
     input: '0 0% 20%',
     ring: '120 77.1% 27.5%',
+    well: '0 0% 2.5%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

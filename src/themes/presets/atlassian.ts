@@ -48,6 +48,8 @@ export const atlassianTheme: ThemeDefinition = {
     border: '222.9 12.3% 88.8%',
     input: '222.9 12.3% 88.8%',
     ring: '215 100% 61%',
+    well: '220 23% 93.5%',
+    wellForeground: '217.8 54% 19.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const atlassianTheme: ThemeDefinition = {
     border: '210 13.7% 20%',
     input: '210 13.8% 25.5%',
     ring: '215 100% 67.1%',
+    well: '210 12.1% 9.9%',
+    wellForeground: '210 21.7% 82%',
     ...SHARED_STRUCTURAL,
   },
 };

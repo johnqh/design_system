@@ -48,6 +48,8 @@ export const baseWebTheme: ThemeDefinition = {
     border: '0 0% 79.6%',
     input: '0 0% 79.6%',
     ring: '218.9 87.8% 54.9%',
+    well: '0 0% 93.5%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const baseWebTheme: ThemeDefinition = {
     border: '0 0% 20%',
     input: '0 0% 27.8%',
     ring: '219 88.5% 65.9%',
+    well: '0 0% 4.8%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

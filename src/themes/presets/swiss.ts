@@ -47,6 +47,8 @@ export const swissTheme: ThemeDefinition = {
     border: '0 0% 80%',
     input: '0 0% 80%',
     ring: '0 84% 50%',
+    well: '0 0% 93.5%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const swissTheme: ThemeDefinition = {
     border: '0 0% 20%',
     input: '0 0% 20%',
     ring: '0 84% 50%',
+    well: '0 0% 5%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

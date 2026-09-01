@@ -48,6 +48,8 @@ export const lightningTheme: ThemeDefinition = {
     border: '0 0% 78.8%',
     input: '0 0% 78.8%',
     ring: '207.6 100% 55.3%',
+    well: '0 0% 92.3%',
+    wellForeground: '0 0% 9.4%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const lightningTheme: ThemeDefinition = {
     border: '0 0% 26.7%',
     input: '0 0% 36.1%',
     ring: '207.6 100% 55.3%',
+    well: '0 0% 5.6%',
+    wellForeground: '0 0% 98.4%',
     ...SHARED_STRUCTURAL,
   },
 };

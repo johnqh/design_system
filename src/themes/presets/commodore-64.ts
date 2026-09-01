@@ -47,6 +47,8 @@ export const commodore64Theme: ThemeDefinition = {
     border: '248.3 51.5% 66.9%',
     input: '249.7 37% 53.9%',
     ring: '281.1 37.4% 38.2%',
+    well: '249.1 60.5% 82.1%',
+    wellForeground: '249.6 50.3% 31.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const commodore64Theme: ThemeDefinition = {
     border: '249.7 37% 53.9%',
     input: '249.7 37% 53.9%',
     ring: '103.1 46.4% 67.1%',
+    well: '249.6 50.3% 28.6%',
+    wellForeground: '246.9 53% 74.1%',
     ...SHARED_STRUCTURAL,
   },
 };

@@ -47,6 +47,8 @@ export const polarisTheme: ThemeDefinition = {
     border: '210 7.1% 89%',
     input: '210 4.5% 56.9%',
     ring: '214.1 100% 41.4%',
+    well: '240 5.9% 93.7%',
+    wellForeground: '200 4.5% 13.1%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const polarisTheme: ThemeDefinition = {
     border: '0 0% 26.7%',
     input: '0 0% 38%',
     ring: '213.8 100% 67.6%',
+    well: '0 0% 7.2%',
+    wellForeground: '0 0% 89%',
     ...SHARED_STRUCTURAL,
   },
 };

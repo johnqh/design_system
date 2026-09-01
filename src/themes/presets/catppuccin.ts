@@ -48,6 +48,8 @@ export const catppuccinTheme: ThemeDefinition = {
     border: '222.9 15.9% 82.7%',
     input: '225 13.6% 76.9%',
     ring: '219.9 91.5% 53.9%',
+    well: '220 21.7% 88.8%',
+    wellForeground: '233.8 16% 35.5%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const catppuccinTheme: ThemeDefinition = {
     border: '236.8 16.2% 22.9%',
     input: '234.3 13.2% 31.2%',
     ring: '217.2 91.9% 75.9%',
+    well: '240 23.1% 8.6%',
+    wellForeground: '226.2 63.9% 88%',
     ...SHARED_STRUCTURAL,
   },
 };

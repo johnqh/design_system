@@ -48,6 +48,8 @@ export const nordTheme: ThemeDefinition = {
     border: '218.8 27.9% 88%',
     input: '218.8 27.9% 88%',
     ring: '213.1 32% 52.2%',
+    well: '217.5 26.7% 91.1%',
+    wellForeground: '220 16.4% 21.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const nordTheme: ThemeDefinition = {
     border: '220 16.5% 35.7%',
     input: '220 16.8% 31.6%',
     ring: '193.3 43.4% 67.5%',
+    well: '220 16.4% 18.6%',
+    wellForeground: '218.8 27.9% 88%',
     ...SHARED_STRUCTURAL,
   },
 };

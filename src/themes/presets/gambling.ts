@@ -47,6 +47,8 @@ export const gamblingTheme: ThemeDefinition = {
     border: '0 0% 85%',
     input: '0 0% 85%',
     ring: '36 90% 55%',
+    well: '0 0% 94%',
+    wellForeground: '0 0% 5%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const gamblingTheme: ThemeDefinition = {
     border: '0 0% 16%',
     input: '0 0% 16%',
     ring: '36 90% 55%',
+    well: '0 0% 2%',
+    wellForeground: '0 0% 95%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

@@ -47,6 +47,8 @@ export const gameBoyTheme: ThemeDefinition = {
     border: '120 57.7% 13.9%',
     input: '120 57.7% 13.9%',
     ring: '120 34.2% 28.6%',
+    well: '71.4 85.2% 36.8%',
+    wellForeground: '120 57.7% 13.9%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const gameBoyTheme: ThemeDefinition = {
     border: '71.4 85.2% 39.8%',
     input: '72.6 84% 36.7%',
     ring: '72.6 84% 36.7%',
+    well: '120 57.7% 10.9%',
+    wellForeground: '71.4 85.2% 39.8%',
     ...SHARED_STRUCTURAL,
   },
 };

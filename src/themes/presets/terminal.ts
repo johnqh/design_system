@@ -47,6 +47,8 @@ export const terminalTheme: ThemeDefinition = {
     border: '120 22% 28%',
     input: '120 22% 28%',
     ring: '120 65% 72%',
+    well: '120 20% 5%',
+    wellForeground: '120 60% 75%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const terminalTheme: ThemeDefinition = {
     border: '120 18% 22%',
     input: '120 18% 22%',
     ring: '120 65% 72%',
+    well: '120 24% 1%',
+    wellForeground: '120 60% 72%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

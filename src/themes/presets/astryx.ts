@@ -48,6 +48,8 @@ export const astryxTheme: ThemeDefinition = {
     border: '220 6.5% 82%',
     input: '220 6.5% 82%',
     ring: '217.2 100% 51.6%',
+    well: '220 20% 93.5%',
+    wellForeground: '216 8.2% 12%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const astryxTheme: ThemeDefinition = {
     border: '210 3.1% 25.1%',
     input: '210 3.1% 25.1%',
     ring: '214.4 76% 51%',
+    well: '210 4% 6.8%',
+    wellForeground: '222.9 14.9% 90.8%',
     ...SHARED_STRUCTURAL,
   },
 };

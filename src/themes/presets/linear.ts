@@ -47,6 +47,8 @@ export const linearTheme: ThemeDefinition = {
     border: '220 13% 91%',
     input: '220 13% 91%',
     ring: '239 84% 67%',
+    well: '220 14% 93%',
+    wellForeground: '224 71% 4%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const linearTheme: ThemeDefinition = {
     border: '240 15% 14%',
     input: '240 15% 14%',
     ring: '239 84% 74%',
+    well: '240 33% 2%',
+    wellForeground: '226 64% 96%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

@@ -50,6 +50,8 @@ export const cyberpunkTheme: ThemeDefinition = {
     border: '220 17% 25%',
     input: '220 17% 25%',
     ring: '188 95% 43%',
+    well: '220 17% 11%',
+    wellForeground: '180 7% 88%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -78,6 +80,8 @@ export const cyberpunkTheme: ThemeDefinition = {
     border: '220 17% 18%',
     input: '220 17% 18%',
     ring: '188 95% 43%',
+    well: '220 17% 4%',
+    wellForeground: '180 7% 88%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

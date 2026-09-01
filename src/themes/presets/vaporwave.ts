@@ -48,6 +48,8 @@ export const vaporwaveTheme: ThemeDefinition = {
     border: '300 20% 88%',
     input: '300 20% 88%',
     ring: '298 90% 64%',
+    well: '320 30% 91%',
+    wellForeground: '270 50% 15%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const vaporwaveTheme: ThemeDefinition = {
     border: '270 30% 20%',
     input: '270 30% 20%',
     ring: '298 90% 70%',
+    well: '270 50% 5%',
+    wellForeground: '300 20% 92%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

@@ -48,6 +48,8 @@ export const glassmorphismTheme: ThemeDefinition = {
     border: '220 13% 91%',
     input: '220 13% 91%',
     ring: '263 70% 50%',
+    well: '220 20% 94%',
+    wellForeground: '224 71% 4%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const glassmorphismTheme: ThemeDefinition = {
     border: '215 28% 17%',
     input: '215 28% 17%',
     ring: '263 70% 58%',
+    well: '224 71% 1%',
+    wellForeground: '210 20% 98%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

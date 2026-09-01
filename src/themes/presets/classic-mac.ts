@@ -47,6 +47,8 @@ export const classicMacTheme: ThemeDefinition = {
     border: '0 0% 0%',
     input: '0 0% 0%',
     ring: '0 0% 0%',
+    well: '0 0% 93%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const classicMacTheme: ThemeDefinition = {
     border: '0 0% 53.3%',
     input: '0 0% 53.3%',
     ring: '0 0% 100%',
+    well: '0 0% 7.2%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

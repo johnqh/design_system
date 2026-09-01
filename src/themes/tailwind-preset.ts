@@ -57,6 +57,10 @@ export function createTailwindPreset(_theme?: ThemeDefinition) {
             DEFAULT: 'hsl(var(--card) / <alpha-value>)',
             foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
           },
+          well: {
+            DEFAULT: 'hsl(var(--well) / <alpha-value>)',
+            foreground: 'hsl(var(--well-foreground) / <alpha-value>)',
+          },
           success: {
             DEFAULT: 'hsl(var(--success) / <alpha-value>)',
             foreground: 'hsl(var(--success-foreground) / <alpha-value>)',
@@ -144,6 +148,10 @@ export function createNativeWindPreset(theme: ThemeDefinition) {
           card: {
             DEFAULT: hsl(light.card),
             foreground: hsl(light.cardForeground),
+          },
+          well: {
+            DEFAULT: hsl(light.well ?? light.background),
+            foreground: hsl(light.wellForeground ?? light.foreground),
           },
           success: {
             DEFAULT: hsl(light.success),

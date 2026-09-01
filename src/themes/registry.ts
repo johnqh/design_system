@@ -6,6 +6,8 @@
 
 import type { ThemeDefinition, ThemeName } from './types';
 import { defaultTheme } from './presets/default';
+import { navyTheme } from './presets/navy';
+import { radiographTheme } from './presets/radiograph';
 import { neoBrutalismTheme } from './presets/neo-brutalism';
 import { glassmorphismTheme } from './presets/glassmorphism';
 import { cyberpunkTheme } from './presets/cyberpunk';
@@ -58,6 +60,8 @@ import { gruvboxTheme } from './presets/gruvbox';
 
 export const themes: Record<ThemeName, ThemeDefinition> = {
   default: defaultTheme,
+  navy: navyTheme,
+  radiograph: radiographTheme,
   'neo-brutalism': neoBrutalismTheme,
   glassmorphism: glassmorphismTheme,
   cyberpunk: cyberpunkTheme,

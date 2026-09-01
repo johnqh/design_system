@@ -48,6 +48,8 @@ export const steamTheme: ThemeDefinition = {
     border: '211.6 27.5% 86.5%',
     input: '211.6 27.5% 86.5%',
     ring: '203.3 72.8% 37.5%',
+    well: '216 33.3% 94.1%',
+    wellForeground: '213.1 34.9% 16.3%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const steamTheme: ThemeDefinition = {
     border: '213.8 36.4% 25.9%',
     input: '203.7 45.3% 35.1%',
     ring: '202 86.6% 67.8%',
+    well: '213.1 34.9% 13.3%',
+    wellForeground: '206.4 28.7% 82.9%',
     ...SHARED_STRUCTURAL,
   },
 };

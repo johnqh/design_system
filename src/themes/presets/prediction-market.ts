@@ -47,6 +47,8 @@ export const predictionMarketTheme: ThemeDefinition = {
     border: '0 0% 90%',
     input: '0 0% 90%',
     ring: '234 89% 60%',
+    well: '220 20% 93.5%',
+    wellForeground: '0 0% 9%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const predictionMarketTheme: ThemeDefinition = {
     border: '0 0% 16%',
     input: '0 0% 16%',
     ring: '234 89% 66%',
+    well: '0 0% 4%',
+    wellForeground: '0 0% 95%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

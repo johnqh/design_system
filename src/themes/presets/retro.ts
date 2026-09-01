@@ -49,6 +49,8 @@ export const retroTheme: ThemeDefinition = {
     border: '30 25% 82%',
     input: '30 25% 82%',
     ring: '38 92% 44%',
+    well: '48 100% 93%',
+    wellForeground: '20 14% 20%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -77,6 +79,8 @@ export const retroTheme: ThemeDefinition = {
     border: '20 10% 22%',
     input: '20 10% 22%',
     ring: '38 92% 50%',
+    well: '20 14% 7%',
+    wellForeground: '40 30% 90%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

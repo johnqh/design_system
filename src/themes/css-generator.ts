@@ -34,6 +34,10 @@ function tokenToCSS(tokens: ThemeTokens): string {
     `  --border: ${tokens.border};`,
     `  --input: ${tokens.input};`,
     `  --ring: ${tokens.ring};`,
+    // `well` is optional: themes authored before the role existed fall back to
+    // the page background, so `bg-well` always resolves to a real color.
+    `  --well: ${tokens.well ?? tokens.background};`,
+    `  --well-foreground: ${tokens.wellForeground ?? tokens.foreground};`,
     `  --radius: ${tokens.radius};`,
     `  --border-width: ${tokens.borderWidth};`,
     `  --shadow-sm: ${tokens.shadowSm};`,

@@ -48,6 +48,8 @@ export const nintendoTheme: ThemeDefinition = {
     border: '0 0% 85.5%',
     input: '0 0% 85.5%',
     ring: '355.3 100% 45.1%',
+    well: '0 0% 89.2%',
+    wellForeground: '0 0% 17.6%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const nintendoTheme: ThemeDefinition = {
     border: '0 0% 29%',
     input: '0 0% 29%',
     ring: '355.3 100% 45.1%',
+    well: '0 0% 14.6%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

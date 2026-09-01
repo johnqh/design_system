@@ -47,6 +47,8 @@ export const defiTheme: ThemeDefinition = {
     border: '230 15% 90%',
     input: '230 15% 90%',
     ring: '168 62% 50%',
+    well: '210 40% 94%',
+    wellForeground: '230 25% 10%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const defiTheme: ThemeDefinition = {
     border: '230 20% 20%',
     input: '230 20% 20%',
     ring: '168 62% 50%',
+    well: '230 30% 7%',
+    wellForeground: '0 0% 95%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

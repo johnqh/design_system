@@ -47,6 +47,8 @@ export const fluentTheme: ThemeDefinition = {
     border: '0 0% 82%',
     input: '0 0% 82%',
     ring: '207.9 85.3% 40%',
+    well: '0 0% 94.6%',
+    wellForeground: '0 0% 14.1%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const fluentTheme: ThemeDefinition = {
     border: '0 0% 25.5%',
     input: '0 0% 25.5%',
     ring: '210 89.7% 62%',
+    well: '0 0% 9.2%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

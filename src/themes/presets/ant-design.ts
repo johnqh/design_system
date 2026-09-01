@@ -51,6 +51,8 @@ export const antDesignTheme: ThemeDefinition = {
     border: '0 0% 85.1%',
     input: '0 0% 85.1%',
     ring: '215 100% 54.3%',
+    well: '0 0% 93.1%',
+    wellForeground: '0 0% 12.2%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -79,6 +81,8 @@ export const antDesignTheme: ThemeDefinition = {
     border: '0 0% 25.9%',
     input: '0 0% 25.9%',
     ring: '215.2 81.8% 47.5%',
+    well: '0 0% 4.8%',
+    wellForeground: '0 0% 87.8%',
     ...SHARED_STRUCTURAL,
   },
 };

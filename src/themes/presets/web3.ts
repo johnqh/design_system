@@ -47,6 +47,8 @@ export const web3Theme: ThemeDefinition = {
     border: '0 0% 90%',
     input: '0 0% 90%',
     ring: '328 100% 54%',
+    well: '210 40% 94%',
+    wellForeground: '0 0% 7%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const web3Theme: ThemeDefinition = {
     border: '0 0% 16%',
     input: '0 0% 16%',
     ring: '328 100% 54%',
+    well: '0 0% 4%',
+    wellForeground: '0 0% 95%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

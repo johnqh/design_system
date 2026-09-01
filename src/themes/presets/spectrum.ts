@@ -48,6 +48,8 @@ export const spectrumTheme: ThemeDefinition = {
     border: '0 0% 83.5%',
     input: '0 0% 69.4%',
     ring: '212.6 83.1% 53.5%',
+    well: '0 0% 93.5%',
+    wellForeground: '0 0% 13.3%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const spectrumTheme: ThemeDefinition = {
     border: '0 0% 29%',
     input: '0 0% 35.3%',
     ring: '211.8 86% 57.8%',
+    well: '0 0% 8.4%',
+    wellForeground: '0 0% 89%',
     ...SHARED_STRUCTURAL,
   },
 };

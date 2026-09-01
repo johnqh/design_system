@@ -48,6 +48,8 @@ export const neoBrutalismTheme: ThemeDefinition = {
     border: '0 0% 0%',
     input: '0 0% 0%',
     ring: '48 96% 53%',
+    well: '0 0% 93%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const neoBrutalismTheme: ThemeDefinition = {
     border: '0 0% 100%',
     input: '0 0% 100%',
     ring: '48 96% 53%',
+    well: '0 0% 4%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

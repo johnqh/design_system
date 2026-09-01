@@ -47,6 +47,8 @@ export const windows2000Theme: ThemeDefinition = {
     border: '210 7% 47%',
     input: '210 7% 47%',
     ring: '214 74% 40%',
+    well: '210 17% 81%',
+    wellForeground: '210 10% 12%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const windows2000Theme: ThemeDefinition = {
     border: '214 10% 52%',
     input: '214 10% 52%',
     ring: '214 68% 52%',
+    well: '214 13% 21%',
+    wellForeground: '210 18% 92%',
     ...SHARED_STRUCTURAL,
   },
   classOverrides: {

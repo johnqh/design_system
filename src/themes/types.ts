@@ -41,6 +41,17 @@ export interface ThemeTokens {
   border: string;
   input: string;
   ring: string;
+  /**
+   * Recessed surface: the plane that sits *below* `background` — code wells,
+   * input troughs, table bodies. GitHub Primer calls this `canvas.inset`;
+   * the role is named `well` here because a Tailwind color named `inset`
+   * would shadow the built-in `ring-inset` utility.
+   * Optional so themes authored before this role stay valid; when absent the
+   * CSS generator falls back to `background`, rendering the plane flat rather
+   * than broken.
+   */
+  well?: string;
+  wellForeground?: string;
   // Structural tokens
   radius: string;
   borderWidth: string;
@@ -74,6 +85,8 @@ export interface ThemeDefinition {
 
 export type ThemeName =
   | 'default'
+  | 'navy'
+  | 'radiograph'
   | 'neo-brutalism'
   | 'glassmorphism'
   | 'retro'

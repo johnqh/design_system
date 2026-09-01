@@ -47,6 +47,8 @@ export const amigaTheme: ThemeDefinition = {
     border: '0 0% 0%',
     input: '0 0% 0%',
     ring: '210 100% 33.3%',
+    well: '0 0% 59.7%',
+    wellForeground: '0 0% 0%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const amigaTheme: ThemeDefinition = {
     border: '0 0% 100%',
     input: '0 0% 100%',
     ring: '32 100% 50%',
+    well: '240 100% 30.3%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

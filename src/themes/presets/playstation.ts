@@ -48,6 +48,8 @@ export const playstationTheme: ThemeDefinition = {
     border: '220 33.3% 87.6%',
     input: '220 33.3% 87.6%',
     ring: '217.2 100% 28.4%',
+    well: '220 30% 93.7%',
+    wellForeground: '217.2 100% 28.4%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -76,6 +78,8 @@ export const playstationTheme: ThemeDefinition = {
     border: '221.5 38.2% 26.7%',
     input: '221.5 38.2% 26.7%',
     ring: '207.8 100% 41%',
+    well: '225 44.4% 4.1%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };

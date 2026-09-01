@@ -47,6 +47,8 @@ export const govukTheme: ThemeDefinition = {
     border: '204 3.3% 70.4%',
     input: '180 4.3% 4.5%',
     ring: '52 100% 50%',
+    well: '0 0% 93.5%',
+    wellForeground: '180 4.3% 4.5%',
     ...SHARED_STRUCTURAL,
   },
   dark: {
@@ -75,6 +77,8 @@ export const govukTheme: ThemeDefinition = {
     border: '200 5.1% 45.9%',
     input: '0 0% 100%',
     ring: '52 100% 50%',
+    well: '180 4.3% 1.5%',
+    wellForeground: '0 0% 100%',
     ...SHARED_STRUCTURAL,
   },
 };
