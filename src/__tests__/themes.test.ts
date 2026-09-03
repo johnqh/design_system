@@ -131,10 +131,9 @@ describe('well (recessed surface) role', () => {
         const delta = lightness(theme[mode].well!) - lightness(theme[mode].background);
         // Direction is not fixed: a ground already at pure black can only be
         // lifted, so what matters is that the plane is separable at all.
-        expect(
-          Math.abs(delta),
-          `${theme.name}.${mode} well vs background`
-        ).toBeGreaterThanOrEqual(1.5);
+        expect(Math.abs(delta), `${theme.name}.${mode} well vs background`).toBeGreaterThanOrEqual(
+          1.5
+        );
         expect(lightness(theme[mode].well!)).toBeGreaterThanOrEqual(0);
         expect(lightness(theme[mode].well!)).toBeLessThanOrEqual(100);
       }
