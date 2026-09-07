@@ -206,6 +206,14 @@ const ui = {
       surface: tc('bg-card', 'bg-white dark:bg-gray-800'),
       subtle: tc('bg-muted', 'bg-gray-50 dark:bg-gray-900'),
       muted: tc('bg-muted', 'bg-gray-100 dark:bg-gray-700'),
+      /**
+       * Recessed plane that sits *below* `background` — sidebars, master lists,
+       * code wells, table bodies. Every theme defines its own `well` for light
+       * and dark, so a panel painted with this reads as set back from the page
+       * in whichever theme and mode is active. Pair with `surface` (raised) for
+       * the two halves of a master-detail split.
+       */
+      well: tc('bg-well', 'bg-gray-50 dark:bg-gray-900'),
       overlay: 'bg-black/50 dark:bg-black/70',
     };
   },

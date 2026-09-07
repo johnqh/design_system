@@ -46,4 +46,17 @@ describe('theme surfaces', () => {
       });
     }
   }
+
+  // And the recessed plane. `well` is optional in the type — the CSS generator
+  // falls back to `background` — but a theme that ships it and lets it collapse
+  // onto the page silently flattens every sidebar and master list that uses it.
+  for (const [name, theme] of entries) {
+    for (const mode of ['light', 'dark'] as const) {
+      it(`${name}/${mode}: well differs from background when defined`, () => {
+        const scheme = theme[mode] as unknown as Record<string, string>;
+        if (scheme.well === undefined) return;
+        expect(scheme.well).not.toBe(scheme.background);
+      });
+    }
+  }
 });
