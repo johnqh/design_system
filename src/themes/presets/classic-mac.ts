@@ -40,7 +40,7 @@ export const classicMacTheme: ThemeDefinition = {
     destructiveForeground: '0 0% 100%',
     success: '120 100% 23.3%',
     successForeground: '0 0% 100%',
-    warning: '35.9 100% 35.1%',
+    warning: '35.9 100% 31.8%',
     warningForeground: '0 0% 100%',
     info: '240 100% 40%',
     infoForeground: '0 0% 100%',
