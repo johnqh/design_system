@@ -23,7 +23,14 @@ export const defaultTheme: ThemeDefinition = {
   displayName: 'Sudobility',
   description: 'Clean, modern design with blue primary colors',
   light: {
-    background: '210 40% 96.1%',
+    // The light neutrals sit close to white on purpose. `muted` is what
+    // AppPageLayout paints for its `default` background (via
+    // `ui.background.subtle` -> `bg-muted`), so it is the colour of a whole
+    // page: at the old 92.5% every app read as grey rather than white. The
+    // ramp still steps card (100%) > background (98%) > muted (96.5%) >
+    // well (93.1%), which keeps raised, base, subtle and recessed surfaces
+    // distinguishable — see theme-surfaces.test.ts.
+    background: '210 40% 98%',
     foreground: '222.2 84% 4.9%',
     card: '0 0% 100%',
     cardForeground: '222.2 84% 4.9%',
@@ -33,7 +40,7 @@ export const defaultTheme: ThemeDefinition = {
     primaryForeground: '210 40% 98%',
     secondary: '210 40% 92.5%',
     secondaryForeground: '222.2 47.4% 11.2%',
-    muted: '210 40% 92.5%',
+    muted: '210 40% 96.5%',
     mutedForeground: '215.4 16.3% 43.4%',
     accent: '210 40% 92.5%',
     accentForeground: '222.2 47.4% 11.2%',
