@@ -8,6 +8,13 @@
 // === PRIMARY EXPORTS ===
 export { colors } from './tokens/colors';
 export { designTokens } from './tokens/tokens';
+export {
+  touchTargets,
+  DEFAULT_TOUCH_TARGET,
+  minTouchTarget,
+  touchTargetClasses,
+} from './tokens/touch-targets';
+export type { TouchTargetPlatform } from './tokens/touch-targets';
 export { textVariants } from './core/typography';
 export { variants } from './core/variants';
 export { SimpleVariants, createVariants, createQuickVariants } from './core/simple-variants';
