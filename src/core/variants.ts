@@ -567,46 +567,57 @@ const variants: VariantsType = {
   },
 
   // Input variants
+  //
+  // Every one states `border`, the width, and not only a border *colour*.
+  // A colour with no width draws nothing: the legacy strings named
+  // `border-gray-300` and relied on something else to supply the line, and
+  // the semantic ones named no border at all and leaned on `bg-muted` to
+  // part the field from the page. Where the two fills are close — Swiss has
+  // them at 96% and 96.5% — and nothing else supplies a line, which is every
+  // React Native app, a field had no edge and no fill to tell it from the
+  // text around it: nothing on the screen said "type here". A theme that
+  // wants a different edge still says so in its `input` override, which is
+  // appended after these and wins.
   input: {
     default: () =>
       themed(
         'input',
-        'bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+        'border border-input bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:border-ring focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        'border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
     search: () =>
       themed(
         'input',
-        'bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+        'border border-input bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:border-ring focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        'border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
     error: () =>
       themed(
         'input',
-        'bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2',
-        'bg-gray-50 dark:bg-gray-800 border-red-300 dark:border-red-700 text-gray-900 dark:text-gray-100 focus:border-red-500 focus:ring-red-500 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+        'border border-destructive bg-muted text-foreground block w-full rounded-lg px-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:border-destructive focus:bg-background focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2',
+        'border bg-gray-50 dark:bg-gray-800 border-red-300 dark:border-red-700 text-gray-900 dark:text-gray-100 focus:border-red-500 focus:ring-red-500 block w-full rounded-md px-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
 
     // Sizes
     small: () =>
       themed(
         'input',
-        'bg-muted text-foreground block w-full rounded-lg px-2 py-1.5 text-xs placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+        'border border-input bg-muted text-foreground block w-full rounded-lg px-2 py-1.5 text-xs placeholder:text-muted-foreground transition-colors duration-200 focus:border-ring focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        'border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-2 py-1.5 text-xs placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
     large: () =>
       themed(
         'input',
-        'bg-muted text-foreground block w-full rounded-lg px-4 py-3 text-base placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-4 py-3 text-base placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+        'border border-input bg-muted text-foreground block w-full rounded-lg px-4 py-3 text-base placeholder:text-muted-foreground transition-colors duration-200 focus:border-ring focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        'border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md px-4 py-3 text-base placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
 
     // Special variants
     withIcon: () =>
       themed(
         'input',
-        'bg-muted text-foreground block w-full rounded-lg pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-        'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+        'border border-input bg-muted text-foreground block w-full rounded-lg pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground transition-colors duration-200 focus:border-ring focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        'border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 block w-full rounded-md pl-10 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
       ),
   },
 
