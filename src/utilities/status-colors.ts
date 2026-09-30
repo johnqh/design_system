@@ -9,6 +9,8 @@
  * Status indicator colors for dots, icons, and small visual elements
  * Maps to colors.semantic.state.* from the design system
  */
+import { themedAuto } from '../core/variants';
+
 export const statusIndicatorColors = {
   success: 'bg-green-500',
   error: 'bg-red-500',
@@ -47,10 +49,14 @@ export const cardVariantColors = {
 } as const;
 
 /**
- * Get card variant color classes
+ * Get card variant color classes.
+ *
+ * The active theme's, where there is one: the table above is the un-themed
+ * palette, and returned as written it drew a white card with a grey border
+ * under every theme — navy in the dark, whatever the theme's surface was.
  */
 export function getCardVariantColors(variant: keyof typeof cardVariantColors): string {
-  return cardVariantColors[variant];
+  return themedAuto(cardVariantColors[variant]);
 }
 
 /**

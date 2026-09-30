@@ -51,3 +51,15 @@ describe('gradients', () => {
     expect(GRADIENT_CLASSES.gradientText).toContain('bg-clip-text');
   });
 });
+
+describe('card colours follow the active theme', () => {
+  it('answers semantic tokens once a theme is configured', async () => {
+    const { configureTheme } = await import('../themes/configure');
+    const { defaultTheme } = await import('../themes');
+    const { getCardVariantColors } = await import('../utilities/status-colors');
+    configureTheme(defaultTheme);
+    const bordered = getCardVariantColors('bordered');
+    expect(bordered).toContain('bg-card');
+    expect(bordered).not.toMatch(/gray-\d|bg-white|dark:/);
+  });
+});
