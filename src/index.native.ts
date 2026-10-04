@@ -65,6 +65,8 @@ export {
   getClassOverride,
 } from './themes/configure';
 export { generateThemeCSS } from './themes/css-generator';
+export { getThemeColor, hslTokenToCss } from './themes/theme-color';
+export type { ThemeColorToken } from './themes/theme-color';
 export { createTailwindPreset, createNativeWindPreset } from './themes/tailwind-preset';
 
 // === PURE TYPESCRIPT UTILITIES ===

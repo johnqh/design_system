@@ -22,6 +22,18 @@ let isNative = false;
 export function configureTheme(theme: ThemeDefinition, options?: { native?: boolean }): void {
   activeTheme = theme;
   isNative = options?.native ?? false;
+  for (const listener of themeListeners) listener();
+}
+
+const themeListeners: Array<() => void> = [];
+
+/**
+ * Run `listener` whenever `configureTheme()` is called. For exported string
+ * constants, which cannot be getters: their module re-assigns them here so
+ * the live binding answers for the active theme.
+ */
+export function onThemeConfigured(listener: () => void): void {
+  themeListeners.push(listener);
 }
 
 /** Get the currently active theme, or null if none configured. */

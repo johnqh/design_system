@@ -9,16 +9,16 @@
  * Status indicator colors for dots, icons, and small visual elements
  * Maps to colors.semantic.state.* from the design system
  */
-import { themedAuto } from '../core/variants';
+import { themedClasses } from '../core/themed-classes';
 
-export const statusIndicatorColors = {
+export const statusIndicatorColors = themedClasses({
   success: 'bg-green-500',
   error: 'bg-red-500',
   warning: 'bg-orange-500',
   attention: 'bg-amber-500',
   info: 'bg-blue-500',
   neutral: 'bg-gray-500',
-} as const;
+} as const);
 
 /**
  * Get status indicator color class
@@ -33,7 +33,7 @@ export function getStatusIndicatorColor(
  * Card/Container variant colors with backgrounds, borders, and text
  * Aligned with colors.component.card.* and colors.component.alert.* from design system
  */
-export const cardVariantColors = {
+export const cardVariantColors = themedClasses({
   default: 'bg-white dark:bg-gray-800',
   bordered: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
   elevated: 'bg-white dark:bg-gray-800 shadow-md',
@@ -46,24 +46,21 @@ export const cardVariantColors = {
     'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300',
   error:
     'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-900 dark:text-red-300',
-} as const;
+} as const);
 
 /**
- * Get card variant color classes.
- *
- * The active theme's, where there is one: the table above is the un-themed
- * palette, and returned as written it drew a white card with a grey border
- * under every theme — navy in the dark, whatever the theme's surface was.
+ * Get card variant color classes — the active theme's, where there is one
+ * (the table answers for the theme at the time it is read).
  */
 export function getCardVariantColors(variant: keyof typeof cardVariantColors): string {
-  return themedAuto(cardVariantColors[variant]);
+  return cardVariantColors[variant];
 }
 
 /**
  * Callout/Alert gradient backgrounds with text colors
  * Gradient patterns aligned with design system
  */
-export const calloutVariantColors = {
+export const calloutVariantColors = themedClasses({
   primary: {
     background:
       'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20',
@@ -99,7 +96,7 @@ export const calloutVariantColors = {
       'bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20',
     text: 'text-purple-700 dark:text-purple-300',
   },
-} as const;
+} as const);
 
 /**
  * Get callout variant colors (background and text)
@@ -115,27 +112,38 @@ export function getCalloutVariantColors(variant: keyof typeof calloutVariantColo
  * Section badge colors with gradients and icon colors
  * Brand gradient patterns from design system
  */
-export const sectionBadgeColors = {
-  default: {
-    container:
-      'bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 text-blue-600 backdrop-blur-sm',
-    icon: 'text-blue-600',
-  },
-  premium: {
-    container:
-      'bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 text-blue-600 backdrop-blur-sm',
-    icon: 'text-blue-600',
-  },
-  primary: {
-    container:
-      'bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 text-blue-600 backdrop-blur-sm',
-    icon: 'text-blue-600',
-  },
-  light: {
-    container: 'bg-white/20 border border-white/30 text-white backdrop-blur-sm',
-    icon: 'text-white',
-  },
-} as const;
+export const sectionBadgeColors = themedClasses(
+  {
+    default: {
+      container:
+        'bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 text-blue-600 backdrop-blur-sm',
+      icon: 'text-blue-600',
+    },
+    premium: {
+      container:
+        'bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 text-blue-600 backdrop-blur-sm',
+      icon: 'text-blue-600',
+    },
+    primary: {
+      container:
+        'bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 text-blue-600 backdrop-blur-sm',
+      icon: 'text-blue-600',
+    },
+    light: {
+      container: 'bg-white/20 border border-white/30 text-white backdrop-blur-sm',
+      icon: 'text-white',
+    },
+  } as const,
+  {
+    // For use on a brand surface: white there becomes the brand's own
+    // foreground, which is not white under every theme.
+    light: {
+      container:
+        'bg-primary-foreground/20 border border-primary-foreground/30 text-primary-foreground backdrop-blur-sm',
+      icon: 'text-primary-foreground',
+    },
+  }
+);
 
 /**
  * Get section badge colors (container and icon)

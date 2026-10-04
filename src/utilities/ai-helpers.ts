@@ -16,6 +16,7 @@
  */
 
 import { cn } from './utils';
+import { themedClasses } from '../core/themed-classes';
 import type {
   TypedVariantConfig,
   VariantResolutionOptions,
@@ -30,7 +31,7 @@ import type {
  * `colors.semantic` or `colors.component` from `tokens/colors`.
  * May be removed in a future major version.
  */
-export const SEMANTIC_COLOR_MAP = {
+export const SEMANTIC_COLOR_MAP = themedClasses({
   // State colors
   success: 'text-green-700 dark:text-green-300',
   error: 'text-red-700 dark:text-red-300',
@@ -46,7 +47,7 @@ export const SEMANTIC_COLOR_MAP = {
   muted: 'text-gray-500 dark:text-gray-500',
   emphasis: 'text-gray-900 dark:text-gray-100',
   subtle: 'text-gray-600 dark:text-gray-400',
-} as const;
+} as const);
 
 /**
  * Common UI patterns with descriptive names for AI understanding.
@@ -55,7 +56,7 @@ export const SEMANTIC_COLOR_MAP = {
  * object from `index.ts` or `UI_CONSTANTS` from `ui-constants.ts`.
  * May be removed in a future major version.
  */
-export const UI_PATTERNS = {
+export const UI_PATTERNS = themedClasses({
   // Layout patterns
   centeredContainer: 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8',
   fullWidthSection: 'w-full py-8 sm:py-12 lg:py-16',
@@ -79,7 +80,7 @@ export const UI_PATTERNS = {
   componentSpacing: 'space-y-4',
   tightSpacing: 'space-y-2',
   looseSpacing: 'space-y-8',
-} as const;
+} as const);
 
 /**
  * Component size multipliers for consistent scaling.

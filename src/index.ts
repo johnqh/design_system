@@ -221,6 +221,7 @@ const ui = {
        * the two halves of a master-detail split.
        */
       well: tc('bg-well', 'bg-gray-50 dark:bg-gray-900'),
+      // A scrim: black under every theme, since it only dims what is behind it.
       overlay: 'bg-black/50 dark:bg-black/70',
     };
   },
@@ -464,6 +465,8 @@ export {
   getClassOverride,
 } from './themes/configure';
 export { generateThemeCSS } from './themes/css-generator';
+export { getThemeColor, hslTokenToCss } from './themes/theme-color';
+export type { ThemeColorToken } from './themes/theme-color';
 export { createTailwindPreset, createNativeWindPreset } from './themes/tailwind-preset';
 
 // === LEGACY NAMED EXPORTS ===

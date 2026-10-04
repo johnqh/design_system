@@ -27,6 +27,10 @@ export type { ThemeTokens, ThemeDefinition, ThemeClassOverrides, ThemeName } fro
 // Configuration
 export { configureTheme, getActiveTheme, getActiveThemeName, getClassOverride } from './configure';
 
+// Theme colours as colour strings (React Native props, SVG, canvas)
+export { getThemeColor, hslTokenToCss } from './theme-color';
+export type { ThemeColorToken } from './theme-color';
+
 // CSS Generation
 export { generateThemeCSS } from './css-generator';
 

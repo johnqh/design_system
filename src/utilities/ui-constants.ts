@@ -1,8 +1,12 @@
 /**
  * Centralized UI constants for consistent styling across the application
+ *
+ * Both tables answer for the active theme when read (see `themedClasses`).
  */
 
-export const UI_CONSTANTS = {
+import { themedClasses } from '../core/themed-classes';
+
+const LEGACY_UI_CONSTANTS = {
   // Common layout classes
   layout: {
     section: 'py-20',
@@ -97,29 +101,33 @@ export const UI_CONSTANTS = {
   },
 } as const;
 
+export const UI_CONSTANTS = themedClasses(LEGACY_UI_CONSTANTS);
+
+const LEGACY_UI_PATTERNS = {
+  // Section with container
+  section: `${LEGACY_UI_CONSTANTS.layout.section} ${LEGACY_UI_CONSTANTS.layout.container}`,
+  sectionCentered: `${LEGACY_UI_CONSTANTS.layout.section} ${LEGACY_UI_CONSTANTS.layout.container} text-center`,
+
+  // Interactive card
+  interactiveCard: `${LEGACY_UI_CONSTANTS.card.interactive} ${LEGACY_UI_CONSTANTS.transition.base} ${LEGACY_UI_CONSTANTS.hover.lift}`,
+
+  // Primary button
+  primaryButton: `${LEGACY_UI_CONSTANTS.button.md} ${LEGACY_UI_CONSTANTS.transition.base} ${LEGACY_UI_CONSTANTS.hover.scale} ${LEGACY_UI_CONSTANTS.focus.ring}`,
+
+  // Hero text
+  heroText: `${LEGACY_UI_CONSTANTS.typography.hero} leading-tight`,
+
+  // Feature grid
+  featureGrid: `${LEGACY_UI_CONSTANTS.grid.responsive4}`,
+
+  // Icon container
+  iconContainer: `${LEGACY_UI_CONSTANTS.icon.lg} rounded-full flex items-center justify-center`,
+} as const;
+
 /**
  * Commonly used class combinations
  */
-export const UI_PATTERNS = {
-  // Section with container
-  section: `${UI_CONSTANTS.layout.section} ${UI_CONSTANTS.layout.container}`,
-  sectionCentered: `${UI_CONSTANTS.layout.section} ${UI_CONSTANTS.layout.container} text-center`,
-
-  // Interactive card
-  interactiveCard: `${UI_CONSTANTS.card.interactive} ${UI_CONSTANTS.transition.base} ${UI_CONSTANTS.hover.lift}`,
-
-  // Primary button
-  primaryButton: `${UI_CONSTANTS.button.md} ${UI_CONSTANTS.transition.base} ${UI_CONSTANTS.hover.scale} ${UI_CONSTANTS.focus.ring}`,
-
-  // Hero text
-  heroText: `${UI_CONSTANTS.typography.hero} leading-tight`,
-
-  // Feature grid
-  featureGrid: `${UI_CONSTANTS.grid.responsive4}`,
-
-  // Icon container
-  iconContainer: `${UI_CONSTANTS.icon.lg} rounded-full flex items-center justify-center`,
-} as const;
+export const UI_PATTERNS = themedClasses(LEGACY_UI_PATTERNS);
 
 /**
  * Utility function to get UI constant by path

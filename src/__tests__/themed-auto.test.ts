@@ -28,8 +28,9 @@ describe('toSemantic — palette → token mapping', () => {
   });
 
   it('maps text-white to the surface foreground on solid brand backgrounds', () => {
+    // The darker hover shade becomes a step down in opacity, so hover still shows.
     expect(toSemantic('bg-blue-600 text-white hover:bg-blue-700')).toBe(
-      'bg-primary text-primary-foreground hover:bg-primary'
+      'bg-primary text-primary-foreground hover:bg-primary/90'
     );
     expect(toSemantic('bg-red-600 text-white')).toBe('bg-destructive text-destructive-foreground');
     // opacity/tinted brand bg keeps text-white untouched (not a solid surface)

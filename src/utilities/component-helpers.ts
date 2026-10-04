@@ -3,6 +3,14 @@
  */
 
 import { cn } from './utils';
+import { toSemantic } from '../core/variants';
+import { getActiveTheme, onThemeConfigured } from '../themes/configure';
+
+/** The legacy classes, or their semantic form while a theme is active. */
+function themedLegacy(legacy: string, semantic?: string): string {
+  if (!getActiveTheme()) return legacy;
+  return semantic ?? toSemantic(legacy);
+}
 
 export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ComponentVariant =
@@ -53,9 +61,21 @@ export function getSizeClasses<T extends keyof typeof sizeClasses>(
 /**
  * Focus ring classes
  */
-export const focusRing = 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2';
-export const focusVisible =
+const LEGACY_FOCUS_RING = 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2';
+const LEGACY_FOCUS_VISIBLE =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2';
+
+/*
+  Strings, not getters, so they cannot ask for the theme when read; they are
+  re-assigned when a theme is configured instead. A value copied out before
+  that keeps the legacy colour — read them at render time.
+*/
+export let focusRing = themedLegacy(LEGACY_FOCUS_RING);
+export let focusVisible = themedLegacy(LEGACY_FOCUS_VISIBLE);
+onThemeConfigured(() => {
+  focusRing = themedLegacy(LEGACY_FOCUS_RING);
+  focusVisible = themedLegacy(LEGACY_FOCUS_VISIBLE);
+});
 
 /**
  * Common transition classes
@@ -110,7 +130,24 @@ export function buttonVariant(variant: ComponentVariant): string {
     ghost: 'bg-transparent hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800',
   };
 
-  return cn(base, variants[variant], transitions.default, focusVisible);
+  const semantic = {
+    default: 'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
+    secondary:
+      'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70',
+    destructive:
+      'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80',
+    outline:
+      'border border-input bg-transparent text-foreground hover:bg-accent active:bg-accent/80',
+    ghost: 'bg-transparent text-foreground hover:bg-accent active:bg-accent/80',
+  };
+
+  return cn(
+    base,
+    themedLegacy(variants[variant], semantic[variant]),
+    transitions.default,
+    focusVisible
+  );
 }
 
 /**
@@ -128,7 +165,7 @@ export function inputVariant(variant: 'default' | 'error' | 'success' = 'default
       'border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400',
   };
 
-  return cn(base, variants[variant], focusRing, transitions.colors);
+  return themedLegacy(cn(base, variants[variant], focusRing, transitions.colors));
 }
 
 /**
@@ -143,7 +180,7 @@ export function cardVariant(variant: 'default' | 'bordered' | 'elevated' = 'defa
     elevated: `${base} shadow-md`,
   };
 
-  return variants[variant];
+  return themedLegacy(variants[variant]);
 }
 
 /**
@@ -176,5 +213,5 @@ export function textVariant(
     primary: 'text-blue-600 dark:text-blue-400',
   };
 
-  return cn(sizes[size], weights[weight], colors[color]);
+  return cn(sizes[size], weights[weight], themedLegacy(colors[color]));
 }

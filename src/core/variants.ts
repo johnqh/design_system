@@ -24,6 +24,14 @@ function themed(
 }
 
 /**
+ * {@link themed} for a variant written only in legacy palette classes: the
+ * semantic form is derived with {@link toSemantic}.
+ */
+function themedFrom(component: keyof ThemeClassOverrides | null, legacy: string): string {
+  return getActiveTheme() ? themed(component, toSemantic(legacy), legacy) : legacy;
+}
+
+/**
  * Palette-class → semantic-token map used by {@link toSemantic}. Converts the
  * legacy hardcoded Tailwind palette classes of the advanced component variants
  * (modal, navigation, table, notifications, …) into theme-aware tokens that
@@ -109,16 +117,131 @@ const SEMANTIC_TOKEN_MAP: Record<string, string> = {
 };
 
 /**
+ * Tailwind hue family → the semantic token that plays its role. Brand-like
+ * hues become `primary`; the status hues become their status token.
+ */
+const HUE_TOKEN: Record<string, string> = {
+  blue: 'primary',
+  indigo: 'primary',
+  violet: 'primary',
+  purple: 'primary',
+  fuchsia: 'primary',
+  sky: 'info',
+  cyan: 'info',
+  teal: 'success',
+  emerald: 'success',
+  green: 'success',
+  lime: 'success',
+  yellow: 'warning',
+  amber: 'warning',
+  orange: 'warning',
+  red: 'destructive',
+  rose: 'destructive',
+  pink: 'destructive',
+};
+const NEUTRAL_HUES = new Set(['slate', 'gray', 'zinc', 'neutral', 'stone']);
+
+const PALETTE_UTILITY =
+  /^(bg|text|border(?:-[trblxyse])?|divide|ring|ring-offset|outline|from|via|to|fill|stroke|placeholder|shadow|decoration|accent|caret)-([a-z]+)-(\d{2,3})$/;
+
+/** Semantic token for a neutral (gray-family) utility at a given shade. */
+function neutralToken(prop: string, shade: number): string {
+  if (prop === 'bg') {
+    if (shade <= 200) return 'bg-muted';
+    if (shade <= 300) return 'bg-border';
+    if (shade <= 600) return 'bg-muted-foreground';
+    if (shade <= 800) return 'bg-card';
+    return 'bg-background';
+  }
+  if (prop === 'text' || prop === 'decoration' || prop === 'caret') {
+    return `${prop}-${shade >= 300 && shade <= 600 ? 'muted-foreground' : 'foreground'}`;
+  }
+  if (prop === 'placeholder') return 'placeholder-muted-foreground';
+  if (prop.startsWith('border') || prop === 'divide' || prop === 'outline') {
+    return `${prop}-${shade === 300 || shade === 400 ? 'input' : 'border'}`;
+  }
+  if (prop === 'ring') return 'ring-ring';
+  if (prop === 'ring-offset') return 'ring-offset-background';
+  if (prop === 'shadow') return 'shadow-foreground';
+  // from / via / to / fill / stroke / accent
+  if (shade <= 300) return `${prop}-muted`;
+  if (shade <= 600) return `${prop}-muted-foreground`;
+  return `${prop}-foreground`;
+}
+
+/** Semantic token for a coloured utility: the hue's token, tinted by shade. */
+function hueToken(prop: string, token: string, shade: number, hasOpacity: boolean): string {
+  if (prop === 'ring' && token === 'primary') return 'ring-ring';
+  const surface = prop === 'bg' || prop === 'from' || prop === 'via' || prop === 'to';
+  const edge = prop.startsWith('border') || prop === 'divide' || prop === 'outline';
+  if (hasOpacity || (!surface && !edge)) return `${prop}-${token}`;
+  // A gradient that ran between two hues keeps some depth on one token.
+  if ((prop === 'via' || prop === 'to') && shade > 300)
+    return `${prop}-${token}/${prop === 'via' ? 90 : 80}`;
+  // Light tints (50–300) were washes behind content; keep them washes.
+  if (shade <= 50) return `${prop}-${token}/10`;
+  if (shade <= 100) return `${prop}-${token}/15`;
+  if (shade <= 200) return `${prop}-${token}/${edge ? 40 : 20}`;
+  if (shade <= 300) return `${prop}-${token}/${edge ? 60 : 30}`;
+  return `${prop}-${token}`;
+}
+
+/**
+ * Semantic replacement for any palette utility the explicit map does not
+ * list, or undefined when the utility is not a palette colour.
+ */
+function paletteToSemantic(bare: string, hasOpacity: boolean): string | undefined {
+  // White and black: a white surface is the theme's card, any other white the
+  // page background; black is the foreground. `text-white` (decided by its
+  // surface, below) and `bg-black` (a scrim) are left alone.
+  const mono = /^(.+)-(white|black)$/.exec(bare);
+  if (mono) {
+    const [, prop, shade] = mono;
+    if (!PALETTE_UTILITY.test(`${prop}-gray-500`)) return undefined;
+    if (shade === 'white') {
+      if (prop === 'text') return undefined;
+      return prop === 'bg' ? 'bg-card' : `${prop}-background`;
+    }
+    return prop === 'bg' ? undefined : `${prop}-foreground`;
+  }
+  const m = PALETTE_UTILITY.exec(bare);
+  if (!m) return undefined;
+  const [, prop, hue, shadeStr] = m;
+  const shade = Number(shadeStr);
+  if (NEUTRAL_HUES.has(hue)) return neutralToken(prop, shade);
+  // A gradient's pink stop is decoration (blue → purple → pink), not an error.
+  const decorative = (prop === 'from' || prop === 'via' || prop === 'to') && hue !== 'red';
+  const token = decorative && HUE_TOKEN[hue] === 'destructive' ? 'primary' : HUE_TOKEN[hue];
+  return token ? hueToken(prop, token, shade, hasOpacity) : undefined;
+}
+
+/**
  * Convert a legacy palette class string into theme-aware tokens. Splits on
  * whitespace, drops `dark:` variants (tokens are already light/dark aware), and
  * maps each palette utility — preserving variant prefixes (`hover:`, `focus:`,
- * `before:`, …) and opacity suffixes (`/50`) — to its semantic token. Unmapped
- * utilities (layout, spacing, `bg-black` scrims, `text-white`) pass through.
+ * `before:`, …) and opacity suffixes (`/50`) — to its semantic token: the
+ * explicit map first, then a rule by hue family and shade for everything
+ * else. Non-colour utilities (layout, spacing, `bg-black` scrims,
+ * `text-white`) pass through.
  */
 export function toSemantic(classes: string): string {
-  let out = classes
-    .split(/\s+/)
-    .filter((t) => t.length > 0 && !t.startsWith('dark:'))
+  const tokens = classes.split(/\s+/).filter((t) => t.length > 0 && !t.startsWith('dark:'));
+
+  // White text on a dark neutral surface (tooltips, inverted panels) is an
+  // inverted surface, not a dark card: mapping the surface to `bg-background`
+  // would leave white text on a light page. Invert the theme's pair instead.
+  const invertedBg = /^bg-(?:(?:slate|gray|zinc|neutral|stone)-(?:700|800|900|950)|black)$/;
+  if (tokens.includes('text-white') && tokens.some((t) => invertedBg.test(t))) {
+    return toSemantic(
+      tokens
+        .map((t) =>
+          invertedBg.test(t) ? 'bg-foreground' : t === 'text-white' ? 'text-background' : t
+        )
+        .join(' ')
+    );
+  }
+
+  let out = tokens
     .map((token) => {
       const colonIdx = token.lastIndexOf(':');
       const prefix = colonIdx >= 0 ? token.slice(0, colonIdx + 1) : '';
@@ -126,16 +249,28 @@ export function toSemantic(classes: string): string {
       const slashIdx = util.indexOf('/');
       const bare = slashIdx >= 0 ? util.slice(0, slashIdx) : util;
       const opacity = slashIdx >= 0 ? util.slice(slashIdx) : '';
-      const mapped = SEMANTIC_TOKEN_MAP[bare];
+      const mapped = SEMANTIC_TOKEN_MAP[bare] ?? paletteToSemantic(bare, opacity !== '');
       if (!mapped) return token;
-      return prefix + (opacity && !mapped.includes('/') ? mapped + opacity : mapped);
+      if (!opacity) {
+        // Legacy hover/active states stepped a shade darker; one token has no
+        // darker shade, so step its opacity down instead (as `button` does).
+        const solidFill = /^(?:bg|from)-(?:primary|secondary|destructive|success|warning|info)$/;
+        if (solidFill.test(mapped) && /(?:^|:)(hover|active):$/.test(prefix)) {
+          return prefix + mapped + (prefix.endsWith('active:') ? '/80' : '/90');
+        }
+        return prefix + mapped;
+      }
+      // An explicit opacity wins over the tint the mapping chose.
+      const base = mapped.includes('/') ? mapped.slice(0, mapped.indexOf('/')) : mapped;
+      return prefix + base + opacity;
     })
     .join(' ');
 
   // On a solid brand surface, map `text-white` to that surface's foreground
   // token so text stays legible under themes with light primaries (e.g. Game
-  // Boy). Only applies to solid (non-opacity) brand backgrounds.
-  const solid = out.match(/\bbg-(primary|destructive|success|warning)\b(?!\/)/);
+  // Boy). Only applies to solid (non-opacity) brand backgrounds, including a
+  // gradient's starting stop.
+  const solid = out.match(/\b(?:bg|from)-(primary|destructive|success|warning|info)\b(?!\/)/);
   if (solid && /\btext-white\b/.test(out)) {
     out = out.replace(/\btext-white\b/g, `text-${solid[1]}-foreground`);
   }
@@ -382,11 +517,20 @@ const variants: VariantsType = {
 
     gradient: {
       primary: () =>
-        'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200',
+        themedFrom(
+          'button',
+          'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200'
+        ),
       secondary: () =>
-        'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-900 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200',
+        themedFrom(
+          'button',
+          'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-900 border-transparent focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200'
+        ),
       success: () =>
-        'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200',
+        themedFrom(
+          'button',
+          'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200'
+        ),
     },
 
     // Web3 specific button variants
@@ -398,7 +542,10 @@ const variants: VariantsType = {
           'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200'
         ),
       connect: () =>
-        'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200',
+        themedFrom(
+          'button',
+          'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-transparent shadow-lg hover:shadow-xl focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200'
+        ),
       disconnect: () =>
         themed(
           'button',
@@ -513,7 +660,7 @@ const variants: VariantsType = {
         'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium'
       ),
 
-    // Web3 specific
+    // Web3 specific — chain brand colours, intentionally NOT theme-aware (brand identity)
     ethereum: () =>
       'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
     solana: () =>
@@ -785,6 +932,7 @@ const variants: VariantsType = {
   // Modal/Dialog variants
   modal: {
     // Overlay variants
+    // A scrim: black under every theme, since it only dims what is behind it.
     overlay: {
       default: () =>
         'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4',
@@ -1530,8 +1678,12 @@ const variants: VariantsType = {
     // Notification badges
     badge: {
       container: () => 'relative inline-block',
+      // Under a theme the text colour comes with the fill below (each fill's
+      // own foreground), since white is not legible on every theme's fills.
       badge: () =>
-        themedAuto(
+        themed(
+          null,
+          'absolute -top-1 -right-1 text-xs rounded-full flex items-center justify-center font-medium',
           'absolute -top-1 -right-1 text-white text-xs rounded-full flex items-center justify-center font-medium'
         ),
 
@@ -1541,10 +1693,10 @@ const variants: VariantsType = {
       large: () => 'h-5 w-5 text-xs',
 
       // Color variants
-      primary: () => themedAuto('bg-blue-500'),
-      success: () => themedAuto('bg-green-500'),
-      error: () => themedAuto('bg-red-500'),
-      warning: () => themedAuto('bg-yellow-500'),
+      primary: () => themed(null, 'bg-primary text-primary-foreground', 'bg-blue-500'),
+      success: () => themed(null, 'bg-success text-success-foreground', 'bg-green-500'),
+      error: () => themed(null, 'bg-destructive text-destructive-foreground', 'bg-red-500'),
+      warning: () => themed(null, 'bg-warning text-warning-foreground', 'bg-yellow-500'),
 
       // Special states
       dot: () => 'w-2 h-2 rounded-full animate-pulse',
@@ -1610,6 +1762,7 @@ const variants: VariantsType = {
 
     // Loading states
     loading: {
+      // A scrim: black under every theme, since it only dims what is behind it.
       overlay: () => 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50',
       container: () => themedAuto('bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm mx-4'),
       content: () => 'text-center',
@@ -1963,6 +2116,7 @@ const variants: VariantsType = {
 
       // Overlay positions
       overlay: () => 'fixed inset-0 z-50',
+      // A scrim: black under every theme, since it only dims what is behind it.
       backdrop: () => 'fixed inset-0 bg-black bg-opacity-50 z-40',
     },
 
@@ -2030,6 +2184,7 @@ const variants: VariantsType = {
       mainContent: () => 'flex-1 flex flex-col overflow-hidden',
 
       // Modal patterns
+      // A scrim: black under every theme, since it only dims what is behind it.
       modalOverlay: () =>
         'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50',
       modalContent: () =>
@@ -2425,6 +2580,7 @@ const variants: VariantsType = {
   overlays: {
     // Modal/Dialog overlays
     modal: {
+      // A scrim: black under every theme, since it only dims what is behind it.
       backdrop: () =>
         'fixed inset-0 z-40 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-all duration-300 ease-out',
       backdropEntering: () => 'opacity-0',
@@ -2599,6 +2755,7 @@ const variants: VariantsType = {
 
     // Drawer/Sidebar overlays
     drawer: {
+      // A scrim: black under every theme, since it only dims what is behind it.
       backdrop: () =>
         'fixed inset-0 z-40 bg-black/50 dark:bg-black/70 transition-opacity duration-300',
       container: () =>
@@ -2645,6 +2802,7 @@ const variants: VariantsType = {
 
     // Sheet overlays (bottom sheets, action sheets)
     sheet: {
+      // A scrim: black under every theme, since it only dims what is behind it.
       backdrop: () =>
         'fixed inset-0 z-40 bg-black/50 dark:bg-black/70 transition-opacity duration-300',
       container: () => 'fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out',
@@ -3151,7 +3309,7 @@ const variants: VariantsType = {
         high: () => themedAuto('text-gray-900 dark:text-gray-100'),
         medium: () => themedAuto('text-gray-700 dark:text-gray-300'),
         low: () => themedAuto('text-gray-600 dark:text-gray-400'),
-        inverse: () => themedAuto('text-white dark:text-gray-900'),
+        inverse: () => themed(null, 'text-background', 'text-white dark:text-gray-900'),
       },
 
       // High contrast backgrounds

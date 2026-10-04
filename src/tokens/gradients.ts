@@ -1,8 +1,13 @@
 /**
  * Centralized gradient utilities for consistent styling across the application
+ *
+ * Both tables answer for the active theme when read: the palette below while
+ * none is configured, the theme's own colours (primary, muted, …) once one is.
  */
 
-export const GRADIENTS = {
+import { themedClasses } from '../core/themed-classes';
+
+const LEGACY_GRADIENTS = {
   // Background gradients
   backgrounds: {
     main: 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900',
@@ -37,34 +42,38 @@ export const GRADIENTS = {
   },
 } as const;
 
+export const GRADIENTS = themedClasses(LEGACY_GRADIENTS);
+
+const LEGACY_GRADIENT_CLASSES = {
+  // Primary action button with full styling
+  primaryButton: `${LEGACY_GRADIENTS.buttons.primary} text-white shadow-lg hover:shadow-xl transition-all duration-200`,
+
+  // Hero button with enhanced styling
+  heroButton: `${LEGACY_GRADIENTS.buttons.primary} text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25`,
+
+  // Header button styling
+  headerButton: `${LEGACY_GRADIENTS.buttons.primary} text-white px-4 py-2 rounded-md font-medium transition-all duration-200 transform hover:scale-105 shadow-lg`,
+
+  // Page background with common layout
+  pageLayout: `min-h-screen ${LEGACY_GRADIENTS.backgrounds.page}`,
+
+  // Page background with dark mode support
+  pageLayoutDark: `min-h-screen ${LEGACY_GRADIENTS.backgrounds.pageDark}`,
+
+  // Text gradient styling
+  gradientText: `${LEGACY_GRADIENTS.text.primary} bg-clip-text text-transparent`,
+  gradientTextSecondary: `${LEGACY_GRADIENTS.text.secondary} bg-clip-text text-transparent`,
+} as const;
+
 /**
  * Common gradient combinations with additional styling
  */
-export const GRADIENT_CLASSES = {
-  // Primary action button with full styling
-  primaryButton: `${GRADIENTS.buttons.primary} text-white shadow-lg hover:shadow-xl transition-all duration-200`,
-
-  // Hero button with enhanced styling
-  heroButton: `${GRADIENTS.buttons.primary} text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25`,
-
-  // Header button styling
-  headerButton: `${GRADIENTS.buttons.primary} text-white px-4 py-2 rounded-md font-medium transition-all duration-200 transform hover:scale-105 shadow-lg`,
-
-  // Page background with common layout
-  pageLayout: `min-h-screen ${GRADIENTS.backgrounds.page}`,
-
-  // Page background with dark mode support
-  pageLayoutDark: `min-h-screen ${GRADIENTS.backgrounds.pageDark}`,
-
-  // Text gradient styling
-  gradientText: `${GRADIENTS.text.primary} bg-clip-text text-transparent`,
-  gradientTextSecondary: `${GRADIENTS.text.secondary} bg-clip-text text-transparent`,
-} as const;
+export const GRADIENT_CLASSES = themedClasses(LEGACY_GRADIENT_CLASSES);
 
 /**
  * Utility function to get gradient class by key
  */
-export const getGradient = (category: keyof typeof GRADIENTS, variant: string): string => {
+export const getGradient = (category: keyof typeof LEGACY_GRADIENTS, variant: string): string => {
   const gradientCategory = GRADIENTS[category] as Record<string, string>;
   return gradientCategory[variant] || '';
 };

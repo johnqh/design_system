@@ -21,6 +21,9 @@
  * ```
  */
 
+import { getActiveTheme } from '../themes/configure';
+import { toSemantic } from './variants';
+
 /**
  * Function that returns a CSS class string for styling components.
  *
@@ -81,6 +84,8 @@ export interface VariantConfig {
 export class SimpleVariants {
   private variants: VariantConfig;
   private fallbacks: Map<string, string> = new Map();
+  /** Keys still holding a built-in fallback (themed on read), not a caller's. */
+  private builtInFallbacks: Set<string> = new Set();
 
   /**
    * Creates a new SimpleVariants instance.
@@ -127,6 +132,7 @@ export class SimpleVariants {
       'border border-gray-300 px-3 py-2 rounded focus:ring-2 focus:ring-blue-500'
     );
     this.fallbacks.set('badge.default', 'bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm');
+    for (const key of this.fallbacks.keys()) this.builtInFallbacks.add(key);
   }
 
   /**
@@ -394,7 +400,12 @@ export class SimpleVariants {
    */
   private getFallback(component: string, variant: string): string {
     const key = `${component}.${variant}`;
-    const fallback = this.fallbacks.get(key) || this.fallbacks.get(`${component}.default`) || '';
+    const foundKey = this.fallbacks.has(key) ? key : `${component}.default`;
+    const raw = this.fallbacks.get(foundKey) || '';
+    // The built-in fallbacks are written in the legacy palette; a caller's own
+    // fallback is returned as given.
+    const fallback =
+      raw && getActiveTheme() && this.builtInFallbacks.has(foundKey) ? toSemantic(raw) : raw;
 
     if (!fallback) {
       this.logStructuredError(
@@ -539,6 +550,7 @@ export class SimpleVariants {
    */
   addFallback(key: string, classes: string): void {
     this.fallbacks.set(key, classes);
+    this.builtInFallbacks.delete(key);
   }
 
   /**
