@@ -14,12 +14,7 @@ function themedLegacy(legacy: string, semantic?: string): string {
 
 export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ComponentVariant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'destructive'
-  | 'outline'
-  | 'ghost';
+  'default' | 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost';
 
 /**
  * Size mappings for different component types

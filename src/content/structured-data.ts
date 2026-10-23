@@ -74,10 +74,7 @@ interface TechArticleData extends BaseStructuredData {
 }
 
 export type StructuredData =
-  | SoftwareApplicationData
-  | WebPageData
-  | AboutPageData
-  | TechArticleData;
+  SoftwareApplicationData | WebPageData | AboutPageData | TechArticleData;
 
 // Common organization data factory
 export const createBaseOrganization = (emailDomain: string): Organization => ({
